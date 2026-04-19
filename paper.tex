@@ -1,9 +1,14 @@
-\documentclass[11pt]{article}
-\usepackage[margin=1.15in]{geometry}
+%% REVTeX 4.2 — Physical Review E
+%% Target: PRE (pre); change 'pre' to 'prresearch' if submitting to PRResearch
+
+\documentclass[aps,pre,reprint,superscriptaddress,nofootinbib,floatfix]{revtex4-2}
+
+% Pass hyperref options before any package loads it (orcidlink pulls it in)
+\PassOptionsToPackage{colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black}{hyperref}
+
 \usepackage{amsmath,amssymb,amsthm}
-\usepackage[numbers,sort&compress]{natbib}
-\usepackage[colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black]{hyperref}
-\usepackage{booktabs}
+\usepackage{booktabs}      % kept for compatibility; table uses ruledtabular
+\usepackage{orcidlink}     % also loads hyperref with above options
 \usepackage{microtype}
 
 \input{outputs/data/paper_macros.tex}
@@ -18,51 +23,41 @@
 \newcommand{\tr}{\mathrm{tr}}
 \newcommand{\R}{\mathbb{R}}
 
-\title{Task-Relative Descriptive Privilege in\\
-Linear Gaussian Dynamical Systems}
-\author{Kunal Bhatia\thanks{ORCID: 0009-0007-4447-6325.
-  \texttt{kunal29bhatia@gmail.com}}\\
-\small Independent Researcher, Heidelberg, Germany}
-
-\date{March 2026\quad\textit{Preprint --- not peer reviewed}}
-
 \begin{document}
-\maketitle
+
+\title{Task-Relative Descriptive Privilege in
+       Linear Gaussian Dynamical Systems}
+
+\author{Kunal Bhatia \orcidlink{0009-0007-4447-6325}}
+\email{kunal29bhatia@gmail.com}
+\affiliation{Independent Researcher, Heidelberg, Germany}
+
+\date{\today}
 
 \begin{abstract}
-We ask whether a single description can be simultaneously optimal for all
-prediction tasks in a linear dynamical system.
-In a finite-dimensional linear Gaussian dynamical system, the optimal rank-$r$
-observer for a squared-error prediction target is uniquely determined by the
-top-$r$ eigenspace of a target information matrix derived from the stationary
-covariance and the dynamics.
-Two targets whose information matrices have distinct top-$r$ eigenspaces
-admit no jointly optimal observer.
-Global privilege holds if and only if the target family is \emph{$r$-coherent}:
-all information matrices share a common top-$r$ eigenspace.
-$r$-coherence requires strong structural alignment between the dynamics and the
-task family.
-Outside it, privilege is task-relative within this class.
-We illustrate the theorem numerically: a concrete no-privilege instance yields a
-global-privilege gap of $\Gamma = \GammaCondA > 0$, and structural coherence
-is confirmed to be perturbation-robust.
+In a finite-dimensional linear Gaussian dynamical system, the rank-$r$
+linear observer minimizing squared-error prediction loss is uniquely
+determined---up to rotation within the eigenspace---by the top-$r$ eigenspace
+of the target information matrix.
+Two prediction targets with distinct dominant eigenspaces admit no jointly
+optimal observer.
+Global privilege---a single observer simultaneously optimal for all
+tasks---holds exactly when the target family is \emph{$r$-coherent}: every
+information matrix shares a common top-$r$ eigenspace.
+This is an exact algebraic condition.
+A two-target instance with $n=8$, $r=2$ yields a privilege gap
+$\Gamma=\GammaCondA>0$; a structurally coherent construction attains zero
+pairwise subspace angle and is perturbation-robust.
 \end{abstract}
 
-\noindent\textbf{Keywords.}
-Linear Gaussian dynamical system;
-Ky Fan maximum principle;
-Grassmannian;
-eigenspace optimality;
-$r$-coherence;
-prediction;
-observer.
+\keywords{linear Gaussian dynamical system, Ky Fan maximum principle,
+Grassmannian, eigenspace optimality, $r$-coherence, prediction}
 
-\medskip
-\noindent\textbf{MSC 2020.}
-15A42 (primary);
-93E11, 60G35 (secondary).
+\maketitle
 
+% -------------------------------------------------------------------------
 \section{Introduction}
+% -------------------------------------------------------------------------
 
 A basic question in the study of dynamical systems is whether there is a
 single low-dimensional description that is optimal for every prediction task,
@@ -89,12 +84,14 @@ This result is intentionally narrow.
 It concerns only finite-dimensional linear Gaussian dynamical systems,
 fixed-rank linear observers, and squared-error prediction targets.
 
+% -------------------------------------------------------------------------
 \section{System and Observer Family}
+% -------------------------------------------------------------------------
 
 \paragraph{Dynamics.}
 Let
 \begin{equation}
-  x_{t+1} = A x_t + \xi_t, \qquad \xi_t \sim \mathcal{N}(0, Q),
+  x_{t+1} = A x_t + \xi_t, \quad \xi_t \sim \mathcal{N}(0, Q),
   \quad x_t \in \R^n,
 \end{equation}
 with $A$ stable (spectral radius $<1$) and $Q \succ 0$.
@@ -125,7 +122,9 @@ integer $\tau \ge 1$:
 Performance is total mean squared prediction error.
 A target family $\mathcal{T} = \{(C_k, \tau_k)\}$ is any finite collection.
 
+% -------------------------------------------------------------------------
 \section{Theorem}
+% -------------------------------------------------------------------------
 
 \subsection{Exact Bayes risk formula}
 
@@ -188,7 +187,7 @@ Distinct eigenspaces cannot be spanned by the same $U$.
 The corollary extends to any finite target family: if $\{M_k\}$ do not share
 a common top-$r$ eigenspace, no rank-$r$ observer is globally optimal.
 
-\subsection{$r$-coherence: the exact exception}
+\subsection{\texorpdfstring{$r$}{r}-coherence: the exact exception}
 
 \begin{definition}\label{def:rcoh}
 A target family $\mathcal{T}$ is \emph{$r$-coherent} with respect to
@@ -201,7 +200,7 @@ Global privilege holds if and only if $\mathcal{T}$ is $r$-coherent.
 \end{corollary}
 
 $r$-coherence requires all targets to be linear functionals of a common
-$r$-dimensional sufficient statistic across all horizons -- a strong structural
+$r$-dimensional sufficient statistic across all horizons---a strong structural
 alignment between the dynamics and the task family.
 Outside $r$-coherence, the optimal observer generally depends on the target
 within the class studied here.
@@ -212,7 +211,9 @@ approximate or asymptotic condition.
 It is the exact characterisation of when global privilege is warranted.
 \end{remark}
 
+% -------------------------------------------------------------------------
 \section{Numerical Illustrations}
+% -------------------------------------------------------------------------
 
 The theorem is analytically exact under its stated assumptions.
 We illustrate it numerically with two finite-dimensional instances:
@@ -222,7 +223,8 @@ formula and numerical optimization on the Grassmannian.
 
 \paragraph{Setup.}
 State dimension $n=8$, observer rank $r=2$.
-The model is a finite-dimensional linear Gaussian dynamical system \cite{Kalman1960}.
+The model is a finite-dimensional linear Gaussian dynamical system
+\cite{Kalman1960}.
 $A = VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$, random
 non-orthogonal $V$ (seed 100), $Q = 0.1\,I_8$.
 $\Sigma$ is computed from the discrete Lyapunov equation; $\Sigma\succ 0$
@@ -232,7 +234,8 @@ formula, eigenspace calculations, and repeated projected optimization over
 $\Gr(2,8)$.
 
 \paragraph{Condition A: no-global-privilege instance.}
-{\sloppy Targets $T_1 = ([e_1^\top;\,e_2^\top],\,1)$ and
+{\sloppy
+Targets $T_1 = ([e_1^\top;\,e_2^\top],\,1)$ and
 $T_2 = ([e_5^\top;\,e_6^\top],\,5)$.\par}
 With non-normal $A$, $A^1$ and $A^5$ rotate state-space directions
 differently; the principal angles \cite{BjorckGolub1973} between the top-2
@@ -252,26 +255,25 @@ optimization over $\Gr(2,8)$ from random initializations, achieves
 $\Gamma = \GammaCondA > 0$.
 No globally optimal observer exists for this target family.
 Table~\ref{tab:condA} gives the full regret structure.
-The asymmetry in the off-diagonal entries reflects the geometry of the instance:
-$U^*_2$ is optimised for directions nearly orthogonal to $T_1$, so its
-cross-regret is large; $U^*_1$ retains partial overlap with the
+The asymmetry in the off-diagonal entries reflects the geometry of the
+instance: $U^*_2$ is optimised for directions nearly orthogonal to $T_1$,
+so its cross-regret is large; $U^*_1$ retains partial overlap with the
 long-horizon $T_2$ target, so its cross-regret is small.
 Both are computed from the same analytic formula.
 
 \begin{table}[tbp]
-\centering
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
 All values from the exact analytic Bayes risk formula.}
 \label{tab:condA}
+\begin{ruledtabular}
 \begin{tabular}{lcc}
-\toprule
 Observer & Regret on $T_1$ & Regret on $T_2$ \\
-\midrule
+\hline
 $U^*_1$ (optimal for $T_1$) & \CondARegretUoneTa & \CondARegretUoneTb \\
 $U^*_2$ (optimal for $T_2$) & \CondARegretUtwoTa & \CondARegretUtwoTb \\
 $U_{\mathrm{joint}}$ (compromise) & \CondARegretUjointTa & \CondARegretUjointTb \\
-\bottomrule
 \end{tabular}
+\end{ruledtabular}
 \end{table}
 
 \paragraph{Condition B$'$: structural coherence and its robustness.}
@@ -287,7 +289,7 @@ $\CondBMaxAngleDeg^\circ$ to machine precision.
 
 Under $\varepsilon = \CondBPertEps$ perturbations to $C$
 (\CondBPertDraws{} random draws), the maximum principal angle across all
-draws and all pairs is $\CondBPertMaxRad$~rad -- well below the fragility
+draws and all pairs is $\CondBPertMaxRad$~rad---well below the fragility
 threshold of $\CondBPertThreshold$~rad.
 Structural coherence is perturbation-robust, distinguishing it from
 accidental near-coincidences of eigenspaces that break under small
@@ -295,7 +297,9 @@ perturbations.
 
 The numerical results are consistent with the theorem in all cases.
 
+% -------------------------------------------------------------------------
 \section{Scope}
+% -------------------------------------------------------------------------
 
 \paragraph{What is earned.}
 In finite-dimensional linear Gaussian dynamical systems at stationarity,
@@ -314,15 +318,17 @@ with $O(n)$ acting by transformation.
 \paragraph{What is not earned.}
 This result does not apply to nonlinear systems, non-Gaussian noise,
 nonlinear observers, or non-prediction tasks.
-The causal axis -- whether the observer optimal for intervention differs from
-the observer optimal for prediction -- is not addressed here.
+The causal axis---whether the observer optimal for intervention differs from
+the observer optimal for prediction---is not addressed here.
 
-\section*{Acknowledgments}
+% -------------------------------------------------------------------------
+\begin{acknowledgments}
 No external funding was received for this work.
 Code to reproduce all numerical illustrations is available at
 \url{https://github.com/kunalb541/LGDS}.
+\end{acknowledgments}
 
-\bibliographystyle{plainnat}
+\bibliographystyle{apsrev4-2}
 \bibliography{refs}
 
 \end{document}
