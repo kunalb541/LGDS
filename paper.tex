@@ -74,6 +74,11 @@ target family.
 The linear state-space framework is classical \cite{Kailath1980};
 the relevant matrix optimisation on the Grassmannian \cite{Edelman1998}
 is governed by the Ky Fan maximum principle \cite{Fan1949}.
+The novelty is not the Ky Fan principle or the optimality of PCA for
+squared-error loss \cite{Hotelling1933}---both classical---but the exact
+algebraic characterisation of when a single observer suffices across a
+target family: the $r$-coherence condition (Definition~\ref{def:rcoh})
+and its biconditional (Corollary~\ref{cor:coherence}).
 
 This yields three things useful for the present question:
 an exact risk formula with no approximation,
@@ -231,7 +236,8 @@ $\Sigma$ is computed from the discrete Lyapunov equation; $\Sigma\succ 0$
 is confirmed to machine precision.
 All reported quantities are computed exactly from the analytic Bayes risk
 formula, eigenspace calculations, and repeated projected optimization over
-$\Gr(2,8)$.
+$\Gr(2,8)$ (300 random initializations of projected L-BFGS-B, gradient-norm
+threshold $10^{-12}$, function-value tolerance $10^{-15}$).
 
 \paragraph{Condition A: no-global-privilege instance.}
 {\sloppy
@@ -250,16 +256,18 @@ The global-privilege gap
       \bigl[\mathcal{R}(U;\,C_k,\tau_k) - \mathcal{R}^*_k\bigr]
 \end{equation}
 measures the best achievable worst-case regret under task conflict.
-The minimax observer $U_{\mathrm{joint}}$, found by repeated projected
-optimization over $\Gr(2,8)$ from random initializations, achieves
-$\Gamma = \GammaCondA > 0$.
+The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
 No globally optimal observer exists for this target family.
 Table~\ref{tab:condA} gives the full regret structure.
-The asymmetry in the off-diagonal entries reflects the geometry of the
-instance: $U^*_2$ is optimised for directions nearly orthogonal to $T_1$,
-so its cross-regret is large; $U^*_1$ retains partial overlap with the
-long-horizon $T_2$ target, so its cross-regret is small.
-Both are computed from the same analytic formula.
+The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
+are a necessary condition for an interior minimax, confirming the global
+saddle point was found.
+The large asymmetry in the off-diagonal entries ($\CondARegretUtwoTa$
+vs.\ $\CondARegretUoneTb$) reflects the principal angle structure:
+$U^*_2$'s row space makes a $\CondAAngleOne^\circ$ angle with $M_1$'s
+dominant eigendirection, forfeiting most of its eigenvalue weight, while
+the smaller $\CondAAngleTwo^\circ$ second angle means $U^*_1$ retains
+substantial alignment with $M_2$'s second direction.
 
 \begin{table}[tbp]
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
@@ -290,7 +298,9 @@ $\CondBMaxAngleDeg^\circ$ to machine precision.
 Under $\varepsilon = \CondBPertEps$ perturbations to $C$
 (\CondBPertDraws{} random draws), the maximum principal angle across all
 draws and all pairs is $\CondBPertMaxRad$~rad---well below the fragility
-threshold of $\CondBPertThreshold$~rad.
+threshold of $\CondBPertThreshold$~rad, set at $1.5\varepsilon$ above the
+$O(\varepsilon)$ subspace-angle perturbation expected when the spectral
+gap of $M_{C,\tau}$ is $O(1)$.
 Structural coherence is perturbation-robust, distinguishing it from
 accidental near-coincidences of eigenspaces that break under small
 perturbations.
@@ -314,12 +324,25 @@ risk formula.
 The Grassmannian $\Gr(r,n)$ is the literal domain of this optimisation:
 a compact Riemannian manifold on which observer quality is a smooth function,
 with $O(n)$ acting by transformation.
+The computation reduces to a single $n \times n$ eigendecomposition of
+$M_{C,\tau}$, independent of $\tau$ once $A^\tau$ is formed; $A^\tau$ is
+obtained in $O(n^3 \log \tau)$ operations by repeated squaring.
 
 \paragraph{What is not earned.}
 This result does not apply to nonlinear systems, non-Gaussian noise,
 nonlinear observers, or non-prediction tasks.
 The causal axis---whether the observer optimal for intervention differs from
 the observer optimal for prediction---is not addressed here.
+
+\paragraph{Relation to a broader programme.}
+This result establishes an exact tractable baseline.
+The linear Gaussian setting admits closed-form analysis because the MMSE
+predictor is linear, the stationary distribution is Gaussian, and the
+optimal observer reduces to a single eigendecomposition.
+Whether analogous structural conditions govern non-Gaussian or nonlinear
+systems---and whether the causal axis introduces further constraints on
+global privilege---are open questions motivating the author's related
+empirical work.
 
 % -------------------------------------------------------------------------
 \begin{acknowledgments}
