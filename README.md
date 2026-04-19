@@ -40,7 +40,7 @@ the Grassmannian Gr(2, 8), which is an analytic optimisation problem.
 **Requirements:** Python ≥ 3.9, NumPy, SciPy.
 
 ```bash
-# Activate your environment (example using the project's ml-base venv)
+# Activate your Python environment
 source /path/to/your/venv/bin/activate
 
 # Regenerate all paper numbers and macros
