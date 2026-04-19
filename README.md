@@ -1,4 +1,4 @@
-# Task-Relative Descriptive Privilege in Linear Gaussian Dynamical Systems
+## Task-Relative Descriptive Privilege in Linear Gaussian Dynamical Systems
 
 **Kunal Bhatia** — Independent Researcher, Heidelberg, Germany
 ORCID: [0009-0007-4447-6325](https://orcid.org/0009-0007-4447-6325)
