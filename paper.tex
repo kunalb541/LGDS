@@ -260,14 +260,14 @@ The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
 No globally optimal observer exists for this target family.
 Table~\ref{tab:condA} gives the full regret structure.
 The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
-are a necessary condition for an interior minimax, confirming the global
-saddle point was found.
+are a necessary condition for a minimax with $\Gamma>0$, confirming the
+global minimum was found.
 The large asymmetry in the off-diagonal entries ($\CondARegretUtwoTa$
 vs.\ $\CondARegretUoneTb$) reflects the principal angle structure:
-$U^*_2$'s row space makes a $\CondAAngleOne^\circ$ angle with $M_1$'s
-dominant eigendirection, forfeiting most of its eigenvalue weight, while
-the smaller $\CondAAngleTwo^\circ$ second angle means $U^*_1$ retains
-substantial alignment with $M_2$'s second direction.
+the larger $\CondAAngleOne^\circ$ principal angle shows $U^*_2$'s subspace
+is substantially misaligned with $M_1$'s top eigenspace, forfeiting most
+of its eigenvalue weight, while the smaller $\CondAAngleTwo^\circ$ angle
+means $U^*_1$ retains partial alignment with $M_2$'s top eigenspace.
 
 \begin{table}[tbp]
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
