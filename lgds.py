@@ -134,12 +134,12 @@ print(f"  Gamma (true minimax) = {Gamma:.6f}")
 print(f"  Regrets at Uj: T1={reg_Uj_T1:.6f}, T2={reg_Uj_T2:.6f}")
 
 
-# -- Condition B': structural coherence + perturbation robustness --------------
+# -- Condition B: structural coherence + perturbation robustness ---------------
 #
 # Normal A = V D V^T, C = top-2 rows of V^T (eigenvectors of A).
 # M_{C,tau} has fixed top-2 eigenspace for all tau -- exactly r-coherent.
 
-print("Computing Condition B' ...")
+print("Computing Condition B ...")
 
 Ab, Sigmab, Sigmab_half = build_system(seed=200, normal=True)
 
@@ -150,7 +150,7 @@ targets_b = [(Cb, 1), (Cb, 2), (Cb, 3), (Cb, 5)]
 Ms_b = [info_matrix(Ab, Sigmab_half, C, tau) for C, tau in targets_b]
 Us_b = [top_r_observer(M, r) for M in Ms_b]
 
-# Minimum spectral gap across Condition B' targets.
+# Minimum spectral gap across Condition B targets.
 # gap_k = lambda_r(M_k) - lambda_{r+1}(M_k) (descending notation).
 # eigh returns ascending order, so gap = eigvals[-r] - eigvals[-r-1].
 spectral_gaps_b = []
@@ -159,7 +159,7 @@ for M in Ms_b:
     spectral_gaps_b.append(eigvals_M[-r] - eigvals_M[-r - 1])
 min_gap_b = min(spectral_gaps_b)
 assert min_gap_b > 0, f"Spectral gap non-positive: {min_gap_b}"
-print(f"  Spectral gaps (Condition B'): {[f'{g:.4f}' for g in spectral_gaps_b]}")
+print(f"  Spectral gaps (Condition B): {[f'{g:.4f}' for g in spectral_gaps_b]}")
 print(f"  Min spectral gap: {min_gap_b:.6f}")
 
 # All pairwise principal angles -- must be ~0
