@@ -1,7 +1,7 @@
 %% REVTeX 4.2 — Physical Review E
 %% Target: PRE (pre); change 'pre' to 'prresearch' if submitting to PRResearch
 
-\documentclass[aps,pre,reprint,superscriptaddress,nofootinbib,floatfix]{revtex4-2}
+\documentclass[aps,pre,reprint,superscriptaddress,nofootinbib,floatfix,showkeys]{revtex4-2}
 
 % Pass hyperref options before any package loads it (orcidlink pulls it in)
 \PassOptionsToPackage{colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black}{hyperref}
@@ -50,10 +50,12 @@ Numerical illustrations confirm a no-global-privilege instance
 both consistent with the theorem.
 \end{abstract}
 
-\keywords{linear Gaussian dynamical system, Ky Fan maximum principle,
-Grassmannian, eigenspace optimality, $r$-coherence, prediction}
+\keywords{linear Gaussian dynamical systems, dimensionality reduction,
+Grassmannian optimization, Ky Fan theorem, principal subspaces}
 
 \maketitle
+
+\noindent\textit{MSC 2020:} 15A18; 93B07; 62H25\par\medskip
 
 % -------------------------------------------------------------------------
 \section{Introduction}
@@ -348,7 +350,7 @@ empirical work.
 
 % -------------------------------------------------------------------------
 \begin{acknowledgments}
-No external funding was received for this work.
+The author received no external funding for this work.
 Code to reproduce all numerical illustrations is available at
 \url{https://github.com/kunalb541/LGDS}.
 \end{acknowledgments}
