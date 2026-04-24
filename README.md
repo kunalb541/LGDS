@@ -77,7 +77,7 @@ tests/test_lgds.py            # correctness tests
 - **Section 3** — Theorem: Bayes risk formula → top-eigenspace optimality (Proposition 1)
   → no-global-privilege corollary → r-coherence definition and equivalence
 - **Section 4** — Numerical illustrations: Condition A (no privilege, Γ = 0.026 > 0),
-  Condition B′ (structural coherence, max angle 0.000°, perturbation-robust)
+  Condition B (structural coherence, max angle 0.000°, perturbation-robust)
 - **Section 5** — Scope (what is and is not earned)
 
 ## Citation
