@@ -45,9 +45,9 @@ Global privilege---a single observer simultaneously optimal for all
 tasks---holds exactly when the target family is \emph{$r$-coherent}: every
 information matrix shares a common top-$r$ eigenspace.
 This is an exact algebraic condition.
-A two-target instance with $n=8$, $r=2$ yields a privilege gap
-$\Gamma=\GammaCondA>0$; a structurally coherent construction attains zero
-pairwise subspace angle and is perturbation-robust.
+Numerical illustrations confirm a no-global-privilege instance
+($\Gamma=\GammaCondA>0$) and a structurally coherent construction,
+both consistent with the theorem.
 \end{abstract}
 
 \keywords{linear Gaussian dynamical system, Ky Fan maximum principle,
@@ -80,10 +80,8 @@ algebraic characterisation of when a single observer suffices across a
 target family: the $r$-coherence condition (Definition~\ref{def:rcoh})
 and its biconditional (Corollary~\ref{cor:coherence}).
 
-This yields three things useful for the present question:
-an exact risk formula with no approximation,
-a proof that task-relative privilege is the rule within this class,
-and an explicit algebraic criterion for when global privilege is warranted.
+The result yields an exact risk formula, a no-global-privilege corollary,
+and an exact algebraic criterion for the exceptional coherent case.
 
 This result is intentionally narrow.
 It concerns only finite-dimensional linear Gaussian dynamical systems,
@@ -258,6 +256,7 @@ The global-privilege gap
 measures the best achievable worst-case regret under task conflict.
 The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
 No globally optimal observer exists for this target family.
+The positive gap certifies the impossibility of any jointly optimal rank-2 observer for this task pair.
 Table~\ref{tab:condA} gives the full regret structure.
 The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
 are a necessary condition for a minimax with $\Gamma>0$, confirming the
@@ -284,7 +283,7 @@ $U_{\mathrm{joint}}$ (compromise) & \CondARegretUjointTa & \CondARegretUjointTb 
 \end{ruledtabular}
 \end{table}
 
-\paragraph{Condition B$'$: structural coherence and its robustness.}
+\paragraph{Condition B: structurally coherent example.}
 A target family is constructed so that all $M_k$ share the same top-2
 eigenspace by design: normal $A_{\mathrm{sym}} = VDV^\top$ with orthogonal
 $V$, and a common $C$ whose rows are the top-2 eigenvectors of $A$, varying
