@@ -328,6 +328,11 @@ obtained in $O(n^3 \log \tau)$ operations by repeated squaring.
 \paragraph{What is not earned.}
 This result does not apply to nonlinear systems, non-Gaussian noise,
 nonlinear observers, or non-prediction tasks.
+The breakdown is structural: for non-Gaussian noise or nonlinear dynamics,
+the MMSE predictor is generally nonlinear and
+Proposition~\ref{prop:opt}'s trace maximisation has no closed-form counterpart;
+for nonlinear observers, the Grassmannian parametrisation and the Ky Fan
+principle both cease to apply.
 The causal axis---whether the observer optimal for intervention differs from
 the observer optimal for prediction---is not addressed here.
 
