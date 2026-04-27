@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{Task-Relative Descriptive Privilege in
+\title{Task-Dependent Optimal Linear Observers in
        Linear Gaussian Dynamical Systems}
 
 \author{Kunal Bhatia \orcidlink{0009-0007-4447-6325}}
@@ -35,24 +35,25 @@
 \date{\today}
 
 \begin{abstract}
-In a finite-dimensional linear Gaussian dynamical system, the rank-$r$
-linear observer minimizing squared-error prediction loss is uniquely
-determined---up to rotation within the eigenspace---by the top-$r$ eigenspace
-of the target information matrix.
-Two prediction targets with distinct dominant eigenspaces admit no jointly
-optimal observer.
-Global privilege---a single observer simultaneously optimal for all
-tasks---holds exactly when the target family is \emph{$r$-coherent}: every
-information matrix shares a common top-$r$ eigenspace.
-This is an exact algebraic condition.
-Numerical illustrations confirm a no-global-privilege instance
-($\Gamma=\GammaCondA>0$) and a structurally coherent construction,
-both consistent with the theorem.
-\par\smallskip\noindent\textit{MSC 2020:} 15A18; 93B07; 62H25
+For a stationary linear Gaussian dynamical system, the rank-$r$ linear
+observer minimizing squared-error prediction loss for target $Cx_{t+\tau}$
+has row space equal to the top-$r$ eigenspace of the target information
+matrix $M_{C,\tau} = \Sigma^{1/2}(A^\tau)^\top C^\top CA^\tau\Sigma^{1/2}$,
+uniquely up to eigenspace rotation.
+Two targets with distinct dominant eigenspaces admit no common optimal
+rank-$r$ observer.
+A common optimal observer exists if and only if the target family is
+\emph{$r$-coherent}: all information matrices share a common top-$r$
+eigenspace.
+This condition is exact, not asymptotic or approximate.
+Numerical illustrations at $n=8$, $r=2$ confirm a target-dependent case
+($\Gamma=\GammaCondA>0$) and an $r$-coherent construction, both consistent
+with the theorem.
+\par\smallskip\noindent\textit{MSC 2020:} 93B07; 93E10; 15A18
 \end{abstract}
 
-\keywords{linear Gaussian dynamical systems, dimensionality reduction,
-Grassmannian optimization, Ky Fan theorem, principal subspaces}
+\keywords{linear Gaussian dynamical systems, low-rank linear observers,
+optimal observation, Grassmannian, Ky Fan theorem}
 
 \maketitle
 
@@ -60,33 +61,37 @@ Grassmannian optimization, Ky Fan theorem, principal subspaces}
 \section{Introduction}
 % -------------------------------------------------------------------------
 
-A basic question in the study of dynamical systems is whether there is a
-single low-dimensional description that is optimal for every prediction task,
-or whether the optimal description depends on the target one seeks to predict.
-This paper answers that question exactly for finite-dimensional linear Gaussian
-dynamical systems (LGDS).
-The optimal rank-$r$ observer is the top-$r$ eigenspace of a target information
-matrix.
-Two targets whose information matrices have distinct dominant subspaces cannot
-be simultaneously optimised by any single observer.
-The exception has an exact algebraic characterisation: $r$-coherence of the
-target family.
+A central question in observer design for linear dynamical systems is whether
+a single rank-$r$ linear observer can be simultaneously optimal for predicting
+multiple output channels $\{C_k x_{t+\tau_k}\}$, or whether the optimal
+observer depends on the specific prediction target and horizon.
+For finite-dimensional linear Gaussian dynamical systems (LGDS) at
+stationarity, this paper gives an exact answer: the optimal rank-$r$ observer
+for predicting $Cx_{t+\tau}$ is the top-$r$ eigenspace of the target
+information matrix $M_{C,\tau}$, and a common optimal observer across a family
+of targets exists if and only if all information matrices share a common
+dominant eigenspace.
 
-The linear state-space framework is classical \cite{Kailath1980};
-the relevant matrix optimisation on the Grassmannian \cite{Edelman1998}
-is governed by the Ky Fan maximum principle \cite{Fan1949}.
-The novelty is not the Ky Fan principle or the optimality of PCA for
-squared-error loss \cite{Hotelling1933}---both classical---but the exact
-algebraic characterisation of when a single observer suffices across a
-target family: the $r$-coherence condition (Definition~\ref{def:rcoh})
-and its biconditional (Corollary~\ref{cor:coherence}).
+The Grassmannian $\Gr(r,n)$ is the natural parameter space for rank-$r$
+linear observers \cite{Edelman1998}, and observer quality---the trace
+$\tr(U M_{C,\tau} U^\top)$---is a smooth function on this manifold.
+Optimal observer selection reduces to trace maximisation on $\Gr(r,n)$,
+governed by the Ky Fan variational principle \cite{Fan1949}: the maximum
+is achieved by the leading eigenspace of $M_{C,\tau}$, recovering
+principal-subspace selection \cite{Hotelling1933} in the static ($A=I$)
+case within the classical linear state-space framework \cite{Kailath1980}.
 
-The result yields an exact risk formula, a no-global-privilege corollary,
-and an exact algebraic criterion for the exceptional coherent case.
+The Ky Fan principle and eigenspace optimality are classical.
+The contribution here is the exact algebraic condition for when a single
+rank-$r$ observer is simultaneously optimal across a task family:
+$r$-coherence (Definition~\ref{def:rcoh}), stated as an exact biconditional
+in Corollary~\ref{cor:coherence}.
+When $r$-coherence fails, target-dependent observer selection is unavoidable,
+and the worst-case regret gap $\Gamma>0$ is computable from the closed-form
+Bayes risk formula.
 
-This result is intentionally narrow.
-It concerns only finite-dimensional linear Gaussian dynamical systems,
-fixed-rank linear observers, and squared-error prediction targets.
+The result is scoped to finite-dimensional LGDS, fixed-rank linear observers,
+and squared-error prediction targets.
 
 % -------------------------------------------------------------------------
 \section{System and Observer Family}
@@ -174,7 +179,7 @@ $\sum_{i=1}^r \lambda_i(M_{C,\tau})$, achieved exactly when the row space of
 $U$ spans the corresponding eigenspace.
 \end{proof}
 
-\subsection{No-global-privilege corollary}
+\subsection{Target-dependent observer selection}
 
 \begin{corollary}\label{cor:noglobal}
 If targets $(C_1,\tau_1)$ and $(C_2,\tau_2)$ have information matrices
@@ -189,7 +194,7 @@ Distinct eigenspaces cannot be spanned by the same $U$.
 \end{proof}
 
 The corollary extends to any finite target family: if $\{M_k\}$ do not share
-a common top-$r$ eigenspace, no rank-$r$ observer is globally optimal.
+a common top-$r$ eigenspace, no common optimal rank-$r$ observer exists.
 
 \subsection{\texorpdfstring{$r$}{r}-coherence: the exact exception}
 
@@ -200,19 +205,18 @@ share a common top-$r$ eigenspace $V^*$.
 \end{definition}
 
 \begin{corollary}\label{cor:coherence}
-Global privilege holds if and only if $\mathcal{T}$ is $r$-coherent.
+A common optimal observer exists if and only if $\mathcal{T}$ is $r$-coherent.
 \end{corollary}
 
-$r$-coherence requires all targets to be linear functionals of a common
-$r$-dimensional sufficient statistic across all horizons---a strong structural
-alignment between the dynamics and the task family.
-Outside $r$-coherence, the optimal observer generally depends on the target
-within the class studied here.
+$r$-coherence requires all targets to be functions of a common $r$-dimensional
+sufficient statistic across all prediction horizons---a strong alignment
+between the system dynamics and the task family.
+Outside $r$-coherence, the optimal observer is target-dependent.
 
 \begin{remark}
 $r$-coherence is an algebraic equality between eigenspaces, not an
 approximate or asymptotic condition.
-It is the exact characterisation of when global privilege is warranted.
+It is the exact condition for a common optimal observer to exist.
 \end{remark}
 
 % -------------------------------------------------------------------------
@@ -221,7 +225,7 @@ It is the exact characterisation of when global privilege is warranted.
 
 The theorem is analytically exact under its stated assumptions.
 We illustrate it numerically with two finite-dimensional instances:
-a no-global-privilege example and a structurally coherent example.
+a target-dependent case and an $r$-coherent case.
 All reported quantities are computed exactly from the analytic Bayes risk
 formula and numerical optimization on the Grassmannian.
 
@@ -238,7 +242,7 @@ formula, eigenspace calculations, and repeated projected optimization over
 $\Gr(2,8)$ (300 random initializations of projected L-BFGS-B, gradient-norm
 threshold $10^{-12}$, function-value tolerance $10^{-15}$).
 
-\paragraph{Condition A: no-global-privilege instance.}
+\paragraph{Condition A: target-dependent instance.}
 {\sloppy
 Targets $T_1 = ([e_1^\top;\,e_2^\top],\,1)$ and
 $T_2 = ([e_5^\top;\,e_6^\top],\,5)$.\par}
@@ -248,15 +252,15 @@ eigenspaces of $M_1$ and $M_2$ are $\CondAAngleOne^\circ$ and
 $\CondAAngleTwo^\circ$, confirming that no single rank-2 observer is
 simultaneously optimal.
 
-The global-privilege gap
+The minimax regret gap
 \begin{equation}
   \Gamma
     = \min_{U\in\Gr(r,n)}\,\max_k\,
       \bigl[\mathcal{R}(U;\,C_k,\tau_k) - \mathcal{R}^*_k\bigr]
 \end{equation}
-measures the best achievable worst-case regret under task conflict.
+quantifies the best achievable worst-case suboptimality under task conflict.
 The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
-No globally optimal observer exists for this target family.
+No common optimal rank-$r$ observer exists for this target pair.
 The positive gap certifies the impossibility of any jointly optimal rank-2 observer for this task pair.
 Table~\ref{tab:condA} gives the full regret structure.
 The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
@@ -310,15 +314,16 @@ The numerical results are consistent with the theorem in all cases.
 % -------------------------------------------------------------------------
 
 \paragraph{What is earned.}
-In finite-dimensional linear Gaussian dynamical systems at stationarity,
-among rank-$r$ linear observers $\phi_U(x)=U\Sigma^{-1/2}x$ and
-squared-error prediction targets $y=Cx_{t+\tau}$,
-descriptive privilege is task-relative unless the target family is
-$r$-coherent.
-$r$-coherence requires strong structural alignment between dynamics and tasks.
-Outside it, no fixed-rank observer is globally optimal, and the cost of
-forcing any observer onto a non-native target is given exactly by the Bayes
-risk formula.
+In stationary finite-dimensional LGDS, among rank-$r$ linear observers
+$\phi_U(x)=U\Sigma^{-1/2}x$ and squared-error prediction targets
+$y=Cx_{t+\tau}$, no common optimal rank-$r$ observer exists unless the
+target family is $r$-coherent.
+$r$-coherence requires all prediction targets to be functions of a common
+$r$-dimensional sufficient statistic across all horizons---a strong alignment
+between the system dynamics and the task family.
+Outside $r$-coherence, no common optimal observer exists, and the cost of
+applying any fixed observer to a non-native target is given exactly by the
+Bayes risk formula.
 The Grassmannian $\Gr(r,n)$ is the literal domain of this optimisation:
 a compact Riemannian manifold on which observer quality is a smooth function,
 with $O(n)$ acting by transformation.
@@ -337,15 +342,14 @@ principle both cease to apply.
 The causal axis---whether the observer optimal for intervention differs from
 the observer optimal for prediction---is not addressed here.
 
-\paragraph{Relation to a broader programme.}
-This result establishes an exact tractable baseline.
+\paragraph{Extensions.}
 The linear Gaussian setting admits closed-form analysis because the MMSE
 predictor is linear, the stationary distribution is Gaussian, and the
 optimal observer reduces to a single eigendecomposition.
-Whether analogous structural conditions govern non-Gaussian or nonlinear
-systems---and whether the causal axis introduces further constraints on
-global privilege---are open questions motivating the author's related
-empirical work.
+Whether analogous shared-eigenspace conditions characterise common optimal
+observers in non-Gaussian or nonlinear systems, and whether intervention
+objectives impose additional constraints on observer selection, are open
+questions beyond the scope of the present result.
 
 % -------------------------------------------------------------------------
 \begin{acknowledgments}
