@@ -94,8 +94,3 @@ tests/test_lgds.py             # correctness tests
 - **Section 4** — Numerical illustrations: Condition A (target-dependent, Γ = 0.026 > 0),
   Condition B (r-coherent, max angle 0.000°, perturbation-robust)
 - **Section 5** — Scope
-
-## Citation
-
-Bhatia, K. (2026). *Task-Dependent Optimal Linear Observers in Linear Gaussian
-Dynamical Systems*. Submitted to Systems & Control Letters.
