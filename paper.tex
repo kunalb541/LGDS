@@ -102,10 +102,17 @@ case within the classical linear state-space framework \cite{Kailath1980}.
 
 The Ky Fan variational principle and principal-subspace optimality are
 classical \cite{Fan1949,Hotelling1933}.
-The contribution here is the exact algebraic biconditional for the existence
-of a common optimal rank-$r$ observer across a prediction task family:
-$r$-coherence (Definition~\ref{def:rcoh}), stated precisely in
-Corollary~\ref{cor:coherence}.
+The single-target result (Proposition~\ref{prop:opt}) applies Ky Fan to the
+target information matrix $M_{C,\tau}$, which identifies which directions of
+state space bear on a given prediction task.
+What is not resolved by classical eigenspace theory is the task-family
+question: when does a single rank-$r$ observer remain exactly optimal across
+a family of targets with possibly distinct information matrices?
+The structural characterization, given in Corollary~\ref{cor:coherence}, is
+$r$-coherence: its non-trivial content is the backward direction, which
+shows that any commonly optimal observer must be the unique top-$r$ eigenspace
+of each individual $M_k$, forcing all information matrices to share a common
+dominant eigenspace.
 The regret gap $\Gamma$ provides a computable certificate of unavoidable
 suboptimality when $r$-coherence fails.
 
@@ -232,6 +239,17 @@ share a common top-$r$ eigenspace $V^*$.
 A common optimal observer exists if and only if $\mathcal{T}$ is $r$-coherent.
 \end{corollary}
 
+\begin{proof}
+(\emph{If})\enspace If $\mathcal{T}$ is $r$-coherent with shared top-$r$
+eigenspace $V^*$, the observer with row space $V^*$ minimises
+$\mathcal{R}(\cdot;\,C_k,\tau_k)$ for each $k$ by Proposition~\ref{prop:opt}.
+(\emph{Only if})\enspace If $U$ is simultaneously optimal for all $k$, then
+by Proposition~\ref{prop:opt}'s uniqueness (holding when
+$\lambda_r(M_k)>\lambda_{r+1}(M_k)$ for all $k$), the row space of $U$
+must equal the top-$r$ eigenspace of every $M_k$; hence all $M_k$ share
+that eigenspace and $\mathcal{T}$ is $r$-coherent.
+\end{proof}
+
 $r$-coherence requires all targets to be functions of a common $r$-dimensional
 sufficient statistic across all prediction horizons---a strong alignment
 between the system dynamics and the task family.
@@ -288,14 +306,8 @@ No common optimal rank-$r$ observer exists for this target pair.
 The positive gap certifies the impossibility of any jointly optimal rank-2 observer for this task pair.
 Table~\ref{tab:condA} gives the full regret structure.
 The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
-are a necessary condition for a minimax with $\Gamma>0$, confirming the
-global minimum was found.
-The large asymmetry in the off-diagonal entries ($\CondARegretUtwoTa$
-vs.\ $\CondARegretUoneTb$) reflects the principal angle structure:
-the larger $\CondAAngleOne^\circ$ principal angle shows $U^*_2$'s subspace
-is substantially misaligned with $M_1$'s top eigenspace, forfeiting most
-of its eigenvalue weight, while the smaller $\CondAAngleTwo^\circ$ angle
-means $U^*_1$ retains partial alignment with $M_2$'s top eigenspace.
+satisfy the necessary condition for a minimax solution with $\Gamma>0$,
+consistent with the global minimum having been attained.
 
 \begin{table}[tbp]
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
@@ -351,6 +363,10 @@ between the system dynamics and the task family.
 Outside $r$-coherence, no common optimal observer exists, and the cost of
 applying any fixed observer to a non-native target is given exactly by the
 Bayes risk formula.
+In observer design workflows where a single rank-$r$ map must serve multiple
+prediction channels, $\Gamma$ is therefore a computable lower bound on
+worst-case suboptimality under any shared observer: if $\Gamma>0$, dedicated
+per-target observers are necessary to achieve optimality.
 The Grassmannian $\Gr(r,n)$ is the literal domain of this optimisation:
 a compact Riemannian manifold on which observer quality is a smooth function,
 with $O(n)$ acting by transformation.
