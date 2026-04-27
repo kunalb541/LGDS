@@ -1,5 +1,5 @@
 %% cover_letter.tex
-%% Cover letter for submission to Linear Algebra and its Applications
+%% Cover letter for submission to Systems & Control Letters
 %% NOT anonymised -- this is seen only by the editor, not reviewers
 
 \documentclass[12pt]{article}
@@ -23,7 +23,7 @@ ORCID: \href{https://orcid.org/0009-0007-4447-6325}{0009-0007-4447-6325}
 \bigskip
 \noindent
 Editor-in-Chief\\
-\textit{Linear Algebra and its Applications}\\
+\textit{Systems \& Control Letters}\\
 Elsevier
 
 \bigskip
@@ -34,7 +34,7 @@ Elsevier
 
 I am pleased to submit the manuscript \textbf{``Task-Relative Descriptive
 Privilege in Linear Gaussian Dynamical Systems''} for consideration in
-\textit{Linear Algebra and its Applications}.
+\textit{Systems \& Control Letters}.
 
 \paragraph{The result.}
 The paper characterises, exactly and algebraically, when a single rank-$r$
@@ -55,19 +55,21 @@ risk formula.
 The Ky Fan principle and PCA optimality are classical.
 The contribution is the exact algebraic characterisation of when a single
 subspace suffices across a target family: $r$-coherence is an eigenspace
-coincidence condition on the Grassmannian $\mathrm{Gr}(r,n)$, which is the
-literal domain of the optimisation.
+coincidence condition on the Grassmannian $\mathrm{Gr}(r,n)$, the natural
+domain for rank-$r$ observer design.
 The result is not asymptotic and does not rely on approximation.
 
 \paragraph{Fit for the journal.}
-The central objects --- symmetric matrices, their eigenspaces, and the
-Grassmannian $\mathrm{Gr}(r,n)$ --- place this squarely within the scope of
-\textit{Linear Algebra and its Applications}.
-The key tool is the Ky Fan variational principle (a classical result in matrix
-analysis), and the main theorem is an exact algebraic equivalence.
-The paper is self-contained and concise.
-MSC 2020 codes: 15A18 (Eigenvalues, singular values, and eigenvectors);
-93B07 (Observability); 62H25 (Factor analysis and principal components).
+The paper is a concise, self-contained theorem result in the linear systems
+and observer design tradition of \textit{Systems \& Control Letters}.
+The setting is the standard stationary linear Gaussian dynamical system
+with squared-error prediction loss; the observer family is rank-$r$ linear
+maps; the key structural quantity is the Grassmannian $\mathrm{Gr}(r,n)$.
+The no-global-privilege result (Corollary 2) and the $r$-coherence equivalence
+(Corollary 4) are directly relevant to observer selection and state estimation
+under multiple objectives.
+MSC 2020 codes: 93B07 (Observability); 93E10 (Estimation and detection);
+15A18 (Eigenvalues, singular values, and eigenvectors).
 
 \paragraph{Numerical illustration.}
 Two illustrative instances are provided at $n=8$, $r=2$: a
@@ -81,24 +83,11 @@ no Monte Carlo simulation.
 \paragraph{Originality and prior publication.}
 This manuscript has not been published elsewhere and is not currently under
 consideration by any other journal.
-The work is original.
 Reproducible code (Python, NumPy/SciPy, $<$250 lines) is available at
 \url{https://github.com/kunalb541/LGDS}.
 
 \paragraph{Conflicts of interest.}
 The author declares no conflicts of interest.
-
-\paragraph{Suggested reviewers.}
-Experts in matrix analysis, subspace methods, and the Grassmannian would be
-well-placed to evaluate this work.
-Specific suggestions:
-\begin{itemize}
-  \item A specialist in the Ky Fan variational principle and matrix
-        inequalities.
-  \item A specialist in Grassmannian geometry and orthogonality constraints
-        (Edelman, Arias, Smith 1998).
-  \item A specialist in linear systems and observability.
-\end{itemize}
 
 \bigskip
 
