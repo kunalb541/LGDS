@@ -2,13 +2,16 @@
 %% Blind manuscript for double-blind peer review
 %% Submitted to: Systems & Control Letters
 %% Author information and code repository omitted for review.
+%% Format: identical to paper.tex (revtex4-2 reprint) with author block removed.
 
-\documentclass[final,3p,times]{elsarticle}
+\documentclass[aps,pre,reprint,superscriptaddress,nofootinbib,floatfix,showkeys]{revtex4-2}
+
+% Pass hyperref options before any package loads it
+\PassOptionsToPackage{colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black}{hyperref}
 
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{booktabs}
 \usepackage{microtype}
-\usepackage[colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black]{hyperref}
 
 \input{outputs/data/paper_macros.tex}
 
@@ -23,16 +26,14 @@
 \newcommand{\R}{\mathbb{R}}
 \renewcommand{\qedsymbol}{$\blacksquare$}
 
-\journal{Systems \& Control Letters}
-
 \begin{document}
-
-\begin{frontmatter}
 
 \title{Task-Relative Descriptive Privilege in
        Linear Gaussian Dynamical Systems}
 
 %% Author information omitted for double-blind peer review.
+
+\date{\today}
 
 \begin{abstract}
 In a finite-dimensional linear Gaussian dynamical system, the rank-$r$
@@ -48,15 +49,13 @@ This is an exact algebraic condition.
 Numerical illustrations confirm a no-global-privilege instance
 ($\Gamma=\GammaCondA>0$) and a structurally coherent construction,
 both consistent with the theorem.
+\par\smallskip\noindent\textit{MSC 2020:} 15A18; 93B07; 62H25
 \end{abstract}
 
-\begin{keyword}
-linear Gaussian dynamical systems \sep dimensionality reduction \sep
-Grassmannian optimization \sep Ky Fan theorem \sep principal subspaces
-\MSC[2020] 15A18 \sep 93B07 \sep 62H25
-\end{keyword}
+\keywords{linear Gaussian dynamical systems, dimensionality reduction,
+Grassmannian optimization, Ky Fan theorem, principal subspaces}
 
-\end{frontmatter}
+\maketitle
 
 % -------------------------------------------------------------------------
 \section{Introduction}
@@ -259,8 +258,7 @@ The global-privilege gap
 measures the best achievable worst-case regret under task conflict.
 The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
 No globally optimal observer exists for this target family.
-The positive gap certifies the impossibility of any jointly optimal rank-2
-observer for this task pair.
+The positive gap certifies the impossibility of any jointly optimal rank-2 observer for this task pair.
 Table~\ref{tab:condA} gives the full regret structure.
 The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
 are a necessary condition for a minimax with $\Gamma>0$, confirming the
@@ -276,17 +274,15 @@ means $U^*_1$ retains partial alignment with $M_2$'s top eigenspace.
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
 All values from the exact analytic Bayes risk formula.}
 \label{tab:condA}
-\begin{center}
+\begin{ruledtabular}
 \begin{tabular}{lcc}
-\toprule
 Observer & Regret on $T_1$ & Regret on $T_2$ \\
-\midrule
+\hline
 $U^*_1$ (optimal for $T_1$) & \CondARegretUoneTa & \CondARegretUoneTb \\
 $U^*_2$ (optimal for $T_2$) & \CondARegretUtwoTa & \CondARegretUtwoTb \\
 $U_{\mathrm{joint}}$ (compromise) & \CondARegretUjointTa & \CondARegretUjointTb \\
-\bottomrule
 \end{tabular}
-\end{center}
+\end{ruledtabular}
 \end{table}
 
 \paragraph{Condition B: structurally coherent example.}
@@ -349,19 +345,17 @@ predictor is linear, the stationary distribution is Gaussian, and the
 optimal observer reduces to a single eigendecomposition.
 Whether analogous structural conditions govern non-Gaussian or nonlinear
 systems---and whether the causal axis introduces further constraints on
-global privilege---are open questions motivating further empirical work.
+global privilege---are open questions motivating the author's related
+empirical work.
 
 % -------------------------------------------------------------------------
-\section*{Acknowledgements}
-% -------------------------------------------------------------------------
-
+\begin{acknowledgments}
 The author received no external funding for this work.
 Reproducible code is available from a publicly accessible repository
 (details provided in the non-blind version of the manuscript).
+\end{acknowledgments}
 
-% -------------------------------------------------------------------------
-
-\bibliographystyle{elsarticle-num}
+\bibliographystyle{apsrev4-2}
 \bibliography{refs}
 
 \end{document}
