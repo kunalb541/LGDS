@@ -84,12 +84,18 @@ $M_{C,\tau}$.
 Reduced representations for linear systems have been studied via principal
 components of Gramians \cite{Moore1981}, balanced truncation, and related
 model-reduction methods \cite{Antoulas2005}.
-Those works address reduced system descriptions or approximation error across
-all inputs and initial conditions.
-The present note asks a different question: given a prediction task family with
-possibly distinct information matrices $\{M_{C_k,\tau_k}\}$, when does one
-rank-$r$ observer remain exactly optimal for all targets, and when is
-target-dependent observer selection unavoidable?
+The observability Gramian accumulates contributions from all prediction
+horizons and all output directions; balanced truncation minimises
+approximation error in $H_2$/$H_\infty$ system norms rather than
+squared-error prediction loss for a specified $(C,\tau)$.
+Sensor-selection and output-design methods target estimation or
+reconstruction quality for a given objective, typically without
+characterising when a fixed low-rank map is simultaneously optimal
+across an entire task family.
+The present note asks precisely that structural question: given distinct
+prediction targets with information matrices $\{M_{C_k,\tau_k}\}$, when
+is one rank-$r$ observer simultaneously optimal for all of them, and when
+is target-dependent selection unavoidable?
 
 The Grassmannian $\Gr(r,n)$ is the natural parameter space for rank-$r$
 linear observers \cite{Edelman1998}, and observer quality---the trace
@@ -132,7 +138,8 @@ Let
 with $A$ stable (spectral radius $<1$) and $Q \succ 0$.
 The unique stationary covariance $\Sigma$ satisfies
 $A \Sigma A^\top + Q = \Sigma$ and is strictly positive definite
-\cite{Kailath1980}.
+\cite{Kailath1980}; $\Sigma^{1/2}$ denotes its symmetric positive-definite
+square root.
 
 \paragraph{Observer family.}
 An observer of rank $r$ ($1 \le r < n$) is parametrised by a
@@ -165,10 +172,20 @@ A target family $\mathcal{T} = \{(C_k, \tau_k)\}$ is any finite collection.
 
 Given observation $z = U \Sigma^{-1/2} x_t$, the MMSE predictor of
 $Cx_{t+\tau}$ is linear by Gaussian conjugacy.
-At stationarity,
-$\mathrm{Cov}(Cx_{t+\tau},\,z^\top) = CA^\tau \Sigma^{1/2} U^\top$
-and $\mathrm{Cov}(z,z^\top) = I_r$.
-The Bayes risk is
+At stationarity, $x_{t+\tau} = A^\tau x_t + w_\tau$ where $w_\tau$
+is the accumulated process noise independent of $x_t$, so
+$E[x_{t+\tau}x_t^\top] = A^\tau\Sigma$.
+It follows that
+$\mathrm{Cov}(Cx_{t+\tau},\,z^\top)
+ = CA^\tau\Sigma\cdot\Sigma^{-1/2}U^\top = CA^\tau\Sigma^{1/2}U^\top$
+and $\mathrm{Cov}(z,z^\top) = U\Sigma^{-1/2}\Sigma\Sigma^{-1/2}U^\top = I_r$.
+Applying the Gaussian linear MMSE formula
+$\mathcal{R}(U;\,C,\tau)
+ = \mathrm{tr}(\mathrm{Var}(Cx_{t+\tau}))
+ - \mathrm{tr}\!\bigl(\mathrm{Cov}(Cx_{t+\tau},z^\top)
+                       \mathrm{Cov}(z,z^\top)^{-1}
+                       \mathrm{Cov}(z,Cx_{t+\tau})\bigr)$
+gives
 \begin{equation}
   \mathcal{R}(U;\,C,\tau)
     = \tr(C\Sigma C^\top) - \tr\!\bigl(U\,M_{C,\tau}\,U^\top\bigr),
@@ -259,6 +276,17 @@ Outside $r$-coherence, the optimal observer is target-dependent.
 $r$-coherence is an algebraic equality between eigenspaces, not an
 approximate or asymptotic condition.
 It is the exact condition for a common optimal observer to exist.
+\end{remark}
+
+\begin{remark}
+$r$-coherence is strictly weaker than simultaneous diagonalisability of
+$\{M_k\}$: only the dominant $r$-dimensional eigenspace must coincide,
+not the full eigenbasis.
+Simultaneous diagonalisability (equivalently, pairwise commutativity
+$[M_i,M_j]=0$) implies $r$-coherence for every $r$, but not conversely.
+For generic $(A,\Sigma)$ and target families, the top-$r$ eigenspaces of
+distinct $M_k$ are distinct, so $r$-coherence is a non-generic condition
+absent structural alignment between the task family and the system.
 \end{remark}
 
 % -------------------------------------------------------------------------
@@ -370,9 +398,9 @@ per-target observers are necessary to achieve optimality.
 The Grassmannian $\Gr(r,n)$ is the literal domain of this optimisation:
 a compact Riemannian manifold on which observer quality is a smooth function,
 with $O(n)$ acting by transformation.
-The computation reduces to a single $n \times n$ eigendecomposition of
-$M_{C,\tau}$, independent of $\tau$ once $A^\tau$ is formed; $A^\tau$ is
-obtained in $O(n^3 \log \tau)$ operations by repeated squaring.
+For fixed $C$, the computation reduces to a single $n \times n$
+eigendecomposition of $M_{C,\tau}$ per horizon once $A^\tau$ is formed;
+$A^\tau$ is obtained in $O(n^3 \log \tau)$ operations by repeated squaring.
 
 \paragraph{What is not earned.}
 This result concerns optimal reduced linear observation for prediction; it
