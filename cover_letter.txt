@@ -1,0 +1,27 @@
+Dear Editor,
+
+Please consider the enclosed manuscript, "Task-Dependent Optimal Linear
+Observers in Linear Gaussian Dynamical Systems," for publication in
+Systems & Control Letters.
+
+The paper studies observer selection in stationary finite-dimensional
+linear Gaussian dynamical systems. Its main result is an exact
+characterization of target-dependent optimal rank-r linear observers:
+for prediction target C x(t+tau), the optimal observer is the top-r
+eigenspace of the associated target information matrix, and a common
+optimal observer across a target family exists if and only if the
+family is r-coherent.
+
+The manuscript is concise, theorem-driven, and scoped to fixed-rank
+linear observers and squared-error prediction in the LGDS setting.
+We believe this focus is well aligned with the aims of Systems &
+Control Letters.
+
+This manuscript is not under consideration elsewhere. No external
+funding was received for this work, and the author declares no
+competing interests.
+
+Thank you for your consideration.
+
+Sincerely,
+Kunal Bhatia

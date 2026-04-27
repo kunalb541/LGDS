@@ -1,0 +1,11 @@
+For a stationary linear Gaussian dynamical system, the rank-r linear
+observer minimizing squared-error prediction loss for target Cx(t+tau)
+has row space equal to the top-r eigenspace of the target information
+matrix M(C,tau) = Sigma^(1/2) (A^tau)^T C^T C A^tau Sigma^(1/2),
+uniquely up to eigenspace rotation. Two targets with distinct dominant
+eigenspaces admit no common optimal rank-r observer. A common optimal
+observer exists if and only if the target family is r-coherent: all
+information matrices share a common top-r eigenspace. This condition
+is exact, not asymptotic or approximate. Numerical illustrations at
+n = 8, r = 2 confirm a target-dependent case (Gamma = 0.026 > 0) and
+an r-coherent construction, both consistent with the theorem.
