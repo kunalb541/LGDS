@@ -27,8 +27,13 @@ The main theorem: a common optimal observer exists if and only if the target
 family is r-coherent. Outside r-coherence, the optimal observer is
 target-dependent.
 
-The proof is two lines: the Ky Fan variational principle gives the optimal
-subspace exactly; two distinct subspaces cannot be spanned by the same matrix.
+The single-target proof (Proposition 1 + Corollary 2) is two lines: Ky Fan
+gives the optimal subspace; two distinct subspaces cannot be spanned by the
+same matrix. Corollary 4 (the iff characterization) has an explicit
+forward/backward proof: the forward direction is immediate from the definition;
+the backward direction uses the strict-gap uniqueness of the top-*r* eigenspace
+to force all information matrices to share a common dominant eigenspace — that
+step is the non-trivial content.
 
 ## All computations are exact — no simulation
 
@@ -85,7 +90,7 @@ tests/test_lgds.py             # correctness tests
 - **Section 2** — System and observer family (stationary LGDS, Grassmannian)
 - **Section 3** — Theorem: Bayes risk formula → top-eigenspace optimality (Proposition 1)
   → target-dependent observer selection (Corollary 2) → r-coherence definition
-  and exact biconditional (Corollary 4)
+  and structural iff characterization with explicit proof (Corollary 4)
 - **Section 4** — Numerical illustrations: Condition A (target-dependent, Γ = 0.026 > 0),
   Condition B (r-coherent, max angle 0.000°, perturbation-robust)
 - **Section 5** — Scope
