@@ -75,7 +75,7 @@ of targets exists if and only if all information matrices share a common
 dominant eigenspace.
 
 This paper is not about dynamic observer synthesis in the Luenberger--Kalman
-sense \cite{Luenberger1971,Kailath1980}: the observer is a fixed rank-$r$
+sense \cite{Luenberger1971,OReilly1983,Kailath1980}: the observer is a fixed rank-$r$
 linear map $\phi_U(x)=U\Sigma^{-1/2}x$, and performance is squared-error
 prediction loss for a specified target $Cx_{t+\tau}$ at stationarity.
 The static case ($A=I$, $\tau=0$) recovers standard principal-subspace
@@ -190,6 +190,11 @@ The minimum risk is
 where $\lambda_1 \ge \cdots \ge \lambda_n$ are the eigenvalues of $M_{C,\tau}$.
 Uniqueness up to rotation holds when $\lambda_r > \lambda_{r+1}$.
 \end{proposition}
+
+Degeneracy at the gap ($\lambda_r = \lambda_{r+1}$) yields a continuum of
+optimal observers spanning the degenerate eigenspace; in practice, a generic
+target $(C,\tau)$ produces a strict spectral gap, making degeneracy
+non-generic for fixed $(A,\Sigma)$.
 
 \begin{proof}
 Minimising $\mathcal{R}$ is equivalent to maximising
@@ -328,6 +333,9 @@ Under $\varepsilon = \CondBPertEps$ perturbations to $C$
 (\CondBPertDraws{} random draws), the maximum principal angle across all
 draws and all pairs is $\CondBPertMaxRad$~rad---well below the fragility
 threshold of $\CondBPertThreshold$~rad, set at $1.5\varepsilon$.
+The threshold $1.5\varepsilon$ is a heuristic calibration; the direct
+numerical check confirms that the shared dominant eigenspace is robust to
+this level of perturbation in $C$.
 Structural coherence is perturbation-robust, distinguishing it from
 accidental near-coincidences of eigenspaces that break under small
 perturbations.
