@@ -74,6 +74,25 @@ information matrix $M_{C,\tau}$, and a common optimal observer across a family
 of targets exists if and only if all information matrices share a common
 dominant eigenspace.
 
+This paper is not about dynamic observer synthesis in the Luenberger--Kalman
+sense \cite{Luenberger1971,Kailath1980}: the observer is a fixed rank-$r$
+linear map $\phi_U(x)=U\Sigma^{-1/2}x$, and performance is squared-error
+prediction loss for a specified target $Cx_{t+\tau}$ at stationarity.
+The static case ($A=I$, $\tau=0$) recovers standard principal-subspace
+selection, but the main object here is the interaction of system dynamics,
+prediction horizon $\tau$, and observer rank through the information matrix
+$M_{C,\tau}$.
+
+Reduced representations for linear systems have been studied via principal
+components of Gramians \cite{Moore1981}, balanced truncation, and related
+model-reduction methods \cite{Antoulas2005}.
+Those works address reduced system descriptions or approximation error across
+all inputs and initial conditions.
+The present note asks a different question: given a prediction task family with
+possibly distinct information matrices $\{M_{C_k,\tau_k}\}$, when does one
+rank-$r$ observer remain exactly optimal for all targets, and when is
+target-dependent observer selection unavoidable?
+
 The Grassmannian $\Gr(r,n)$ is the natural parameter space for rank-$r$
 linear observers \cite{Edelman1998}, and observer quality---the trace
 $\tr(U M_{C,\tau} U^\top)$---is a smooth function on this manifold.
@@ -83,14 +102,14 @@ is achieved by the leading eigenspace of $M_{C,\tau}$, recovering
 principal-subspace selection \cite{Hotelling1933} in the static ($A=I$)
 case within the classical linear state-space framework \cite{Kailath1980}.
 
-The Ky Fan principle and eigenspace optimality are classical.
-The contribution here is the exact algebraic condition for when a single
-rank-$r$ observer is simultaneously optimal across a task family:
-$r$-coherence (Definition~\ref{def:rcoh}), stated as an exact biconditional
-in Corollary~\ref{cor:coherence}.
-When $r$-coherence fails, target-dependent observer selection is unavoidable,
-and the worst-case regret gap $\Gamma>0$ is computable from the closed-form
-Bayes risk formula.
+The Ky Fan variational principle and principal-subspace optimality are
+classical \cite{Fan1949,Hotelling1933}.
+The contribution here is the exact algebraic biconditional for the existence
+of a common optimal rank-$r$ observer across a prediction task family:
+$r$-coherence (Definition~\ref{def:rcoh}), stated precisely in
+Corollary~\ref{cor:coherence}.
+The regret gap $\Gamma$ provides a computable certificate of unavoidable
+suboptimality when $r$-coherence fails.
 
 The result is scoped to finite-dimensional LGDS, fixed-rank linear observers,
 and squared-error prediction targets.
@@ -338,7 +357,10 @@ $M_{C,\tau}$, independent of $\tau$ once $A^\tau$ is formed; $A^\tau$ is
 obtained in $O(n^3 \log \tau)$ operations by repeated squaring.
 
 \paragraph{What is not earned.}
-This result does not apply to nonlinear systems, non-Gaussian noise,
+This result concerns optimal reduced linear observation for prediction; it
+does not address dynamic observer synthesis, asymptotic state reconstruction,
+or feedback design.
+It also does not apply to nonlinear systems, non-Gaussian noise,
 nonlinear observers, or non-prediction tasks.
 The breakdown is structural: for non-Gaussian noise or nonlinear dynamics,
 the MMSE predictor is generally nonlinear and
