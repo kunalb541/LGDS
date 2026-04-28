@@ -26,7 +26,7 @@
 
 \begin{document}
 
-\title{Task-Dependent Optimal Linear Observers in
+\title{Task-Dependent Optimal Linear Projections in
        Linear Gaussian Dynamical Systems}
 
 \author{Kunal Bhatia \orcidlink{0009-0007-4447-6325}}
@@ -36,13 +36,13 @@
 
 \begin{abstract}
 For a stationary linear Gaussian dynamical system, the rank-$r$ linear
-observer minimizing squared-error prediction loss for target $Cx_{t+\tau}$
+projection minimizing squared-error prediction loss for target $Cx_{t+\tau}$
 has row space equal to the top-$r$ eigenspace of the target information
 matrix $M_{C,\tau} = \Sigma^{1/2}(A^\tau)^\top C^\top CA^\tau\Sigma^{1/2}$,
 uniquely up to eigenspace rotation.
 Two targets with distinct dominant eigenspaces admit no common optimal
-rank-$r$ observer.
-A common optimal observer exists if and only if the target family is
+rank-$r$ projection.
+A common optimal projection exists if and only if the target family is
 \emph{$r$-coherent}: all information matrices share a common top-$r$
 eigenspace.
 This condition is exact, not asymptotic or approximate.
@@ -52,8 +52,8 @@ with the theorem.
 \par\smallskip\noindent\textit{MSC 2020:} 93B07; 93E10; 15A18
 \end{abstract}
 
-\keywords{linear Gaussian dynamical systems, low-rank linear observers,
-optimal observation, Grassmannian, Ky Fan theorem}
+\keywords{linear Gaussian dynamical systems, low-rank linear projections,
+optimal prediction, Grassmannian, Ky Fan theorem}
 
 \maketitle
 
@@ -62,23 +62,23 @@ optimal observation, Grassmannian, Ky Fan theorem}
 % -------------------------------------------------------------------------
 
 A central question in observer design for linear dynamical systems is whether
-a single rank-$r$ linear observer can be simultaneously optimal for predicting
+a single rank-$r$ linear projection can be simultaneously optimal for predicting
 multiple output channels $\{C_k x_{t+\tau_k}\}$, or whether the optimal
-observer depends on the specific prediction target and horizon.
+projection depends on the specific prediction target and horizon.
 For finite-dimensional linear Gaussian dynamical systems (LGDS) at
-stationarity, this paper gives an exact answer: the optimal rank-$r$ observer
+stationarity, this paper gives an exact answer: the optimal rank-$r$ projection
 for predicting $Cx_{t+\tau}$ is the top-$r$ eigenspace of the target
-information matrix $M_{C,\tau}$, and a common optimal observer across a family
+information matrix $M_{C,\tau}$, and a common optimal projection across a family
 of targets exists if and only if all information matrices share a common
 dominant eigenspace.
 
 This paper is not about dynamic observer synthesis in the Luenberger--Kalman
-sense \cite{Luenberger1971,OReilly1983,Kailath1980}: the observer is a fixed rank-$r$
+sense \cite{Luenberger1971,OReilly1983,Kailath1980}: the projection is a fixed rank-$r$
 linear map $\phi_U(x)=U\Sigma^{-1/2}x$, and performance is squared-error
 prediction loss for a specified target $Cx_{t+\tau}$ at stationarity.
 The static case ($A=I$, $\tau=0$) recovers standard principal-subspace
 selection, but the main object here is the interaction of system dynamics,
-prediction horizon $\tau$, and observer rank through the information matrix
+prediction horizon $\tau$, and projection rank through the information matrix
 $M_{C,\tau}$.
 
 Reduced representations for linear systems have been studied via principal
@@ -94,13 +94,13 @@ characterising when a fixed low-rank map is simultaneously optimal
 across an entire task family.
 The present note asks precisely that structural question: given distinct
 prediction targets with information matrices $\{M_{C_k,\tau_k}\}$, when
-is one rank-$r$ observer simultaneously optimal for all of them, and when
+is one rank-$r$ projection simultaneously optimal for all of them, and when
 is target-dependent selection unavoidable?
 
 The Grassmannian $\Gr(r,n)$ is the natural parameter space for rank-$r$
-linear observers \cite{Edelman1998}, and observer quality---the trace
+linear projections \cite{Edelman1998}, and projection quality---the trace
 $\tr(U M_{C,\tau} U^\top)$---is a smooth function on this manifold.
-Optimal observer selection reduces to trace maximisation on $\Gr(r,n)$,
+Optimal projection selection reduces to trace maximisation on $\Gr(r,n)$,
 governed by the Ky Fan variational principle \cite{Fan1949}: the maximum
 is achieved by the leading eigenspace of $M_{C,\tau}$, recovering
 principal-subspace selection \cite{Hotelling1933} in the static ($A=I$)
@@ -112,21 +112,21 @@ The single-target result (Proposition~\ref{prop:opt}) applies Ky Fan to the
 target information matrix $M_{C,\tau}$, which identifies which directions of
 state space bear on a given prediction task.
 What is not resolved by classical eigenspace theory is the task-family
-question: when does a single rank-$r$ observer remain exactly optimal across
+question: when does a single rank-$r$ projection remain exactly optimal across
 a family of targets with possibly distinct information matrices?
 The structural characterization, given in Corollary~\ref{cor:coherence}, is
 $r$-coherence: its non-trivial content is the backward direction, which
-shows that any commonly optimal observer must be the unique top-$r$ eigenspace
+shows that any commonly optimal projection must be the unique top-$r$ eigenspace
 of each individual $M_k$, forcing all information matrices to share a common
 dominant eigenspace.
 The regret gap $\Gamma$ provides a computable certificate of unavoidable
 suboptimality when $r$-coherence fails.
 
-The result is scoped to finite-dimensional LGDS, fixed-rank linear observers,
+The result is scoped to finite-dimensional LGDS, fixed-rank linear projections,
 and squared-error prediction targets.
 
 % -------------------------------------------------------------------------
-\section{System and Observer Family}
+\section{System and Projection Family}
 % -------------------------------------------------------------------------
 
 \paragraph{Dynamics.}
@@ -141,19 +141,22 @@ $A \Sigma A^\top + Q = \Sigma$ and is strictly positive definite
 \cite{Kailath1980}; $\Sigma^{1/2}$ denotes its symmetric positive-definite
 square root.
 
-\paragraph{Observer family.}
-An observer of rank $r$ ($1 \le r < n$) is parametrised by a
-row-orthonormal matrix $U \in \R^{r \times n}$, $U U^\top = I_r$:
+\paragraph{Projection family.}
+A rank-$r$ projection is parametrised by a
+row-orthonormal matrix $U \in \R^{r \times n}$, $U U^\top = I_r$, via
 \begin{equation}
   \phi_U(x) = U \Sigma^{-1/2} x.
 \end{equation}
-Pre-whitening by $\Sigma^{-1/2}$ places all observers on a common isotropic
+Pre-whitening by $\Sigma^{-1/2}$ places all projections on a common isotropic
 footing; in the static case ($A=I$, $\tau=0$) this reduces to principal
 component analysis \cite{Hotelling1933}.
-Two observers differing only by an orthogonal rotation of their row spaces are
-equivalent; the observer space is the Grassmannian
+Two projections differing only by an orthogonal rotation of their row spaces are
+equivalent; the projection space is the Grassmannian
 $\Gr(r,n)$, a smooth compact Riemannian manifold of dimension $r(n-r)$,
 with metric and geodesic structure from $O(n)$ \cite{Edelman1998}.
+(The map $\phi_U$ is also called a \emph{linear observer} in the state-estimation
+literature \cite{Luenberger1971}; we use ``projection'' to distinguish it from
+dynamic observer synthesis.)
 
 \paragraph{Target family.}
 A prediction target is a pair $(C, \tau)$ with $C \in \R^{p \times n}$ and
@@ -205,18 +208,18 @@ $M_{C,0}=\Sigma^{1/2}C^\top C\Sigma^{1/2}$,
 which differs from the state covariance $\Sigma$ used by PCA unless
 $C=I_n$.
 For $C=e_k^\top$ (predicting one component), $M_{C,0}$ is rank-$1$ with
-eigenvector $e_k$ in the whitened basis: the optimal rank-$1$ observer
+eigenvector $e_k$ in the whitened basis: the optimal rank-$1$ projection
 captures the $k$-th whitened direction regardless of the state variance in
 other components, whereas PCA selects the maximum-variance direction.
 In the dynamic case, the rotation by $(A^\tau)^\top$ in $M_{C,\tau}$
 shifts the dominant eigenspace with~$\tau$: the same target $C$ admits a
-horizon-dependent optimal observer.
+horizon-dependent optimal projection.
 \end{remark}
 
 \subsection{Top-eigenspace optimality}
 
 \begin{proposition}\label{prop:opt}
-For fixed rank $r$, the observer minimising $\mathcal{R}(U;\,C,\tau)$ over
+For fixed rank $r$, the projection minimising $\mathcal{R}(U;\,C,\tau)$ over
 $\Gr(r,n)$ has row space equal to the top-$r$ eigenspace of $M_{C,\tau}$.
 The minimum risk is
 \begin{equation}
@@ -228,7 +231,7 @@ Uniqueness up to rotation holds when $\lambda_r > \lambda_{r+1}$.
 \end{proposition}
 
 Degeneracy at the gap ($\lambda_r = \lambda_{r+1}$) yields a continuum of
-optimal observers spanning the degenerate eigenspace; in practice, a generic
+optimal projections spanning the degenerate eigenspace; in practice, a generic
 target $(C,\tau)$ produces a strict spectral gap, making degeneracy
 non-generic for fixed $(A,\Sigma)$.
 
@@ -241,7 +244,7 @@ $\sum_{i=1}^r \lambda_i(M_{C,\tau})$, achieved exactly when the row space of
 $U$ spans the corresponding eigenspace.
 \end{proof}
 
-The \emph{task regret} of observer $U$ for target $(C,\tau)$ is the excess
+The \emph{task regret} of projection $U$ for target $(C,\tau)$ is the excess
 Bayes risk:
 \begin{equation}\label{eq:regret}
   \mathrm{Reg}(U;\,C,\tau)
@@ -287,11 +290,11 @@ and the second by $\lambda_{r+1}-\lambda_n$; the two $\|\sin\Theta\|_F^2$
 factors sum as written.
 \end{proof}
 
-\subsection{Target-dependent observer selection}
+\subsection{Target-dependent projection selection}
 
 \begin{corollary}\label{cor:noglobal}
 If targets $(C_1,\tau_1)$ and $(C_2,\tau_2)$ have information matrices
-$M_1$ and $M_2$ with distinct top-$r$ eigenspaces, no single rank-$r$ observer
+$M_1$ and $M_2$ with distinct top-$r$ eigenspaces, no single rank-$r$ projection
 is simultaneously optimal for both.
 \end{corollary}
 
@@ -302,7 +305,7 @@ Distinct eigenspaces cannot be spanned by the same $U$.
 \end{proof}
 
 The corollary extends to any finite target family: if $\{M_k\}$ do not share
-a common top-$r$ eigenspace, no common optimal rank-$r$ observer exists.
+a common top-$r$ eigenspace, no common optimal rank-$r$ projection exists.
 
 \subsection{\texorpdfstring{$r$}{r}-coherence: the exact exception}
 
@@ -313,29 +316,35 @@ share a common top-$r$ eigenspace $V^*$.
 \end{definition}
 
 \begin{corollary}\label{cor:coherence}
-A common optimal observer exists if and only if $\mathcal{T}$ is $r$-coherent.
+A common optimal rank-$r$ projection exists if and only if $\mathcal{T}$ is
+$r$-coherent.
+Under strict $r$-gaps ($\lambda_r(M_k)>\lambda_{r+1}(M_k)$ for all $k$),
+$r$-coherence means all $M_k$ share the same top-$r$ eigenspace.
+With degeneracies, it means there exists a common $r$-dimensional subspace
+within the dominant invariant subspace of each $M_k$.
 \end{corollary}
 
 \begin{proof}
-(\emph{If})\enspace If $\mathcal{T}$ is $r$-coherent with shared top-$r$
-eigenspace $V^*$, the observer with row space $V^*$ minimises
+(\emph{If})\enspace If $\mathcal{T}$ is $r$-coherent with common subspace
+$V^*$, the projection with row space $V^*$ minimises
 $\mathcal{R}(\cdot;\,C_k,\tau_k)$ for each $k$ by Proposition~\ref{prop:opt}.
 (\emph{Only if})\enspace If $U$ is simultaneously optimal for all $k$, then
-by Proposition~\ref{prop:opt}'s uniqueness (holding when
-$\lambda_r(M_k)>\lambda_{r+1}(M_k)$ for all $k$), the row space of $U$
-must equal the top-$r$ eigenspace of every $M_k$; hence all $M_k$ share
-that eigenspace and $\mathcal{T}$ is $r$-coherent.
+by the Ky Fan maximality condition its row space lies within the dominant
+invariant subspace of every $M_k$; hence all $M_k$ share a common
+$r$-dimensional subspace and $\mathcal{T}$ is $r$-coherent.
+Under strict $r$-gaps the dominant invariant subspace is unique of dimension
+$r$, so all $M_k$ share exactly the same top-$r$ eigenspace.
 \end{proof}
 
 $r$-coherence requires all targets to be functions of a common $r$-dimensional
 sufficient statistic across all prediction horizons---a strong alignment
 between the system dynamics and the task family.
-Outside $r$-coherence, the optimal observer is target-dependent.
+Outside $r$-coherence, the optimal projection is target-dependent.
 
 \begin{remark}
 $r$-coherence is an algebraic equality between eigenspaces, not an
 approximate or asymptotic condition.
-It is the exact condition for a common optimal observer to exist.
+It is the exact condition for a common optimal projection to exist.
 \end{remark}
 
 \begin{remark}
@@ -349,11 +358,11 @@ distinct $M_k$ are distinct, so $r$-coherence is a non-generic condition
 absent structural alignment between the task family and the system.
 \end{remark}
 
-\subsection{Minimax shared observer and approximate coherence}
+\subsection{Minimax shared projection and approximate coherence}
 \label{sec:minimax}
 
 For a task family $\mathcal{T}=\{(C_a,\tau_a)\}_{a=1}^m$, define the
-\emph{minimax shared observer} and \emph{minimax regret gap}:
+\emph{minimax shared projection} and \emph{minimax regret gap}:
 \begin{equation}\label{eq:mm}
   U_{\mathrm{mm}}
   = \arg\min_{U\in\Gr(r,n)}\max_a\,\mathrm{Reg}(U;\,C_a,\tau_a),
@@ -361,8 +370,8 @@ For a task family $\mathcal{T}=\{(C_a,\tau_a)\}_{a=1}^m$, define the
   \Gamma
   := \min_{U\in\Gr(r,n)}\max_a\,\mathrm{Reg}(U;\,C_a,\tau_a).
 \end{equation}
-$U_{\mathrm{mm}}$ is the best shared rank-$r$ observer in the worst-case sense;
-$\Gamma\ge 0$ is the unavoidable worst-case cost of any single observer.
+$U_{\mathrm{mm}}$ is the best shared rank-$r$ projection in the worst-case sense;
+$\Gamma\ge 0$ is the unavoidable worst-case cost of any single projection.
 
 \begin{corollary}\label{cor:gammazero}
 $\Gamma=0$ if and only if $\mathcal{T}$ is $r$-coherent.
@@ -401,7 +410,7 @@ All reported quantities are computed exactly from the analytic Bayes risk
 formula and numerical optimization on the Grassmannian.
 
 \paragraph{Setup.}
-State dimension $n=8$, observer rank $r=2$.
+State dimension $n=8$, projection rank $r=2$.
 The model is a finite-dimensional linear Gaussian dynamical system
 \cite{Kalman1960}.
 $A = VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$, random
@@ -420,13 +429,13 @@ $T_2 = ([e_5^\top;\,e_6^\top],\,5)$.\par}
 With non-normal $A$, $A^1$ and $A^5$ rotate state-space directions
 differently; the principal angles \cite{BjorckGolub1973} between the top-2
 eigenspaces of $M_1$ and $M_2$ are $\CondAAngleOne^\circ$ and
-$\CondAAngleTwo^\circ$, confirming that no single rank-2 observer is
+$\CondAAngleTwo^\circ$, confirming that no single rank-2 projection is
 simultaneously optimal.
 
 The task regret \eqref{eq:regret} and minimax gap $\Gamma$
 \eqref{eq:mm} are computed from the exact Bayes risk formula.
 By Corollary~\ref{cor:gammazero}, $\Gamma>0$ certifies non-$r$-coherence.
-The numerically computed minimax observer $U_{\mathrm{joint}}$
+The numerically computed minimax projection $U_{\mathrm{joint}}$
 achieves $\Gamma=\GammaCondA>0$; balanced regrets on both targets
 are a necessary condition for a minimax solution, consistent with the
 global minimum having been attained.
@@ -438,7 +447,7 @@ All values from the exact analytic Bayes risk formula.}
 \label{tab:condA}
 \begin{ruledtabular}
 \begin{tabular}{lcc}
-Observer & Regret on $T_1$ & Regret on $T_2$ \\
+Projection & Regret on $T_1$ & Regret on $T_2$ \\
 \hline
 $U^*_1$ (optimal for $T_1$) & \CondARegretUoneTa & \CondARegretUoneTb \\
 $U^*_2$ (optimal for $T_2$) & \CondARegretUtwoTa & \CondARegretUtwoTb \\
@@ -453,7 +462,7 @@ eigenspace by design: normal $A_{\mathrm{sym}} = VDV^\top$ with orthogonal
 $V$, and a common $C$ whose rows are the top-2 eigenvectors of $A$, varying
 only the prediction horizon $\tau \in \{1,2,3,5\}$.
 Under this construction $M_{C,\tau}$ has the same dominant 2-dimensional
-eigenspace for all $\tau$, so the four optimal observers are identical by the
+eigenspace for all $\tau$, so the four optimal projections are identical by the
 theorem.
 The maximum pairwise principal angle across all four is
 $\CondBMaxAngleDeg^\circ$ to machine precision.
@@ -462,12 +471,11 @@ Under $\varepsilon = \CondBPertEps$ perturbations to $C$
 (\CondBPertDraws{} random draws), the maximum principal angle across all
 draws and all pairs is $\CondBPertMaxRad$~rad---well below the fragility
 threshold of $\CondBPertThreshold$~rad, set at $1.5\varepsilon$.
-The threshold $1.5\varepsilon$ is a heuristic calibration; the direct
-numerical check confirms that the shared dominant eigenspace is robust to
-this level of perturbation in $C$.
-Structural coherence is perturbation-robust, distinguishing it from
-accidental near-coincidences of eigenspaces that break under small
-perturbations.
+The threshold $1.5\varepsilon$ is a heuristic calibration.
+In this constructed example, the shared dominant eigenspace remains stable
+under the tested perturbations, illustrating that approximate coherence can
+be quantified via principal angles (Corollary~\ref{cor:approxcoh}) rather
+than requiring exact eigenspace equality.
 
 The numerical results are consistent with the theorem in all cases.
 
@@ -476,22 +484,22 @@ The numerical results are consistent with the theorem in all cases.
 % -------------------------------------------------------------------------
 
 \paragraph{What is earned.}
-In stationary finite-dimensional LGDS, among rank-$r$ linear observers
+In stationary finite-dimensional LGDS, among rank-$r$ linear projections
 $\phi_U(x)=U\Sigma^{-1/2}x$ and squared-error prediction targets
-$y=Cx_{t+\tau}$, no common optimal rank-$r$ observer exists unless the
+$y=Cx_{t+\tau}$, no common optimal rank-$r$ projection exists unless the
 target family is $r$-coherent.
 $r$-coherence requires all prediction targets to be functions of a common
 $r$-dimensional sufficient statistic across all horizons---a strong alignment
 between the system dynamics and the task family.
-Outside $r$-coherence, no common optimal observer exists, and the cost of
-applying any fixed observer to a non-native target is given exactly by the
+Outside $r$-coherence, no common optimal projection exists, and the cost of
+applying any fixed projection to a non-native target is given exactly by the
 Bayes risk formula.
-In observer design workflows where a single rank-$r$ map must serve multiple
+In design workflows where a single rank-$r$ map must serve multiple
 prediction channels, $\Gamma$ is therefore a computable lower bound on
-worst-case suboptimality under any shared observer: if $\Gamma>0$, dedicated
-per-target observers are necessary to achieve optimality.
+worst-case suboptimality under any shared projection: if $\Gamma>0$, dedicated
+per-target projections are necessary to achieve optimality.
 The Grassmannian $\Gr(r,n)$ is the literal domain of this optimisation:
-a compact Riemannian manifold on which observer quality is a smooth function,
+a compact Riemannian manifold on which projection quality is a smooth function,
 with $O(n)$ acting by transformation.
 For fixed $C$, the computation reduces to a single $n \times n$
 eigendecomposition of $M_{C,\tau}$ per horizon once $A^\tau$ is formed;
@@ -508,16 +516,16 @@ the MMSE predictor is generally nonlinear and
 Proposition~\ref{prop:opt}'s trace maximisation has no closed-form counterpart;
 for nonlinear observers, the Grassmannian parametrisation and the Ky Fan
 principle both cease to apply.
-The causal axis---whether the observer optimal for intervention differs from
-the observer optimal for prediction---is not addressed here.
+The causal axis---whether the projection optimal for intervention differs from
+the projection optimal for prediction---is not addressed here.
 
 \paragraph{Extensions.}
 The linear Gaussian setting admits closed-form analysis because the MMSE
 predictor is linear, the stationary distribution is Gaussian, and the
-optimal observer reduces to a single eigendecomposition.
+optimal projection reduces to a single eigendecomposition.
 Whether analogous shared-eigenspace conditions characterise common optimal
-observers in non-Gaussian or nonlinear systems, and whether intervention
-objectives impose additional constraints on observer selection, are open
+projections in non-Gaussian or nonlinear systems, and whether intervention
+objectives impose additional constraints on projection selection, are open
 questions beyond the scope of the present result.
 
 % -------------------------------------------------------------------------
