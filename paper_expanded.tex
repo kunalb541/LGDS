@@ -546,7 +546,7 @@ on the task functional.
 When the causal family $\{K_i\}$ has $\dim\mathrm{span}\{u_i\}>r$ (i.e.
 fails $r$-coverability), no projector achieves global causal optimum
 simultaneously.
-The relevant question becomes \emph{approximate} causal observer
+The relevant question becomes \emph{approximate} causal projection
 selection: how close to optimal can a single rank-$r$ projector come
 across the family, and is there a tractable surrogate for the
 non-Ky--Fan operator-norm objective?
@@ -983,14 +983,21 @@ the iff conditions of Theorems~\ref{thm:pred} and~\ref{thm:caus} are
 testable: $r$-coherence by checking equality of top-$r$ eigenspaces;
 $r$-coverability by computing $\dim\mathrm{span}\{u_i\}$ in the
 simple-top case.
-When neither holds, the regret gap $\Gamma_{\mathrm{pred}}>0$ or the
-weak-glue regret $\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
-provides a computable lower bound on unavoidable suboptimality of any
-single projection.
-$\Gamma=0$ is the certificate of structural alignment between the system
-dynamics and the task family; $\Gamma>0$ is the certificate that
-dedicated per-target projections are necessary to achieve global
-optimum.
+When neither exact condition holds, the two structural quantities
+play different roles:
+$\Gamma_{\mathrm{pred}}\ge 0$ is the minimax \emph{unavoidable
+worst-case} predictive suboptimality of any single projection
+(Corollary~\ref{cor:approxcoh}; $\Gamma_{\mathrm{pred}}>0$ certifies
+non-coherence and quantifies the inherent task-family gap), while
+the weak-glue expression
+$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
+\emph{upper-bounds} the loss incurred by replacing the true causal
+optimiser $P_F^\star$ with the surrogate optimiser $P_B^\star$
+(Theorem~\ref{thm:instancereg}).
+$\Gamma_{\mathrm{pred}}=0$ is the certificate of structural
+alignment between the system dynamics and the predictive task
+family; $\Gamma_{\mathrm{pred}}>0$ is the certificate that dedicated
+per-target projections are necessary for predictive optimality.
 
 % =========================================================================
 \section*{Acknowledgements}
