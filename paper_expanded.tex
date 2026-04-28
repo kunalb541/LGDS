@@ -35,51 +35,51 @@
 
 \begin{frontmatter}
 
-\title{Common Optimal Finite-Rank Projections:\\
-       Coherence, Coverability, and Regret}
+\title{Coherence, Coverability, and Regret for\\
+       Finite-Rank Projections of PSD Families}
 
 \author{Kunal Bhatia}
 \address{Independent Researcher, Heidelberg, Germany\\
 ORCID: \href{https://orcid.org/0009-0007-4447-6325}{0009-0007-4447-6325}}
 
 \begin{abstract}
-For a finite family of positive semidefinite (PSD) target operators on
-$\R^d$ and a fixed rank $r$, we ask when a single rank-$r$ orthogonal
-projection is simultaneously optimal for every target under two natural
-scoring rules: the \emph{predictive} Ky--Fan trace
-$S^{\mathrm{pred}}_t(P)=\tr(P M_t)$ and the \emph{causal} operator norm
-$S^{\mathrm{caus}}_t(P)=\lambda_{\max}(P K_t P)$.
-Existence of a common optimal projection under $S^{\mathrm{pred}}$ is
-equivalent to \emph{$r$-coherence}---all $M_t$ share a common dominant
+For a finite family of positive semidefinite (PSD) operators on $\R^d$
+and a fixed rank $r$, we ask when a single rank-$r$ orthogonal
+projection is simultaneously optimal for every operator under two
+natural scoring rules: the \emph{trace} score
+$S^{\mathrm{tr}}_t(P)=\tr(P M_t)$ (Ky Fan), and the \emph{operator-norm}
+score $S^{\mathrm{op}}_t(P)=\lambda_{\max}(P K_t P)$.
+Existence of a common optimal projection under the trace score is
+equivalent to \emph{$r$-coherence}: all $M_t$ share a common dominant
 $r$-dimensional invariant subspace.
-Existence of a common optimal projection under $S^{\mathrm{caus}}$ is
-equivalent to \emph{$r$-coverability}---a single rank-$r$ subspace
+Existence of a common optimal projection under the operator-norm score
+is equivalent to \emph{$r$-coverability}: a single rank-$r$ subspace
 nontrivially intersects the leading eigenspace of every $K_t$.
-$r$-coherence implies $r$-coverability but the converse fails; a $3\times 3$
-witness exhibits the strict gap.
-When coverability fails over a finite-support regime of local PSD
-response operators $\{A_i\}$, the eigenvalue-weighted surrogate
+$r$-coherence implies $r$-coverability but the converse fails; a
+$3\times 3$ witness exhibits the strict gap (the \emph{fork}).
+When coverability fails for a finite-support regime $\{A_i\}$ of local
+PSD operators, the eigenvalue-weighted surrogate
 $B_\lambda=\sum_i w_i\lambda_1(A_i)u_iu_i^\top$ (with $u_i$ the leading
 eigenvector of $A_i$) provides a Ky--Fan-tractable approximation of the
-causal landscape; we prove a sandwich
+regime-averaged operator-norm objective; we prove a sandwich
 $\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$
 and an instance-dependent regret bound
 $F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
-that is tight in three structural regimes (rank-$1$ $A_i$,
-$r$-coverable case, common-shape family).
+tight in three regimes (rank-$1$ $A_i$, $r$-coverable case,
+common-shape family).
 Numerical illustrations include a stationary linear Gaussian dynamical
 system certifying non-coherence ($\Gamma=\GammaCondA>0$), the $3\times 3$
-fork witness in which a common optimal projection exists under
-$S^{\mathrm{caus}}$ but not under $S^{\mathrm{pred}}$, and a $3\times 3$
-weak-glue counterexample in which the coarse regret bound overestimates
-the true regret by a factor of $36$.
+fork witness in which a common optimum exists under the operator-norm
+score but not under the trace score, and a $3\times 3$ surrogate
+counterexample in which the coarse regret bound overestimates the true
+regret by a factor of $36$.
 \end{abstract}
 
 \begin{keyword}
-finite-rank projection \sep Grassmannian \sep Ky Fan theorem \sep
-$r$-coherence \sep $r$-coverability \sep operator-norm objective
-\sep regret bound
-\MSC[2020] 93B07 \sep 15A18 \sep 93E10 \sep 90C26
+PSD families \sep finite-rank projection \sep Grassmannian \sep
+Ky Fan theorem \sep common principal subspace \sep operator-norm
+\sep $r$-coherence \sep $r$-coverability \sep regret bound
+\MSC[2020] 15A18 \sep 15B48 \sep 90C26 \sep 93B07
 \end{keyword}
 
 \end{frontmatter}
@@ -88,30 +88,31 @@ $r$-coherence \sep $r$-coverability \sep operator-norm objective
 \section{Introduction}
 % =========================================================================
 
-A recurrent structural question in observer design, sensor selection, and
-reduced-order modelling is whether a single low-rank linear projection can
-serve simultaneously as the optimal observation map for an entire family of
-prediction or intervention tasks, or whether the optimal projection is
-inherently task-dependent.
-The answer turns out to depend not only on the family of targets but on
-\emph{which scoring rule} is used to measure observer quality.
+A recurrent structural question in low-rank approximation, sensor /
+output selection, and reduced-order modelling is whether a single
+rank-$r$ orthogonal projection can be simultaneously optimal for an
+entire finite family of positive semidefinite (PSD) targets, or whether
+the optimal projection is inherently task-dependent.
+The answer depends not only on the family but on \emph{which scoring
+rule} measures projection quality.
 
-For a fixed projector rank $r$ and a state space $\R^d$, two scoring rules
-are natural and arise in different contexts:
+For fixed rank $r$ on $\R^d$, two PSD-objective scoring rules are
+natural:
 \begin{itemize}
-\item the \emph{predictive trace} $S^{\mathrm{pred}}_t(P) = \tr(P M_t)$,
-which corresponds to squared-error prediction risk in linear Gaussian
-settings and is governed by the Ky Fan variational principle
-\cite{Fan1949};
-\item the \emph{causal operator norm} $S^{\mathrm{caus}}_t(P) =
-\lambda_{\max}(P K_t P)$, which corresponds to the strongest accessible
-intervention response under projector $P$, with $K_t$ a local
-output Gram or causal-response operator.
+\item the \emph{trace} score $S^{\mathrm{tr}}_t(P)=\tr(PM_t)$, governed
+by the Ky Fan variational principle \cite{Fan1949};
+\item the \emph{operator-norm} score $S^{\mathrm{op}}_t(P)
+=\lambda_{\max}(PK_tP)$, governed by the Rayleigh quotient
+characterisation of the largest eigenvalue.
 \end{itemize}
-
-This paper establishes, for arbitrary finite PSD families $\{M_t\}$ and
-$\{K_t\}$, a structural answer to the existence question for each
-scoring rule, and characterises the gap between them.
+The trace score corresponds to squared-error prediction risk in linear
+Gaussian settings (\S\ref{sec:pred}); the operator-norm score admits a
+local linearised intervention-response motivation (\S\ref{sec:caus}).
+The underlying variational ingredients are classical
+\cite{Fan1949,HornJohnson2013}; the contribution of this paper is to
+place the two common-optimality laws side by side, prove the strict
+coherence/coverability fork, and develop the weak-glue surrogate regret
+analysis when neither exact condition holds.
 
 \paragraph{Contribution}
 The first two results are structural consequences of classical
@@ -120,23 +121,27 @@ side-by-side comparison, the strict gap between them, and the regret
 analysis when neither exact condition holds.
 
 \begin{enumerate}
-\item \emph{Predictive simultaneous optimality} (Theorem~\ref{thm:pred}):
+\item \emph{Trace-score common optimality} (Theorem~\ref{thm:pred}):
 a direct consequence of the Ky Fan trace maximum.
-A single rank-$r$ projection is simultaneously optimal for all predictive
-targets $\{M_t\}$ if and only if the family is \emph{$r$-coherent}: all
-$M_t$ share a common dominant $r$-dimensional invariant subspace
-(equivalently, share a top-$r$ eigenspace under strict $r$-gap).
-The LGDS Bayes-risk instance is recovered as a corollary.
+A single rank-$r$ projection is simultaneously optimal for all
+trace-score targets $\{M_t\}$ if and only if the family is
+\emph{$r$-coherent}: all $M_t$ share a common dominant $r$-dimensional
+invariant subspace (equivalently, share a top-$r$ eigenspace under
+strict $r$-gap).
+The squared-error linear Gaussian dynamical systems (LGDS) Bayes-risk
+instance is recovered as a corollary.
 
-\item \emph{Causal simultaneous optimality} (Theorem~\ref{thm:caus}):
+\item \emph{Operator-norm common optimality} (Theorem~\ref{thm:caus}):
 a direct consequence of the rank-$1$-driven structure of the
 operator-norm maximiser.
 A single rank-$r$ projection is simultaneously optimal for all
-causal/operator-norm targets $\{K_t\}$ if and only if the family is
+operator-norm targets $\{K_t\}$ if and only if the family is
 \emph{$r$-coverable}: some rank-$r$ subspace intersects $\Emax(K_t)$
 nontrivially for every $t$.
-``Causal'' here refers to local linearised intervention response
-(Section~\ref{sec:caus}), not to statistical causal identification.
+The operator-norm score has a local linearised intervention-response
+interpretation (\S\ref{sec:caus}); ``intervention'' here refers to the
+linearised response-Gram setting and not to statistical causal
+identification.
 
 \item \emph{The fork} (Theorem~\ref{thm:fork}): For a single PSD family,
 $r$-coherence implies $r$-coverability strictly.
@@ -185,9 +190,10 @@ suboptimality when neither exact condition holds.
 \paragraph{Outline}
 Section~\ref{sec:setup} gives the setup, the two scoring rules, and the
 notion of a common optimal rank-$r$ projection.
-Section~\ref{sec:pred} proves the predictive theorem and instantiates it
-in LGDS, recovering the Bayes-risk formula and the regret-angle bound.
-Section~\ref{sec:caus} proves the causal theorem.
+Section~\ref{sec:pred} proves the trace-score theorem and instantiates
+it in LGDS, recovering the Bayes-risk formula and the regret-angle bound.
+Section~\ref{sec:caus} proves the operator-norm theorem and gives the
+local linearised intervention-response motivation.
 Section~\ref{sec:fork} proves the fork.
 Section~\ref{sec:weakglue} develops the weak-glue surrogate.
 Section~\ref{sec:numerics} gives numerical illustrations.
@@ -238,25 +244,26 @@ Two projectors with the same range are equivalent on $\Gr(r,d)$.
 A \emph{target family} $\mathcal{T}$ indexes the tasks.
 Each $t\in\mathcal{T}$ induces two PSD operators on $\R^d$:
 \begin{itemize}
-\item a \emph{predictive target operator} $M_t \succeq 0$,
-\item a \emph{causal/operator-norm target operator} $K_t \succeq 0$.
+\item a \emph{trace-score target operator} $M_t\succeq 0$,
+\item an \emph{operator-norm target operator} $K_t\succeq 0$.
 \end{itemize}
-``Causal'' here is shorthand for the local linearised
-intervention-response setting derived in Section~\ref{sec:caus};
-it is not intended to denote statistical causal identification, do-calculus,
-or counterfactual inference.
 The two scoring rules considered are:
 \begin{equation}\label{eq:scores}
-S^{\mathrm{pred}}_t(P) := \tr(P M_t),
+S^{\mathrm{tr}}_t(P) := \tr(P M_t),
 \qquad
-S^{\mathrm{caus}}_t(P) := \lambda_{\max}(P K_t P).
+S^{\mathrm{op}}_t(P) := \lambda_{\max}(P K_t P).
 \end{equation}
-The predictive score is the Ky Fan trace; it is a smooth (analytic)
-function of $P\in\Gr(r,d)$.
-The causal score is the operator norm of $P K_t P$; it is continuous and
-$1$-Lipschitz in the operator norm of $P$, but smooth only on the
-Grassmannian stratum where the leading eigenvalue of $P K_t P$ is simple,
-with non-smooth points at eigenvalue crossings \cite{HornJohnson2013}.
+The trace score is the Ky Fan trace; it is a smooth (analytic) function
+of $P\in\Gr(r,d)$.
+The operator-norm score is the largest eigenvalue of $PK_tP$; it is
+continuous and $1$-Lipschitz in the operator norm of $P$, but smooth
+only on the Grassmannian stratum where the leading eigenvalue of $PK_tP$
+is simple, with non-smooth points at eigenvalue crossings
+\cite{HornJohnson2013}.
+The operator-norm score is sometimes referred to as the
+\emph{intervention-response} score in the local-linearised setting of
+\S\ref{sec:caus}; ``intervention'' here means local linearised
+intervention-response, not statistical causal identification.
 
 \paragraph{Spectral subspaces}
 \begin{definition}[Dominant invariant subspace; leading eigenspace]
@@ -295,7 +302,7 @@ on the family if so.
 The two scoring rules give different answers.
 
 % =========================================================================
-\section{Predictive Global Privilege via \texorpdfstring{$r$}{r}-coherence}
+\section{Trace-Score Common Optimality via \texorpdfstring{$r$}{r}-Coherence}
 \label{sec:pred}
 % =========================================================================
 
@@ -311,9 +318,9 @@ this is equivalent to the equality of the top-$r$ eigenspaces of all
 $M_t$.
 \end{definition}
 
-\begin{theorem}[Predictive simultaneous optimality]\label{thm:pred}
+\begin{theorem}[Trace-score common optimality]\label{thm:pred}
 A common optimal rank-$r$ projection for the PSD family $\{M_t\}$ under
-$S^{\mathrm{pred}}$ exists if and only if $\{M_t\}$ is $r$-coherent.
+$S^{\mathrm{tr}}$ exists if and only if $\{M_t\}$ is $r$-coherent.
 \end{theorem}
 
 \begin{proof}
@@ -354,13 +361,14 @@ treats $\{M_t\}$ as exact PSD inputs.
 \begin{remark}[Genericity]
 For generic $\{M_t\}$, distinct $M_t$ have distinct top-$r$ eigenspaces.
 $r$-coherence is therefore a non-generic algebraic condition; outside
-$r$-coherence, the predictive optimum is target-dependent.
+$r$-coherence, the trace-score optimum is target-dependent.
 \end{remark}
 
 \subsection{LGDS instantiation}
 
-The predictive theorem's classical instance is the stationary linear
-Gaussian dynamical system (LGDS) with squared-error prediction loss.
+The trace-score theorem's classical instance is the stationary linear
+Gaussian dynamical system (LGDS) with squared-error prediction loss
+(``predictive'' is the appropriate adjective in this LGDS instance).
 Let
 \begin{equation}
 x_{t+1} = A x_t + \xi_t, \qquad \xi_t\sim\mathcal{N}(0,Q),
@@ -408,9 +416,9 @@ $\tr(U M_{C,\tau} U^\top)=\tr(P M_{C,\tau})$ where $P=U^\top U$.
 Theorem~\ref{thm:pred} applied to the LGDS family
 $\{M_{C_k,\tau_k}\}$ gives:
 
-\begin{corollary}[LGDS predictive iff]
-A common rank-$r$ projection minimising squared-error prediction risk for
-every $(C_k,\tau_k)\in\mathcal{T}$ exists if and only if
+\begin{corollary}[LGDS prediction iff]
+A common rank-$r$ projection minimising squared-error prediction risk
+for every $(C_k,\tau_k)\in\mathcal{T}$ exists if and only if
 $\{M_{C_k,\tau_k}\}$ is $r$-coherent.
 \end{corollary}
 
@@ -457,17 +465,17 @@ The upper bound follows by bounding the two coefficients by $\lambda_1
 -\lambda_{r+1}$ and $\lambda_{r+1}-\lambda_d$ respectively.
 \end{proof}
 
-\begin{corollary}[Approximate predictive coherence]\label{cor:approxcoh}
-For a finite predictive family $\{M_a\}$, define the \emph{minimax
-predictive regret}
+\begin{corollary}[Approximate $r$-coherence]\label{cor:approxcoh}
+For a finite trace-score family $\{M_a\}$, define the \emph{minimax
+trace-score regret}
 \begin{equation}\label{eq:gamma}
-\Gamma_{\mathrm{pred}}
+\Gamma_{\mathrm{tr}}
 := \min_{P\in\Gr(r,d)}\,\max_a\,\Reg(P;\,M_a).
 \end{equation}
-$\Gamma_{\mathrm{pred}}=0$ iff $\{M_a\}$ is $r$-coherent.
+$\Gamma_{\mathrm{tr}}=0$ iff $\{M_a\}$ is $r$-coherent.
 If there exists $P\in\Gr(r,d)$ with $\|\sin\Theta(P,P_a^\star)\|_F^2
 \le\varepsilon^2$ for every $a$, then
-$\Gamma_{\mathrm{pred}}\le\Lambda\,\varepsilon^2$, where
+$\Gamma_{\mathrm{tr}}\le\Lambda\,\varepsilon^2$, where
 $\Lambda:=\max_a[\lambda_1(M_a)-\lambda_d(M_a)]$.
 \end{corollary}
 
@@ -478,13 +486,13 @@ uniformly in $a$.
 \end{proof}
 
 % =========================================================================
-\section{Causal Global Privilege via \texorpdfstring{$r$}{r}-coverability}
+\section{Operator-Norm Common Optimality via \texorpdfstring{$r$}{r}-Coverability}
 \label{sec:caus}
 % =========================================================================
 
 \subsection{Motivation for the operator-norm score}
 
-The causal score $\lambda_{\max}(PK_tP)$ is not a Ky Fan trace.
+The operator-norm score $\lambda_{\max}(PK_tP)$ is not a Ky Fan trace.
 A natural setting is local linearised intervention: at state $x$, an
 input perturbation $\delta u\in\R^q$ induces $\delta y=J_x\delta u$, and
 a rank-$r$ projection $P$ restricts which output directions are visible.
@@ -503,7 +511,7 @@ recover the strongest linear effect rather than aggregate sensitivity.
 
 \subsection{Local maximiser structure}
 
-\begin{proposition}[Fixed-target causal maximiser]\label{prop:localmax}
+\begin{proposition}[Fixed-target operator-norm maximiser]\label{prop:localmax}
 For fixed PSD $K\succeq 0$ on $\R^d$ with leading invariant subspace
 $\Emax(K)$ (the eigenspace of $\lambda_1(K)$),
 \begin{equation}\label{eq:localmax}
@@ -522,15 +530,15 @@ This supremum equals $\lambda_1(K)$ iff $\ran(P)$ contains a unit vector
 in $\Emax(K)$, i.e., $\ran(P)\cap\Emax(K)\ne\{0\}$.
 \end{proof}
 
-The contrast with the predictive case is sharp: under
-$S^{\mathrm{pred}}=\tr(PM)$ the optimal $P$ must have its range
+The contrast with the trace-score case is sharp: under
+$S^{\mathrm{tr}}=\tr(PM)$ the optimal $P$ must have its range
 \emph{equal to} a dominant $r$-dimensional invariant subspace of $M$;
-under $S^{\mathrm{caus}}=\lambda_{\max}(PKP)$ it suffices that
+under $S^{\mathrm{op}}=\lambda_{\max}(PKP)$ it suffices that
 $\ran(P)$ \emph{intersects} the leading invariant subspace of $K$
 nontrivially.
 The local problem is rank-$1$-driven regardless of $r$.
 
-\subsection{\texorpdfstring{$r$}{r}-coverability and the causal theorem}
+\subsection{\texorpdfstring{$r$}{r}-coverability and the operator-norm theorem}
 
 \begin{definition}[$r$-coverability]\label{def:cov}
 A PSD family $\{K_t\}$ is \emph{$r$-coverable} if there exists a rank-$r$
@@ -539,14 +547,14 @@ When each $K_t$ has a simple top eigenvalue with top eigenvector $u_t$,
 $r$-coverability reduces to $\dim\mathrm{span}\{u_t\}\le r$.
 \end{definition}
 
-\begin{theorem}[Causal simultaneous optimality]\label{thm:caus}
+\begin{theorem}[Operator-norm common optimality]\label{thm:caus}
 A common optimal rank-$r$ projection for the PSD family $\{K_t\}$ under
-$S^{\mathrm{caus}}$ exists if and only if $\{K_t\}$ is $r$-coverable.
+$S^{\mathrm{op}}$ exists if and only if $\{K_t\}$ is $r$-coverable.
 \end{theorem}
 
 \begin{proof}
 By Proposition~\ref{prop:localmax}, $P^\star$ is a common optimal rank-$r$
-projection under $S^{\mathrm{caus}}$ iff $\ran(P^\star)\cap\Emax(K_t)\ne\{0\}$
+projection under $S^{\mathrm{op}}$ iff $\ran(P^\star)\cap\Emax(K_t)\ne\{0\}$
 for every $t$.
 Existence of such a rank-$r$ subspace is the definition of
 $r$-coverability.
@@ -591,8 +599,8 @@ $\mu=\sum_i w_i\delta_{x_i}$ on a state space, with $K_i:=K_{x_i}$ having
 simple top eigenvalues and top eigenvectors $u_i$.
 Then $\{K_i\}$ is $r$-coverable iff $\dim\mathrm{span}\{u_i\}\le r$.
 In that case any $P^\star$ whose range contains $\mathrm{span}\{u_i\}$
-achieves the global causal optimum
-$S^{\mathrm{caus}}_i(P^\star)=\lambda_1(K_i)$ for every $i$.
+achieves the global operator-norm optimum
+$S^{\mathrm{op}}_i(P^\star)=\lambda_1(K_i)$ for every $i$.
 This regime is informally called \emph{strong glue}.
 \end{corollary}
 
@@ -608,7 +616,7 @@ Direct from Definition~\ref{def:cov} and Proposition~\ref{prop:localmax}.
 The two structural conditions are not interchangeable.
 We write a single PSD family as $\{T_t\}$ in this section, isolating the
 algebraic relation between $r$-coherence and $r$-coverability from the
-predictive ($M_t$) vs.\ causal ($K_t$) interpretations of
+trace-score ($M_t$) vs.\ operator-norm ($K_t$) interpretations of
 \S\ref{sec:pred}--\ref{sec:caus}.
 
 \begin{theorem}[Coherence implies coverability strictly]\label{thm:fork}
@@ -647,18 +655,17 @@ rank-$2$ subspace is contained in both top-$2$ eigenspaces; the family
 is not $2$-coherent.
 \end{proof}
 
-\begin{remark}[Predictive--causal dissociation]
+\begin{remark}[Trace vs operator-norm dissociation]
 \label{rem:dissoc}
 Theorem~\ref{thm:fork} establishes an algebraic gap between coherence and
 coverability for a single PSD family.
-In a setting where the predictive operators $\{M_t\}$ and causal operators
-$\{K_t\}$ are different functions of the same task index (as is generally
-the case: $M_t$ encodes a prediction objective and $K_t$ a local
-intervention response), the two existence conditions decouple.
-A common optimal projection under $S^{\mathrm{caus}}$ can exist while no
-common optimal projection under $S^{\mathrm{pred}}$ does, and vice versa:
-the existence law for a common optimal projection depends on the task
-functional.
+In a setting where the trace and operator-norm operators
+$\{M_t\}$, $\{K_t\}$ are different functions of the same task index, the
+two existence conditions decouple.
+A common optimal projection under $S^{\mathrm{op}}$ can exist while no
+common optimal projection under $S^{\mathrm{tr}}$ does, and vice versa:
+the existence law for a common optimal projection depends on the
+scoring rule, not just the family.
 \end{remark}
 
 % =========================================================================
@@ -666,16 +673,16 @@ functional.
 \label{sec:weakglue}
 % =========================================================================
 
-When the causal family $\{K_i\}$ has $\dim\mathrm{span}\{u_i\}>r$ (i.e.
-fails $r$-coverability), no projector achieves global causal optimum
-simultaneously.
-The relevant question becomes \emph{approximate} causal projection
-selection: how close to optimal can a single rank-$r$ projector come
-across the family, and is there a tractable surrogate for the
-non-Ky--Fan operator-norm objective?
+When the operator-norm family $\{K_i\}$ has $\dim\mathrm{span}\{u_i\}>r$
+(i.e.\ fails $r$-coverability), no projector achieves the global
+operator-norm optimum simultaneously.
+The relevant question becomes \emph{approximate} common optimality under
+the operator-norm score: how close to optimal can a single rank-$r$
+projection come across the family, and is there a tractable surrogate
+for the non-Ky--Fan operator-norm objective?
 The construction in this section is informally called \emph{weak glue}.
-We emphasise that the bounds developed here control the \emph{value
-regret} $F(P_F^\star)-F(P_B^\star)$, not the subspace distance
+The bounds developed here control \emph{value regret}
+$F(P_F^\star)-F(P_B^\star)$, not subspace distance
 $\|\sin\Theta(P_F^\star,P_B^\star)\|$; as the $d=3$ counterexample of
 Section~\ref{sec:numerics} shows, value and subspace can be discrepant
 (small value gap, substantial subspace gap).
@@ -694,17 +701,17 @@ in place of $u_i u_i^\top$ and are outside the scope of this section.
 The regime-averaged operator-norm score and its surrogate are:
 \begin{align}
 F(P) &:= \sum_{i=1}^N w_i\,\lambda_{\max}(P A_i P)
-        =\sum_{i=1}^N w_i\,S^{\mathrm{caus}}_i(P), \label{eq:F}\\
+        =\sum_{i=1}^N w_i\,S^{\mathrm{op}}_i(P), \label{eq:F}\\
 \tilde F(P) &:= \tr(P B_\lambda),\qquad
 B_\lambda := \sum_{i=1}^N w_i\,\lambda_1(A_i)\,u_i u_i^\top.
 \label{eq:Btilde}
 \end{align}
-Thus $F$ is the $\mu$-weighted average of the per-target causal score
-$S^{\mathrm{caus}}_i(P)$ from~\eqref{eq:scores} with $K_i:=A_i$.
+Thus $F$ is the $\mu$-weighted average of the per-target operator-norm
+score $S^{\mathrm{op}}_i(P)$ from~\eqref{eq:scores} with $K_i:=A_i$.
 The surrogate $\tilde F$ is a Ky Fan trace and is therefore maximised by
 any rank-$r$ projection whose range is a dominant invariant subspace of
 $B_\lambda$.
-Let $P_F^\star\in\arg\max_{\rank P=r} F(P)$ (a true causal optimiser)
+Let $P_F^\star\in\arg\max_{\rank P=r} F(P)$ (a true operator-norm optimiser)
 and $P_B^\star\in\arg\max_{\rank P=r}\tilde F(P)$ (a surrogate optimiser);
 under strict $r$-gap of $B_\lambda$ both are unique up to range
 equivalence on $\Gr(r,d)$, while under degeneracy both are interpreted as
@@ -822,7 +829,7 @@ of two independent mechanisms:
 (a) residual spectral mass $\lambda_2(A_i)>0$, meaning $J_i$ carries
 energy beyond its top singular direction;
 (b) optimizer misalignment $1-\|P_F^\star u_i\|^2>0$, meaning the
-true causal optimum fails to capture the local peak direction.
+true operator-norm optimum fails to capture the local peak direction.
 Either mechanism alone produces no regret: rank-$1$ Jacobians contribute
 nothing regardless of alignment, and perfectly aligned states contribute
 nothing regardless of $\lambda_2(A_i)$.
@@ -882,7 +889,7 @@ gives $\approx 11.8^\circ$ separation at $1.5\%$ value gap).
 % =========================================================================
 
 This section gives three illustrations.
-The first instantiates the predictive theorem in stationary LGDS.
+The first instantiates the trace-score theorem in stationary LGDS.
 The second is the fork witness from Theorem~\ref{thm:fork}.
 The third is a $3\times 3$ weak-glue example showing the gap between the
 coarse and instance-dependent regret bounds.
@@ -890,7 +897,7 @@ All numerical values are computed exactly: closed-form Bayes risk in the
 LGDS case, exact eigendecomposition for the small-dimensional examples.
 There is no Monte Carlo simulation.
 
-\subsection{Predictive: LGDS instance}
+\subsection{Trace score: LGDS instance}
 
 \paragraph{Setup}
 State dimension $d=8$, projection rank $r=2$.
@@ -914,14 +921,14 @@ With non-normal $A$, $A^1$ and $A^5$ rotate state-space directions
 differently; the principal angles between the top-$2$ eigenspaces of
 $M_1$ and $M_2$ are $\CondAAngleOne^\circ$ and $\CondAAngleTwo^\circ$,
 confirming that no single rank-$2$ projection is simultaneously
-predictive-optimal.
-By Corollary~\ref{cor:approxcoh}, the minimax predictive regret
-$\Gamma_{\mathrm{pred}}>0$ certifies non-coherence; numerically,
-$\Gamma_{\mathrm{pred}}=\GammaCondA>0$.
+trace-score-optimal.
+By Corollary~\ref{cor:approxcoh}, the minimax trace-score regret
+$\Gamma_{\mathrm{tr}}>0$ certifies non-coherence; numerically,
+$\Gamma_{\mathrm{tr}}=\GammaCondA>0$.
 Table~\ref{tab:condA} gives the regret structure.
 
 \begin{table}[tbp]
-\caption{Predictive regret matrix, Condition A ($d=8$, $r=2$).
+\caption{Trace-score regret matrix, Condition A ($d=8$, $r=2$).
 Values from the exact Bayes risk formula~\eqref{eq:lgdsbayes}.}
 \label{tab:condA}
 \begin{center}
@@ -951,31 +958,31 @@ $\CondBPertMaxRad$~rad, well below the $1.5\varepsilon=\CondBPertThreshold$~rad
 threshold, illustrating that approximate coherence is quantified via
 principal angles (Corollary~\ref{cor:approxcoh}).
 
-\subsection{Fork: causal-without-predictive privilege}
+\subsection{Fork: operator-norm common optimum without trace-score common optimum}
 
 The fork witness from~\eqref{eq:forkwitness}: $d=3$, $r=2$, $T_1
 =\mathrm{diag}(5,4,0)$, $T_2=\mathrm{diag}(5,0,4)$.
 
-\paragraph{Causal score (assigning $K_t=T_t$)}
+\paragraph{Operator-norm score (assigning $K_t=T_t$)}
 Both $K_t$ have simple top eigenvalue $5$ with top eigenvector $e_1$.
 Thus $\dim\mathrm{span}\{u_t\}=1\le 2=r$, so $\{K_t\}$ is
 $2$-coverable.
 Any rank-$2$ projection whose range contains $e_1$---e.g.
 $P_{\mathrm{cov}}=\Pi_{\mathrm{span}\{e_1,v\}}$ for any unit
 $v\perp e_1$---satisfies
-$S^{\mathrm{caus}}_t(P_{\mathrm{cov}})=\lambda_1(K_t)=5$ for both $t$.
-A common optimal rank-$2$ projection under $S^{\mathrm{caus}}$ exists.
+$S^{\mathrm{op}}_t(P_{\mathrm{cov}})=\lambda_1(K_t)=5$ for both $t$.
+A common optimal rank-$2$ projection under $S^{\mathrm{op}}$ exists.
 
-\paragraph{Predictive score (assigning $M_t=T_t$)}
+\paragraph{Trace score (assigning $M_t=T_t$)}
 $\mathrm{Top}_2(M_1)=\mathrm{span}\{e_1,e_2\}$ and
 $\mathrm{Top}_2(M_2)=\mathrm{span}\{e_1,e_3\}$.
 The intersection is $\mathrm{span}\{e_1\}$, of dimension $1<r$.
 Hence no rank-$2$ subspace is contained in both top-$2$ eigenspaces;
 $\{M_t\}$ is not $2$-coherent, so no common optimal rank-$2$ projection
-under $S^{\mathrm{pred}}$ exists.
-The minimax predictive regret is
+under $S^{\mathrm{tr}}$ exists.
+The minimax trace-score regret is
 \begin{equation}
-\Gamma_{\mathrm{pred}}^{\mathrm{fork}}
+\Gamma_{\mathrm{tr}}^{\mathrm{fork}}
 =\min_{P\in\Gr(2,3)}\max_{t\in\{1,2\}}
 \bigl[\lambda_1(M_t)+\lambda_2(M_t)-\tr(P M_t)\bigr]
 =2.
@@ -991,7 +998,7 @@ Then $\tr(PM_1)=\lambda_1+4\alpha^2=5+4\alpha^2$ and
 $\tr(PM_2)=5+4\beta^2$, so the two regrets are
 $4(1-\alpha^2)=4\beta^2$ and $4(1-\beta^2)=4\alpha^2$.
 The max of these two is minimised when $\alpha^2=\beta^2=\tfrac{1}{2}$,
-giving $\Gamma_{\mathrm{pred}}^{\mathrm{fork}}=2$, attained by
+giving $\Gamma_{\mathrm{tr}}^{\mathrm{fork}}=2$, attained by
 $v=(e_2\pm e_3)/\sqrt 2$ and the corresponding rank-$2$ projection
 $P=\Pi_{\mathrm{span}\{e_1,(e_2+e_3)/\sqrt{2}\}}$.
 The dissociation is exact and structural.
@@ -1100,11 +1107,11 @@ $\theta_F^\star$, $\theta_B^\star$            & $25.1^\circ$, $13.3^\circ$ \\
 \paragraph{What is earned}
 For finite PSD families on $\R^d$ and a fixed projection rank $r$:
 \begin{itemize}
-\item Under the predictive trace score, a common optimal rank-$r$
+\item Under the trace score $\tr(PM_t)$, a common optimal rank-$r$
 projection exists iff the family is $r$-coherent
 (Theorem~\ref{thm:pred}).
-\item Under the causal operator-norm score, a common optimal rank-$r$
-projection exists iff the family is $r$-coverable
+\item Under the operator-norm score $\lambda_{\max}(PK_tP)$, a common
+optimal rank-$r$ projection exists iff the family is $r$-coverable
 (Theorem~\ref{thm:caus}).
 \item $r$-coherence implies $r$-coverability strictly
 (Theorem~\ref{thm:fork}).
@@ -1126,19 +1133,20 @@ Continuous regimes require replacing $B_\lambda$ with the integral
 operator
 $\E_{x\sim\mu}[\lambda_1(J_xJ_x^\top)\,u_xu_x^\top]$ and analysing it
 spectrally; we have not proved a continuous-regime analogue.
-The causal operators $K_t$ are taken as given PSD inputs; in nonlinear
-settings $K_t$ would derive from a global intervention response rather
-than a local Jacobian Gram, and the rank-$1$-driven local maximiser
-characterisation (Proposition~\ref{prop:localmax}) need not extend.
+The operator-norm operators $K_t$ are taken as given PSD inputs; in
+nonlinear intervention-response settings $K_t$ would derive from a
+global rather than local response, and the rank-$1$-driven local
+maximiser characterisation (Proposition~\ref{prop:localmax}) need not
+extend.
 The geometry-first pooled objective $G(P)=\lambda_{\max}(P\,\E[J_xJ_x^\top]P)$
 is mentioned implicitly via the rank-$1$ regime where $G=F$; a full
 treatment of the Jensen gap $F\ge G$ for $r>1$ is left to a companion
 note.
 Approximate coverability (a perturbation theory of $r$-coverability) is
-open and structurally harder than its predictive analogue
-(Corollary~\ref{cor:approxcoh}): predictive regret has a smooth,
-principal-angle-controlled bound because the Ky Fan trace is analytic in
-$P$, whereas causal regret under $\lambda_{\max}(PKP)$ is a
+open and structurally harder than its trace-score analogue
+(Corollary~\ref{cor:approxcoh}): trace-score regret has a smooth,
+principal-angle-controlled bound because the Ky Fan trace is analytic
+in $P$, whereas operator-norm regret under $\lambda_{\max}(PKP)$ is a
 subspace-transversal/hitting condition for leading eigenspaces, with
 threshold behaviour when $\Emax(K_t)$ is multidimensional or when the
 family is nearly but not exactly $r$-hittable.
@@ -1151,19 +1159,19 @@ $r$-coverability by computing $\dim\mathrm{span}\{u_i\}$ in the
 simple-top case.
 When neither exact condition holds, the two structural quantities
 play different roles:
-$\Gamma_{\mathrm{pred}}\ge 0$ is the minimax \emph{unavoidable
-worst-case} predictive suboptimality of any single projection
-(Corollary~\ref{cor:approxcoh}; $\Gamma_{\mathrm{pred}}>0$ certifies
-non-coherence and quantifies the inherent task-family gap), while
-the weak-glue expression
+$\Gamma_{\mathrm{tr}}\ge 0$ is the minimax \emph{unavoidable worst-case}
+trace-score suboptimality of any single projection
+(Corollary~\ref{cor:approxcoh}; $\Gamma_{\mathrm{tr}}>0$ certifies
+non-coherence and quantifies the inherent task-family gap), while the
+weak-glue expression
 $\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
-\emph{upper-bounds} the loss incurred by replacing the true causal
-optimiser $P_F^\star$ with the surrogate optimiser $P_B^\star$
-(Theorem~\ref{thm:instancereg}).
-$\Gamma_{\mathrm{pred}}=0$ is the certificate of structural
-alignment between the system dynamics and the predictive task
-family; $\Gamma_{\mathrm{pred}}>0$ is the certificate that dedicated
-per-target projections are necessary for predictive optimality.
+\emph{upper-bounds} the loss incurred by replacing the true
+operator-norm optimiser $P_F^\star$ with the surrogate optimiser
+$P_B^\star$ (Theorem~\ref{thm:instancereg}).
+$\Gamma_{\mathrm{tr}}=0$ is the certificate of structural alignment
+between the family $\{M_t\}$ and a common rank-$r$ subspace;
+$\Gamma_{\mathrm{tr}}>0$ certifies that dedicated per-target
+projections are necessary for trace-score optimality.
 The surrogate construction has independent computational value: it
 reduces the non-Ky--Fan regime-averaged operator-norm objective $F(P)$
 to the single eigendecomposition of the $d\times d$ matrix $B_\lambda$,
