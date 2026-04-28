@@ -284,9 +284,6 @@ rank-$r$ projection} for the family $\mathcal{T}$ under score $S$ if
 Throughout this paper, $P$ ranges over rank-$r$ orthogonal projectors
 (equivalently $P\in\Gr(r,d)$ via $P=U^\top U$, $UU^\top=I_r$); the
 $\max$ is over this set.
-The same property is sometimes called \emph{finite global privilege} of
-$P^\star$ for $\mathcal{T}$ under $S$; we use the two terms
-interchangeably.
 \end{definition}
 
 The central question of the paper is when a common optimal rank-$r$
@@ -337,7 +334,8 @@ the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
 
 \begin{remark}[Comparison with simultaneous diagonalisation and CPC]
 $r$-coherence is closer to a \emph{common principal subspace} condition
-\cite{Flury1984,Krzanowski1979} than to a common-eigenbasis condition.
+\cite{Flury1984,Krzanowski1979,Schott1991,Boik2002} than to a
+common-eigenbasis condition.
 It is strictly weaker than simultaneous diagonalisability: pairwise
 commutativity $[M_s,M_t]=0$ implies a common eigenbasis (and hence
 $r$-coherence for every $r$), and joint-diagonalisation algorithms
@@ -346,9 +344,14 @@ $r$-coherence requires only a shared dominant $r$-dimensional invariant
 subspace, not a common eigenbasis: the projections of the $M_t$ onto
 the orthogonal complement of $V^\star$ may have unrelated spectral
 structure.
-Data-driven statistical testing of $r$-coherence (e.g.\ likelihood-ratio
-tests in the CPC literature) is outside the scope of this paper, which
-treats $\{M_t\}$ as exact PSD inputs.
+The CPC literature has developed likelihood-ratio tests for shared
+top-$r$ eigenspaces and partial CPC models
+\cite{Schott1991,Boik2002}; the present note treats $\{M_t\}$ as exact
+PSD inputs and does not address statistical testing.
+The new content here is the side-by-side comparison with the
+operator-norm objective (\S\ref{sec:caus}) and the strict
+coherence/coverability separation (\S\ref{sec:fork}), not the
+characterisation Proposition~\ref{thm:pred} on its own.
 \end{remark}
 
 \begin{remark}[Genericity]
@@ -398,11 +401,19 @@ symmetric and $M_{C,\tau}=(CA^\tau\Sigma^{1/2})^\top(CA^\tau\Sigma^{1/2})$.
 \begin{proof}
 $x_{t+\tau}=A^\tau x_t+w_\tau$ with $w_\tau$ independent of $x_t$, so
 $\E[x_{t+\tau}x_t^\top]=A^\tau\Sigma$.
-With $z=U\Sigma^{-1/2}x_t$, $\mathrm{Cov}(z,z^\top)=I_r$ and
-$\mathrm{Cov}(Cx_{t+\tau},z^\top)=CA^\tau\Sigma^{1/2}U^\top$.
-The Gaussian linear MMSE formula
-$\mathcal{R}=\tr(\mathrm{Var}(Cx_{t+\tau}))-\tr(\mathrm{Cov}(Cx_{t+\tau},z^\top)\mathrm{Cov}(z,z^\top)^{-1}\mathrm{Cov}(z,Cx_{t+\tau}))$
-collapses to~\eqref{eq:lgdsbayes}.
+With $z=U\Sigma^{-1/2}x_t$, $\mathrm{Cov}(z,z^\top)
+=U\Sigma^{-1/2}\Sigma\Sigma^{-1/2}U^\top=I_r$ and
+$\mathrm{Cov}(Cx_{t+\tau},z^\top)
+=CA^\tau\Sigma\cdot\Sigma^{-1/2}U^\top=CA^\tau\Sigma^{1/2}U^\top$.
+For jointly Gaussian $(Cx_{t+\tau},z)$ with $\mathrm{Cov}(z,z^\top)=I_r$
+the conditional variance is
+$\mathrm{Var}(Cx_{t+\tau}\,|\,z)
+=\mathrm{Var}(Cx_{t+\tau})-\mathrm{Cov}(Cx_{t+\tau},z^\top)\mathrm{Cov}(z,Cx_{t+\tau})$,
+and the trace of this conditional variance is the MMSE
+$\mathcal{R}(U;C,\tau)$.
+Substituting the covariances gives
+$\mathcal{R}=\tr(C\Sigma C^\top)-\tr\!\bigl(U\Sigma^{1/2}(A^\tau)^\top
+C^\top C A^\tau\Sigma^{1/2}U^\top\bigr)$, which is~\eqref{eq:lgdsbayes}.
 \end{proof}
 
 Since $\tr(C\Sigma C^\top)$ is independent of $U$, minimising
@@ -432,7 +443,7 @@ Define the \emph{task regret}
 \begin{corollary}[Regret--angle bound]\label{cor:regretbound}
 Let $\|\sin\Theta\|_F^2 := \|\sin\Theta(P,P^\star)\|_F^2$ be the squared
 Frobenius norm of the principal-angle sines between $\ran(P)$ and
-$\ran(P^\star)$.
+$\ran(P^\star)$ \cite{BjorckGolub1973,DavisKahan1970,Stewart1990}.
 Then
 \begin{equation}\label{eq:regretbound}
 (\lambda_r-\lambda_{r+1})\|\sin\Theta\|_F^2
@@ -541,7 +552,10 @@ $S^{\mathrm{tr}}=\tr(PM)$ the optimal $P$ must have its range
 under $S^{\mathrm{op}}=\lambda_{\max}(PKP)$ it suffices that
 $\ran(P)$ \emph{intersects} the leading invariant subspace of $K$
 nontrivially.
-The local problem is rank-$1$-driven regardless of $r$.
+The local problem is \emph{rank-$1$-driven} in the sense that the
+maximiser is determined by a single direction in $\Emax(K)$, regardless
+of $r$: any unit vector lying in $\Emax(K)\cap\ran(P)$ already realises
+the maximum value $\lambda_1(K)$.
 
 \subsection{\texorpdfstring{$r$}{r}-coverability and the operator-norm theorem}
 
