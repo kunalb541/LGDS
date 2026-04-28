@@ -1,4 +1,4 @@
-### Coherence, Coverability, and Regret for Finite-Rank Projections of PSD Families
+### When Common Optimal Projections Exist: A Trace/Operator-Norm Fork for PSD Families
 
 **Kunal Bhatia** — Independent Researcher, Heidelberg, Germany
 ORCID: [0009-0007-4447-6325](https://orcid.org/0009-0007-4447-6325)
@@ -92,7 +92,7 @@ python -m pytest tests/ -v
 
 ```
 lgds.py                        # numerical computation; writes outputs/data/paper_macros.tex
-paper.tex                      # the manuscript (13 pages, elsarticle format)
+paper.tex                      # the manuscript (14 pages, elsarticle format)
 paper.pdf                      # compiled manuscript
 refs.bib                       # bibliography
 build.sh                       # python lgds.py + latexmk

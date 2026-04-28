@@ -1,24 +1,13 @@
-For a finite family of positive semidefinite (PSD) operators on R^d
-and a fixed rank r, this paper asks when a single rank-r orthogonal
-projection is simultaneously optimal for every operator under two
-natural scoring rules: the trace score tr(PM_t) (Ky Fan), and the
-operator-norm score lambda_max(P K_t P). Existence of a common
-optimal projection under the trace score is equivalent to r-coherence:
-all M_t share a common dominant r-dimensional invariant subspace.
-Existence of a common optimal projection under the operator-norm score
-is equivalent to r-coverability: a single rank-r subspace nontrivially
-intersects the leading eigenspace of every K_t. r-coherence implies
-r-coverability but the converse fails; a 3x3 witness exhibits the
-strict gap (the "fork"). When coverability fails for a finite-support
-regime {A_i} of local PSD operators, the eigenvalue-weighted surrogate
-B_lambda = sum_i w_i lambda_1(A_i) u_i u_i^T (with u_i the leading
-eigenvector of A_i) provides a Ky-Fan-tractable approximation of the
-regime-averaged operator-norm objective; we prove a sandwich
-F_tilde(P) <= F(P) <= F_tilde(P) + sum_i w_i lambda_2(A_i) and an
-instance-dependent regret bound F(P_F*) - F(P_B*) <= sum_i
-w_i lambda_2(A_i)(1 - ||P_F* u_i||^2) tight in three regimes (rank-1
-A_i, r-coverable case, common-shape family). Numerical illustrations
-include a stationary linear Gaussian dynamical system certifying
-non-coherence, the 3x3 fork witness, and a 3x3 surrogate counterexample
-in which the coarse regret bound overestimates the true regret by a
-factor of 36.
+For a finite family of positive semidefinite operators on R^d, we
+compare two notions of common rank-r optimality: the Ky Fan trace
+score tr(PM) and the operator-norm score lambda_max(PKP). For the
+trace score, a common optimal projection exists exactly when the
+family has a shared dominant r-dimensional invariant subspace
+(r-coherence). For the operator-norm score, a common optimal
+projection exists exactly when one r-plane intersects every leading
+eigenspace (r-coverability). These conditions differ: r-coherence
+implies r-coverability, but the converse fails, as shown by a 3x3
+witness. When coverability fails, we introduce an eigenvalue-weighted
+Ky Fan surrogate and prove coarse and instance-dependent regret
+bounds. The results clarify how the existence of a common optimal
+low-rank projection depends on the scoring rule.

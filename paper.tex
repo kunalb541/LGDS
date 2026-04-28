@@ -35,44 +35,29 @@
 
 \begin{frontmatter}
 
-\title{Coherence, Coverability, and Regret for\\
-       Finite-Rank Projections of PSD Families}
+\title{When Common Optimal Projections Exist:\\
+       A Trace/Operator-Norm Fork for PSD Families}
 
 \author{Kunal Bhatia}
 \address{Independent Researcher, Heidelberg, Germany\\
 ORCID: \href{https://orcid.org/0009-0007-4447-6325}{0009-0007-4447-6325}}
 
 \begin{abstract}
-For a finite family of positive semidefinite (PSD) operators on $\R^d$
-and a fixed rank $r$, we ask when a single rank-$r$ orthogonal
-projection is simultaneously optimal for every operator under two
-natural scoring rules: the \emph{trace} score
-$S^{\mathrm{tr}}_t(P)=\tr(P M_t)$ (Ky Fan), and the \emph{operator-norm}
-score $S^{\mathrm{op}}_t(P)=\lambda_{\max}(P K_t P)$.
-Existence of a common optimal projection under the trace score is
-equivalent to \emph{$r$-coherence}: all $M_t$ share a common dominant
-$r$-dimensional invariant subspace.
-Existence of a common optimal projection under the operator-norm score
-is equivalent to \emph{$r$-coverability}: a single rank-$r$ subspace
-nontrivially intersects the leading eigenspace of every $K_t$.
-$r$-coherence implies $r$-coverability but the converse fails; a
-$3\times 3$ witness exhibits the strict gap (the \emph{fork}).
-When coverability fails for a finite-support regime $\{A_i\}$ of local
-PSD operators, the eigenvalue-weighted surrogate
-$B_\lambda=\sum_i w_i\lambda_1(A_i)u_iu_i^\top$ (with $u_i$ the leading
-eigenvector of $A_i$) provides a Ky--Fan-tractable approximation of the
-regime-averaged operator-norm objective; we prove a sandwich
-$\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$
-and an instance-dependent regret bound
-$F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
-tight in three regimes (rank-$1$ $A_i$, $r$-coverable case,
-common-shape family).
-Numerical illustrations include a stationary linear Gaussian dynamical
-system certifying non-coherence ($\Gamma=\GammaCondA>0$), the $3\times 3$
-fork witness in which a common optimum exists under the operator-norm
-score but not under the trace score, and a $3\times 3$ surrogate
-counterexample in which the coarse regret bound overestimates the true
-regret by a factor of $36$.
+For a finite family of positive semidefinite operators on $\R^d$, we
+compare two notions of common rank-$r$ optimality: the Ky Fan trace
+score $\tr(PM)$ and the operator-norm score $\lambda_{\max}(PKP)$.
+For the trace score, a common optimal projection exists exactly when
+the family has a shared dominant $r$-dimensional invariant subspace
+(\emph{$r$-coherence}).
+For the operator-norm score, a common optimal projection exists exactly
+when one $r$-plane intersects every leading eigenspace
+(\emph{$r$-coverability}).
+These conditions differ: $r$-coherence implies $r$-coverability, but
+the converse fails, as shown by a $3\times 3$ witness.
+When coverability fails, we introduce an eigenvalue-weighted Ky Fan
+surrogate and prove coarse and instance-dependent regret bounds.
+The results clarify how the existence of a common optimal low-rank
+projection depends on the scoring rule.
 \end{abstract}
 
 \begin{keyword}
@@ -108,57 +93,56 @@ characterisation of the largest eigenvalue.
 The trace score corresponds to squared-error prediction risk in linear
 Gaussian settings (\S\ref{sec:pred}); the operator-norm score admits a
 local linearised intervention-response motivation (\S\ref{sec:caus}).
-The Ky Fan and Rayleigh--Ritz ingredients are classical
-\cite{Fan1949,HornJohnson2013}; the new content of this paper is the
-comparative common-optimality framework, the strict
-coherence/coverability fork, and the weak-glue value-regret analysis
-listed below.
+The individual variational steps are classical
+\cite{Fan1949,HornJohnson2013}.
+The contribution of this note is the comparison: the trace objective
+requires a common dominant $r$-subspace, whereas the operator-norm
+objective only requires coverability of leading eigenspaces.
+The strict separation between these existence laws
+(Theorem~\ref{thm:fork}), and the surrogate regret analysis beyond
+coverability (\S\ref{sec:weakglue}), are the main new components.
 
-\paragraph{Contribution}
-Theorems~\ref{thm:pred} and~\ref{thm:caus} are structural consequences
-of classical variational principles, not new variational principles in
-their own right.
-
+\paragraph{Summary of results}
 \begin{enumerate}
-\item \emph{Trace-score common optimality} (Theorem~\ref{thm:pred}):
-a direct consequence of the Ky Fan trace maximum.
-A single rank-$r$ projection is simultaneously optimal for all
-trace-score targets $\{M_t\}$ if and only if the family is
-\emph{$r$-coherent}: all $M_t$ share a common dominant $r$-dimensional
-invariant subspace (equivalently, share a top-$r$ eigenspace under
-strict $r$-gap).
+\item \emph{Trace-score characterisation} (Theorem~\ref{thm:pred}):
+an exact characterisation by Ky Fan trace maximisation.
+A common optimal rank-$r$ projection for $\{M_t\}$ under
+$\tr(PM_t)$ exists iff the family is \emph{$r$-coherent}, i.e.\
+all $M_t$ share a common dominant $r$-dimensional invariant subspace.
 The squared-error linear Gaussian dynamical systems (LGDS) Bayes-risk
 instance is recovered as a corollary.
 
-\item \emph{Operator-norm common optimality} (Theorem~\ref{thm:caus}):
-a direct consequence of the rank-$1$-driven structure of the
+\item \emph{Operator-norm characterisation} (Theorem~\ref{thm:caus}):
+an exact characterisation by the rank-$1$-driven structure of the
 operator-norm maximiser.
-A single rank-$r$ projection is simultaneously optimal for all
-operator-norm targets $\{K_t\}$ if and only if the family is
-\emph{$r$-coverable}: some rank-$r$ subspace intersects $\Emax(K_t)$
-nontrivially for every $t$.
+A common optimal rank-$r$ projection for $\{K_t\}$ under
+$\lambda_{\max}(PK_tP)$ exists iff the family is \emph{$r$-coverable},
+i.e.\ some rank-$r$ subspace intersects $\Emax(K_t)$ nontrivially for
+every $t$.
 The operator-norm score has a local linearised intervention-response
-interpretation (\S\ref{sec:caus}); ``intervention'' here refers to the
+motivation (\S\ref{sec:caus}); ``intervention'' here refers to the
 linearised response-Gram setting and not to statistical causal
 identification.
 
-\item \emph{The fork} (Theorem~\ref{thm:fork}): For a single PSD family,
+\item \emph{The fork} (Theorem~\ref{thm:fork}): for a single PSD family,
 $r$-coherence implies $r$-coverability strictly.
 A $3\times 3$ witness shows the gap: a single common optimal projection
 can exist under the operator-norm score while no common optimal
 projection exists under the trace score.
 The dissociation is algebraic, not a consequence of approximation error.
 
-\item \emph{Weak-glue regret} (Theorems~\ref{thm:weakglue},
-\ref{thm:instancereg}): When coverability fails, the
-eigenvalue-weighted surrogate
+\item \emph{Surrogate regret beyond coverability}
+(Theorems~\ref{thm:weakglue}, \ref{thm:instancereg}): when coverability
+fails, the eigenvalue-weighted surrogate
 $B_\lambda = \sum_i w_i \lambda_1(A_i) u_i u_i^\top$ converts the
 non-Ky--Fan operator-norm objective into a Ky--Fan eigenproblem.
-The surrogate is sandwiched between $F$ and $F + \sum_i w_i\lambda_2(A_i)$,
-giving a coarse regret bound; the instance-dependent refinement
-$\sum_i w_i \lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$ unifies the
-equality regimes (rank-$1$ Jacobians, $r$-coverable case, common-shape)
-and is provably tighter than the coarse bound.
+The surrogate is sandwiched between $F$ and
+$F + \sum_i w_i\lambda_2(A_i)$, giving a coarse certification bound;
+the instance-dependent refinement
+$\sum_i w_i \lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$ identifies the two
+mechanisms controlling surrogate loss (residual spectral mass and
+optimiser misalignment) and is tight in three regimes (rank-$1$ $A_i$,
+$r$-coverable case, common-shape).
 \end{enumerate}
 
 \paragraph{Position in the literature}
@@ -205,9 +189,8 @@ Table~\ref{tab:compare} summarises the two main results side by side.
 \begin{table}[tbp]
 \caption{Side-by-side comparison of the two scoring rules considered in
 this paper. The trace score is smooth (analytic) on $\Gr(r,d)$; the
-operator-norm score is continuous and $1$-Lipschitz, smooth only on the
-stratum where the leading eigenvalue of $PKP$ is simple
-(\S\ref{sec:setup}).}
+operator-norm score is continuous, smooth only on the stratum where the
+leading eigenvalue of $PKP$ is simple (\S\ref{sec:setup}).}
 \label{tab:compare}
 \begin{center}
 \begin{tabular}{lll}
@@ -257,10 +240,18 @@ S^{\mathrm{op}}_t(P) := \lambda_{\max}(P K_t P).
 The trace score is the Ky Fan trace; it is a smooth (analytic) function
 of $P\in\Gr(r,d)$.
 The operator-norm score is the largest eigenvalue of $PK_tP$; it is
-continuous and $1$-Lipschitz in the operator norm of $P$, but smooth
-only on the Grassmannian stratum where the leading eigenvalue of $PK_tP$
-is simple, with non-smooth points at eigenvalue crossings
-\cite{HornJohnson2013}.
+continuous on $\Gr(r,d)$.
+Indeed, since $\lambda_{\max}$ is $1$-Lipschitz in operator norm on
+symmetric matrices \cite{HornJohnson2013}, for any rank-$r$ orthogonal
+projectors $P,Q$,
+\begin{equation}\label{eq:opnormcont}
+|\lambda_{\max}(PK_tP)-\lambda_{\max}(QK_tQ)|
+\le\|PK_tP-QK_tQ\|
+\le 2\,\|K_t\|\,\|P-Q\|.
+\end{equation}
+The score is smooth on the Grassmannian stratum where the leading
+eigenvalue of $PK_tP$ is simple, with non-smooth points at eigenvalue
+crossings \cite{HornJohnson2013}.
 The operator-norm score is sometimes referred to as the
 \emph{intervention-response} score in the local-linearised setting of
 \S\ref{sec:caus}; ``intervention'' here means local linearised
@@ -581,13 +572,12 @@ each $\Emax(K_t)$.
 
 \begin{remark}[Testing $r$-coverability]
 \label{rem:covtest}
-$r$-coverability is the question whether there exists an $r$-plane
-$V\in\Gr(r,d)$ meeting every $\Emax(K_t)$ nontrivially.
-This is a finite-dimensional subspace-transversal / incidence problem
-on the Grassmannian: $V$ must satisfy a Schubert-type incidence
-condition $V\cap\Emax(K_t)\ne\{0\}$ for every $t$.
-We do not pursue a complexity classification; the following practical
-guidance suffices for our purposes.
+$r$-coverability is a finite-dimensional subspace-transversal /
+incidence problem on the Grassmannian: $V\in\Gr(r,d)$ must satisfy a
+Schubert-type incidence condition $V\cap\Emax(K_t)\ne\{0\}$ for every
+$t$.
+For the present note we use the following simple sufficient and
+necessary checks, which already cover the cases of interest.
 \begin{itemize}
 \item \emph{Simple-top reduction.} If $\dim\Emax(K_t)=1$ with top
 eigenvector $u_t$ for every $t$, $V$ must contain each $u_t$, so
@@ -595,15 +585,14 @@ $r$-coverability is equivalent to $\dim\mathrm{span}\{u_t\}\le r$.
 \item \emph{Sufficient condition (any multiplicity).} If
 $\dim\sum_t\Emax(K_t)\le r$, any $r$-dimensional subspace containing
 this sum is an $r$-cover.
-\item \emph{Numerical / algebraic test.} Outside these regimes, $r$-
-coverability can be tested numerically as feasibility on $\Gr(r,d)$ or
-in principle via Schubert incidence calculus; a complete algorithmic
-classification is outside scope.
 \end{itemize}
+The non-simple case becomes a Schubert-incidence feasibility problem on
+$\Gr(r,d)$; a full algorithmic complexity classification is outside the
+scope of this note.
 The simple-top reduction is sufficient but in general strictly stronger
 than $r$-coverability, since freedom to choose unit $u_t\in\Emax(K_t)$
-may bring $\dim\mathrm{span}\{u_t\}$ below $r$ when some
-$\Emax(K_t)$ are multidimensional.
+may bring $\dim\mathrm{span}\{u_t\}$ below $r$ when some $\Emax(K_t)$
+are multidimensional.
 \end{remark}
 
 \subsection{Sufficient condition for the simple-top case}
@@ -670,6 +659,13 @@ rank-$2$ subspace is contained in both top-$2$ eigenspaces; the family
 is not $2$-coherent.
 \end{proof}
 
+\noindent
+The witness isolates the core insight: the same leading vector $e_1$ is
+enough for operator-norm optimality (which requires only nontrivial
+intersection with $\Emax$), but not for trace optimality, which also
+requires capturing the second dominant direction --- and the second
+dominant directions of $T_1$ and $T_2$ disagree.
+
 \begin{remark}[Trace vs operator-norm dissociation]
 \label{rem:dissoc}
 Theorem~\ref{thm:fork} establishes an algebraic gap between coherence and
@@ -695,18 +691,16 @@ The relevant question becomes \emph{approximate} common optimality under
 the operator-norm score: how close to optimal can a single rank-$r$
 projection come across the family, and is there a tractable surrogate
 for the non-Ky--Fan operator-norm objective?
-We use two informal labels for convenience: \emph{strong glue} for the
-simple-top $r$-coverable case ($\dim\mathrm{span}\{u_i\}\le r$), and
-\emph{weak glue} for the non-coverable regime in which the surrogate
-$B_\lambda$ is used in place of an exact common optimum.
-These labels are not additional assumptions; they are shorthand for
-regimes already characterised by Definition~\ref{def:cov} and the
-content of this section.
-The bounds developed here control \emph{value regret}
-$F(P_F^\star)-F(P_B^\star)$, not subspace distance
-$\|\sin\Theta(P_F^\star,P_B^\star)\|$; as the $d=3$ counterexample of
-Section~\ref{sec:numerics} shows, value and subspace can be discrepant
-(small value gap, substantial subspace gap).
+We adopt two shorthands: \emph{strong glue} for the simple-top
+$r$-coverable case ($\dim\mathrm{span}\{u_i\}\le r$), and \emph{weak
+glue} for the non-coverable regime where the surrogate $B_\lambda$
+replaces an exact common optimum.
+These labels are not additional assumptions; they name regimes already
+fixed by Definition~\ref{def:cov} and this section.
+The bounds below control \emph{value regret}
+$F(P_F^\star)-F(P_B^\star)$, not subspace distance: as the $d=3$
+counterexample of \S\ref{sec:numerics} shows, $P_F^\star$ and $P_B^\star$
+can be geometrically separated even when the value gap is small.
 
 \subsection{Setup and surrogate}
 
@@ -1173,6 +1167,15 @@ common-shape family; Corollary~\ref{cor:equality}).
 The instance-dependent bound is structurally informative: it factors
 regret into residual spectral mass and optimizer misalignment, and
 attributes it pointwise to the states in the support of $\mu$.
+
+The regret bounds in
+Theorems~\ref{thm:weakglue}--\ref{thm:instancereg} are conservative
+\emph{certification} bounds: they certify the maximum loss from
+replacing a true operator-norm optimum by the Ky Fan surrogate, and
+identify the two mechanisms controlling this loss (residual spectral
+mass $\lambda_2(A_i)$ and optimiser misalignment $1-\|P_F^\star u_i\|^2$),
+but they need not be sharp estimators of the true value gap, as the
+$d=3$ counterexample of \S\ref{sec:numerics} demonstrates.
 
 \paragraph{What is not earned}
 The results are stated for finite PSD families and finite-support

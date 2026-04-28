@@ -1,8 +1,8 @@
 Dear Editor,
 
-Please consider the enclosed manuscript, "Coherence, Coverability, and
-Regret for Finite-Rank Projections of PSD Families," for publication in
-Linear Algebra and its Applications.
+Please consider the enclosed manuscript, "When Common Optimal
+Projections Exist: A Trace/Operator-Norm Fork for PSD Families," for
+publication in Linear Algebra and its Applications.
 
 The paper studies common optimality of a single rank-r orthogonal
 projection across a finite family of positive semidefinite operators
@@ -37,7 +37,7 @@ common-principal-subspace condition strictly weaker than simultaneous
 diagonalisation, and the operator-norm side opens a complementary
 hitting-problem perspective on PSD families.
 
-The manuscript is approximately 13 pages, theorem-driven, and includes
+The manuscript is approximately 14 pages, theorem-driven, and includes
 three numerical illustrations (one stationary linear Gaussian dynamical
 system instance and two analytically exact 3x3 examples). The
 reproduction code is openly available at https://github.com/kunalb541/LGDS.
