@@ -114,24 +114,29 @@ $\{K_t\}$, a structural answer to the existence question for each
 scoring rule, and characterises the gap between them.
 
 \paragraph{Contribution}
-The contributions are four:
+The first two results are structural consequences of classical
+variational principles applied per family; the contribution is the
+side-by-side comparison, the strict gap between them, and the regret
+analysis when neither exact condition holds.
 
 \begin{enumerate}
 \item \emph{Predictive simultaneous optimality} (Theorem~\ref{thm:pred}):
+a direct consequence of the Ky Fan trace maximum.
 A single rank-$r$ projection is simultaneously optimal for all predictive
 targets $\{M_t\}$ if and only if the family is \emph{$r$-coherent}: all
 $M_t$ share a common dominant $r$-dimensional invariant subspace
 (equivalently, share a top-$r$ eigenspace under strict $r$-gap).
-This is a direct application of Ky Fan trace maximisation; the LGDS
-Bayes-risk instance is recovered as a corollary.
+The LGDS Bayes-risk instance is recovered as a corollary.
 
 \item \emph{Causal simultaneous optimality} (Theorem~\ref{thm:caus}):
-A single rank-$r$ projection is simultaneously optimal for all causal
-targets $\{K_t\}$ under the operator-norm score if and only if the
-family is \emph{$r$-coverable}: some rank-$r$ subspace intersects
-$\Emax(K_t)$ nontrivially for every $t$.
-The proof uses the rank-$1$-driven structure of the
-$\lambda_{\max}(P K P)$ maximiser.
+a direct consequence of the rank-$1$-driven structure of the
+operator-norm maximiser.
+A single rank-$r$ projection is simultaneously optimal for all
+causal/operator-norm targets $\{K_t\}$ if and only if the family is
+\emph{$r$-coverable}: some rank-$r$ subspace intersects $\Emax(K_t)$
+nontrivially for every $t$.
+``Causal'' here refers to local linearised intervention response
+(Section~\ref{sec:caus}), not to statistical causal identification.
 
 \item \emph{The fork} (Theorem~\ref{thm:fork}): For a single PSD family,
 $r$-coherence implies $r$-coverability strictly.
@@ -234,8 +239,12 @@ A \emph{target family} $\mathcal{T}$ indexes the tasks.
 Each $t\in\mathcal{T}$ induces two PSD operators on $\R^d$:
 \begin{itemize}
 \item a \emph{predictive target operator} $M_t \succeq 0$,
-\item a \emph{causal target operator} $K_t \succeq 0$.
+\item a \emph{causal/operator-norm target operator} $K_t \succeq 0$.
 \end{itemize}
+``Causal'' here is shorthand for the local linearised
+intervention-response setting derived in Section~\ref{sec:caus};
+it is not intended to denote statistical causal identification, do-calculus,
+or counterfactual inference.
 The two scoring rules considered are:
 \begin{equation}\label{eq:scores}
 S^{\mathrm{pred}}_t(P) := \tr(P M_t),
@@ -327,16 +336,19 @@ the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
 \end{proof}
 
 \begin{remark}[Comparison with simultaneous diagonalisation and CPC]
-$r$-coherence is closer to a common-principal-subspace condition
+$r$-coherence is closer to a \emph{common principal subspace} condition
 \cite{Flury1984,Krzanowski1979} than to a common-eigenbasis condition.
 It is strictly weaker than simultaneous diagonalisability: pairwise
 commutativity $[M_s,M_t]=0$ implies a common eigenbasis (and hence
-$r$-coherence for every $r$), and joint diagonalisation algorithms
+$r$-coherence for every $r$), and joint-diagonalisation algorithms
 \cite{Pham2001} target this stronger condition.
 $r$-coherence requires only a shared dominant $r$-dimensional invariant
 subspace, not a common eigenbasis: the projections of the $M_t$ onto
 the orthogonal complement of $V^\star$ may have unrelated spectral
 structure.
+Data-driven statistical testing of $r$-coherence (e.g.\ likelihood-ratio
+tests in the CPC literature) is outside the scope of this paper, which
+treats $\{M_t\}$ as exact PSD inputs.
 \end{remark}
 
 \begin{remark}[Genericity]
@@ -552,16 +564,23 @@ each $\Emax(K_t)$.
 $r$-coverability is a finite-dimensional subspace-transversal (or
 \emph{hitting}) problem: does there exist a rank-$r$ subspace $V$ that
 meets every $\Emax(K_t)$ nontrivially?
-In the simple-top case ($\dim\Emax(K_t)=1$ with top eigenvector $u_t$
-for every $t$), $V$ must contain each $u_t$, so the problem reduces to
-the dimension count $\dim\mathrm{span}\{u_t\}\le r$.
-In the general case ($\dim\Emax(K_t)$ possibly $>1$), $r$-coverability
-is implied by the simple-top reduction applied to any choice of unit
-$u_t\in\Emax(K_t)$ but is in general weaker, since the freedom to choose
-$u_t$ within each $\Emax(K_t)$ may bring $\dim\mathrm{span}\{u_t\}$
-below $r$.
-A constructive test exists when $\dim\sum_t\Emax(K_t)\le r$: any
+\emph{Simple-top case.}
+If $\dim\Emax(K_t)=1$ with top eigenvector $u_t$ for every $t$, $V$
+must contain each $u_t$, so $r$-coverability is equivalent to
+$\dim\mathrm{span}\{u_t\}\le r$.
+\emph{General case.}
+If some $\Emax(K_t)$ are multidimensional, the problem is genuinely a
+hitting problem on a collection of subspaces of varying dimension.
+A simple sufficient condition is $\dim\sum_t\Emax(K_t)\le r$: any
 $r$-dimensional subspace containing this sum is an $r$-cover.
+A simple necessary condition is that any choice of unit
+$u_t\in\Emax(K_t)$ (one per $t$) gives $\dim\mathrm{span}\{u_t\}\le r$
+for at least one such choice; without freedom in selecting representatives
+this collapses to the simple-top reduction, which is sufficient but
+strictly stronger than $r$-coverability when the $\Emax(K_t)$ admit
+genuine multidimensional flexibility.
+General algorithmic testing under arbitrary multiplicity structure is
+outside the scope of this paper.
 \end{remark}
 
 \subsection{Sufficient condition for the simple-top case}
@@ -672,14 +691,16 @@ $\kappa_i:=\lambda_2(A_i)/\lambda_1(A_i)\in[0,1)$.
 Repeated leading eigenspaces would require a projector-valued surrogate
 in place of $u_i u_i^\top$ and are outside the scope of this section.
 
-The capacity-first causal objective (the regime-averaged
-operator-norm score) and its surrogate are:
+The regime-averaged operator-norm score and its surrogate are:
 \begin{align}
-F(P) &:= \sum_{i=1}^N w_i\,\lambda_{\max}(P A_i P), \label{eq:F}\\
+F(P) &:= \sum_{i=1}^N w_i\,\lambda_{\max}(P A_i P)
+        =\sum_{i=1}^N w_i\,S^{\mathrm{caus}}_i(P), \label{eq:F}\\
 \tilde F(P) &:= \tr(P B_\lambda),\qquad
 B_\lambda := \sum_{i=1}^N w_i\,\lambda_1(A_i)\,u_i u_i^\top.
 \label{eq:Btilde}
 \end{align}
+Thus $F$ is the $\mu$-weighted average of the per-target causal score
+$S^{\mathrm{caus}}_i(P)$ from~\eqref{eq:scores} with $K_i:=A_i$.
 The surrogate $\tilde F$ is a Ky Fan trace and is therefore maximised by
 any rank-$r$ projection whose range is a dominant invariant subspace of
 $B_\lambda$.
@@ -1143,6 +1164,16 @@ $\Gamma_{\mathrm{pred}}=0$ is the certificate of structural
 alignment between the system dynamics and the predictive task
 family; $\Gamma_{\mathrm{pred}}>0$ is the certificate that dedicated
 per-target projections are necessary for predictive optimality.
+The surrogate construction has independent computational value: it
+reduces the non-Ky--Fan regime-averaged operator-norm objective $F(P)$
+to the single eigendecomposition of the $d\times d$ matrix $B_\lambda$,
+making the surrogate optimum $P_B^\star$ tractable in high dimension
+where direct Riemannian optimisation of $F$ on $\Gr(r,d)$ would be
+expensive; the regret bounds in
+Theorems~\ref{thm:weakglue}--\ref{thm:instancereg} then certify how
+much value is sacrificed.
+A higher-dimensional numerical study (e.g.\ $d\sim 50$, $r\sim 5$,
+$N\sim 100$) is left to future computational work.
 
 % =========================================================================
 \section*{Acknowledgements}
