@@ -199,6 +199,20 @@ where the \emph{target information matrix} is
 $M_{C,\tau}$ is symmetric positive semidefinite of rank at most $\min(p,n)$.
 The formula is exact.
 
+\begin{remark}
+In the static case ($A=I$, $\tau=0$),
+$M_{C,0}=\Sigma^{1/2}C^\top C\Sigma^{1/2}$,
+which differs from the state covariance $\Sigma$ used by PCA unless
+$C=I_n$.
+For $C=e_k^\top$ (predicting one component), $M_{C,0}$ is rank-$1$ with
+eigenvector $e_k$ in the whitened basis: the optimal rank-$1$ observer
+captures the $k$-th whitened direction regardless of the state variance in
+other components, whereas PCA selects the maximum-variance direction.
+In the dynamic case, the rotation by $(A^\tau)^\top$ in $M_{C,\tau}$
+shifts the dominant eigenspace with~$\tau$: the same target $C$ admits a
+horizon-dependent optimal observer.
+\end{remark}
+
 \subsection{Top-eigenspace optimality}
 
 \begin{proposition}\label{prop:opt}
@@ -225,6 +239,52 @@ By the Ky Fan variational principle \cite{Fan1949, HornJohnson2013}
 the maximum equals
 $\sum_{i=1}^r \lambda_i(M_{C,\tau})$, achieved exactly when the row space of
 $U$ spans the corresponding eigenspace.
+\end{proof}
+
+The \emph{task regret} of observer $U$ for target $(C,\tau)$ is the excess
+Bayes risk:
+\begin{equation}\label{eq:regret}
+  \mathrm{Reg}(U;\,C,\tau)
+  \;:=\;
+  \mathcal{R}(U;\,C,\tau) - \mathcal{R}^*(C,\tau)
+  \;=\;
+  \sum_{i=1}^r\lambda_i(M_{C,\tau})-\tr(U\,M_{C,\tau}\,U^\top)
+  \;\ge\; 0.
+\end{equation}
+
+\begin{corollary}[Regret--angle bound]\label{cor:regretbound}
+Let $M=M_{C,\tau}$ with eigenvalues $\lambda_1\ge\cdots\ge\lambda_n\ge 0$
+and top-$r$ eigenspace $U^*$.
+For any $U\in\Gr(r,n)$:
+\begin{equation}\label{eq:regretbound}
+  (\lambda_r-\lambda_{r+1})\,\|\sin\Theta\|_F^2
+  \;\le\;
+  \mathrm{Reg}(U;\,C,\tau)
+  \;\le\;
+  (\lambda_1-\lambda_n)\,\|\sin\Theta\|_F^2,
+\end{equation}
+where $\|\sin\Theta\|_F^2:=\|\sin\Theta(U,U^*)\|_F^2$
+\textup{\cite{BjorckGolub1973}} is the squared Frobenius norm of the
+principal-angle sines between $\mathrm{row}(U)$ and $\mathrm{row}(U^*)$.
+\end{corollary}
+
+\begin{proof}
+Let $p_i:=\sum_{k=1}^r(v_i^\top u_k)^2$ where $v_i$ are eigenvectors of
+$M$ and $u_k$ are orthonormal rows of $U$.
+Then $\mathrm{Reg}(U)=\sum_{i\le r}\lambda_i(1-p_i)-\sum_{i>r}\lambda_ip_i$
+and $\|\sin\Theta\|_F^2=\sum_{i\le r}(1-p_i)=\sum_{i>r}p_i$
+\cite{BjorckGolub1973}.
+Centering at~$\lambda_{r+1}$:
+\[
+  \mathrm{Reg}(U)
+  =\underbrace{\textstyle\sum_{i\le r}(\lambda_i-\lambda_{r+1})(1-p_i)}_{\ge 0}
+  +\underbrace{\textstyle\sum_{i>r}(\lambda_{r+1}-\lambda_i)\,p_i}_{\ge 0}.
+\]
+\emph{Lower bound}: drop the second sum; bound $\lambda_i-\lambda_{r+1}
+\ge\lambda_r-\lambda_{r+1}$ for $i\le r$.
+\emph{Upper bound}: bound the first coefficient by $\lambda_1-\lambda_{r+1}$
+and the second by $\lambda_{r+1}-\lambda_n$; the two $\|\sin\Theta\|_F^2$
+factors sum as written.
 \end{proof}
 
 \subsection{Target-dependent observer selection}
@@ -289,6 +349,47 @@ distinct $M_k$ are distinct, so $r$-coherence is a non-generic condition
 absent structural alignment between the task family and the system.
 \end{remark}
 
+\subsection{Minimax shared observer and approximate coherence}
+\label{sec:minimax}
+
+For a task family $\mathcal{T}=\{(C_a,\tau_a)\}_{a=1}^m$, define the
+\emph{minimax shared observer} and \emph{minimax regret gap}:
+\begin{equation}\label{eq:mm}
+  U_{\mathrm{mm}}
+  = \arg\min_{U\in\Gr(r,n)}\max_a\,\mathrm{Reg}(U;\,C_a,\tau_a),
+  \qquad
+  \Gamma
+  := \min_{U\in\Gr(r,n)}\max_a\,\mathrm{Reg}(U;\,C_a,\tau_a).
+\end{equation}
+$U_{\mathrm{mm}}$ is the best shared rank-$r$ observer in the worst-case sense;
+$\Gamma\ge 0$ is the unavoidable worst-case cost of any single observer.
+
+\begin{corollary}\label{cor:gammazero}
+$\Gamma=0$ if and only if $\mathcal{T}$ is $r$-coherent.
+\end{corollary}
+
+\begin{proof}
+(\emph{If})\enspace If $r$-coherent with shared eigenspace $V^*$:
+$\mathrm{Reg}(V^*;\,C_a,\tau_a)=0$ for all $a$ by
+Proposition~\ref{prop:opt}, so $\Gamma=0$.
+(\emph{Only if})\enspace If $\Gamma=0$, some $U_{\mathrm{mm}}$ achieves
+$\mathrm{Reg}(U_{\mathrm{mm}};\,C_a,\tau_a)=0$ for all $a$, so
+$U_{\mathrm{mm}}$ is optimal for every task; the only-if direction of
+Corollary~\ref{cor:coherence} then gives $r$-coherence.
+\end{proof}
+
+\begin{corollary}[Approximate coherence]\label{cor:approxcoh}
+If there exists $U\in\Gr(r,n)$ with
+$\|\sin\Theta(U,U_a^*)\|_F^2\le\varepsilon^2$ for all $a$, then
+$\Gamma\le\Lambda\,\varepsilon^2$,
+where $\Lambda:=\max_a[\lambda_1(M_a)-\lambda_n(M_a)]$.
+\end{corollary}
+
+\begin{proof}
+Apply the upper bound of Corollary~\ref{cor:regretbound} to $U$ for each
+task and take the maximum over~$a$.
+\end{proof}
+
 % -------------------------------------------------------------------------
 \section{Numerical Illustrations}
 % -------------------------------------------------------------------------
@@ -322,20 +423,14 @@ eigenspaces of $M_1$ and $M_2$ are $\CondAAngleOne^\circ$ and
 $\CondAAngleTwo^\circ$, confirming that no single rank-2 observer is
 simultaneously optimal.
 
-The minimax regret gap
-\begin{equation}
-  \Gamma
-    = \min_{U\in\Gr(r,n)}\,\max_k\,
-      \bigl[\mathcal{R}(U;\,C_k,\tau_k) - \mathcal{R}^*_k\bigr]
-\end{equation}
-quantifies the best achievable worst-case suboptimality under task conflict.
-The minimax observer $U_{\mathrm{joint}}$ achieves $\Gamma = \GammaCondA > 0$.
-No common optimal rank-$r$ observer exists for this target pair.
-The positive gap certifies the impossibility of any jointly optimal rank-2 observer for this task pair.
-Table~\ref{tab:condA} gives the full regret structure.
-The balanced regrets at $U_{\mathrm{joint}}$ ($\GammaCondA$ on both targets)
-satisfy the necessary condition for a minimax solution with $\Gamma>0$,
-consistent with the global minimum having been attained.
+The task regret \eqref{eq:regret} and minimax gap $\Gamma$
+\eqref{eq:mm} are computed from the exact Bayes risk formula.
+By Corollary~\ref{cor:gammazero}, $\Gamma>0$ certifies non-$r$-coherence.
+The numerically computed minimax observer $U_{\mathrm{joint}}$
+achieves $\Gamma=\GammaCondA>0$; balanced regrets on both targets
+are a necessary condition for a minimax solution, consistent with the
+global minimum having been attained.
+Table~\ref{tab:condA} gives the full regret structure~\eqref{eq:regret}.
 
 \begin{table}[tbp]
 \caption{Regret matrix, Condition A ($n=8$, $r=2$, seed 100).
