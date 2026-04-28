@@ -1,21 +1,46 @@
 Dear Editor,
 
-Please consider the enclosed manuscript, "Task-Dependent Optimal Linear
-Observers in Linear Gaussian Dynamical Systems," for publication in
-Systems & Control Letters.
+Please consider the enclosed manuscript, "Coherence, Coverability, and
+Regret for Finite-Rank Projections of PSD Families," for publication in
+Linear Algebra and its Applications.
 
-The paper studies observer selection in stationary finite-dimensional
-linear Gaussian dynamical systems. Its main result is an exact
-characterization of target-dependent optimal rank-r linear observers:
-for prediction target C x(t+tau), the optimal observer is the top-r
-eigenspace of the associated target information matrix, and a common
-optimal observer across a target family exists if and only if the
-family is r-coherent.
+The paper studies common optimality of a single rank-r orthogonal
+projection across a finite family of positive semidefinite operators
+under two natural scoring rules: the trace (Ky Fan) score tr(PM) and
+the operator-norm score lambda_max(PKP). The main results are:
 
-The manuscript is concise, theorem-driven, and scoped to fixed-rank
-linear observers and squared-error prediction in the LGDS setting.
-We believe this focus is well aligned with the aims of Systems &
-Control Letters.
+  - Existence of a common trace-score optimum is equivalent to
+    r-coherence: all M_t share a common dominant r-dimensional
+    invariant subspace.
+
+  - Existence of a common operator-norm optimum is equivalent to
+    r-coverability: a single rank-r subspace meets the leading
+    eigenspace of every K_t nontrivially.
+
+  - r-coherence implies r-coverability strictly; a 3x3 witness
+    isolates the algebraic gap (the "fork").
+
+  - When coverability fails, an eigenvalue-weighted surrogate B_lambda
+    converts the non-Ky-Fan operator-norm objective into a Ky Fan
+    eigenproblem, with sandwich and instance-dependent regret bounds
+    that are tight in three structural regimes (rank-1, r-coverable,
+    common-shape).
+
+The variational ingredients are classical (Ky Fan trace maximisation
+and the Rayleigh quotient characterisation). The contribution is to
+place the two common-optimality laws side by side, prove the strict
+fork between them, and develop the surrogate regret analysis.
+
+The paper connects naturally with the common principal components
+literature (Flury 1984, Krzanowski 1979, Pham 2001): r-coherence is a
+common-principal-subspace condition strictly weaker than simultaneous
+diagonalisation, and the operator-norm side opens a complementary
+hitting-problem perspective on PSD families.
+
+The manuscript is approximately 12 pages, theorem-driven, and includes
+three numerical illustrations (one stationary linear Gaussian dynamical
+system instance and two analytically exact 3x3 examples). The
+reproduction code is openly available at https://github.com/kunalb541/LGDS.
 
 This manuscript is not under consideration elsewhere. No external
 funding was received for this work, and the author declares no
@@ -25,3 +50,5 @@ Thank you for your consideration.
 
 Sincerely,
 Kunal Bhatia
+ORCID: 0009-0007-4447-6325
+Independent Researcher, Heidelberg, Germany
