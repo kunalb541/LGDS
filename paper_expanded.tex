@@ -57,15 +57,15 @@ equivalent to \emph{$r$-coverability}---a single rank-$r$ subspace
 nontrivially intersects the leading eigenspace of every $K_t$.
 $r$-coherence implies $r$-coverability but the converse fails; a $3\times 3$
 witness exhibits the strict gap.
-When coverability fails over a regime of local intervention Jacobians
-$\{J_i\}$, the eigenvalue-weighted surrogate
-$B_\lambda=\sum_i w_i\lambda_1(J_iJ_i^\top)u_iu_i^\top$ provides a
-Ky--Fan-tractable approximation of the causal landscape; we prove a
-sandwich
-$\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(J_iJ_i^\top)$
+When coverability fails over a finite-support regime of local PSD
+response operators $\{A_i\}$, the eigenvalue-weighted surrogate
+$B_\lambda=\sum_i w_i\lambda_1(A_i)u_iu_i^\top$ (with $u_i$ the leading
+eigenvector of $A_i$) provides a Ky--Fan-tractable approximation of the
+causal landscape; we prove a sandwich
+$\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$
 and an instance-dependent regret bound
-$F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(J_iJ_i^\top)(1-\|P_F^\star u_i\|^2)$
-that is tight in three structural regimes (rank-$1$ Jacobians,
+$F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
+that is tight in three structural regimes (rank-$1$ $A_i$,
 $r$-coverable case, common-shape family).
 Numerical illustrations include a stationary linear Gaussian dynamical
 system certifying non-coherence ($\Gamma=\GammaCondA>0$), the $3\times 3$
@@ -188,6 +188,31 @@ Section~\ref{sec:weakglue} develops the weak-glue surrogate.
 Section~\ref{sec:numerics} gives numerical illustrations.
 Section~\ref{sec:scope} closes with scope and discussion.
 
+Table~\ref{tab:compare} summarises the two main results side by side.
+
+\begin{table}[tbp]
+\caption{Side-by-side comparison of the two scoring rules considered in
+this paper. The trace score is smooth (analytic) on $\Gr(r,d)$; the
+operator-norm score is continuous and $1$-Lipschitz, smooth only on the
+stratum where the leading eigenvalue of $PKP$ is simple
+(\S\ref{sec:setup}).}
+\label{tab:compare}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Scoring rule & Fixed-target optimal $P$ has & Common optimum exists iff \\
+\midrule
+$\tr(PM)$ (Ky Fan trace) &
+range $=$ a dominant $r$-dim invariant subspace of $M$ &
+family is $r$-coherent (Thm.~\ref{thm:pred}) \\
+$\lambda_{\max}(PKP)$ (operator norm) &
+range $\cap$ $\Emax(K)\ne\{0\}$ &
+family is $r$-coverable (Thm.~\ref{thm:caus}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
 % =========================================================================
 \section{Setup}
 \label{sec:setup}
@@ -301,11 +326,17 @@ Under strict $r$-gaps the dominant invariant subspace is unique and equals
 the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
 \end{proof}
 
-\begin{remark}[Strictness of $r$-coherence]
-$r$-coherence is strictly weaker than simultaneous diagonalisability.
-Pairwise commutativity $[M_s,M_t]=0$ implies a common eigenbasis and hence
-$r$-coherence for every $r$, but $r$-coherence with a fixed $r$ does not
-require commutativity: only the top-$r$ eigenspace must coincide.
+\begin{remark}[Comparison with simultaneous diagonalisation and CPC]
+$r$-coherence is closer to a common-principal-subspace condition
+\cite{Flury1984,Krzanowski1979} than to a common-eigenbasis condition.
+It is strictly weaker than simultaneous diagonalisability: pairwise
+commutativity $[M_s,M_t]=0$ implies a common eigenbasis (and hence
+$r$-coherence for every $r$), and joint diagonalisation algorithms
+\cite{Pham2001} target this stronger condition.
+$r$-coherence requires only a shared dominant $r$-dimensional invariant
+subspace, not a common eigenbasis: the projections of the $M_t$ onto
+the orthogonal complement of $V^\star$ may have unrelated spectral
+structure.
 \end{remark}
 
 \begin{remark}[Genericity]
@@ -439,9 +470,24 @@ uniformly in $a$.
 \label{sec:caus}
 % =========================================================================
 
-The causal score $S^{\mathrm{caus}}_t(P)=\lambda_{\max}(P K_t P)$ is not
-a Ky Fan trace; the variational principle that governs it is different.
-The structural condition that emerges is correspondingly different.
+\subsection{Motivation for the operator-norm score}
+
+The causal score $\lambda_{\max}(PK_tP)$ is not a Ky Fan trace.
+A natural setting is local linearised intervention: at state $x$, an
+input perturbation $\delta u\in\R^q$ induces $\delta y=J_x\delta u$, and
+a rank-$r$ projection $P$ restricts which output directions are visible.
+The largest squared response visible to $P$ over unit-norm inputs is
+\begin{equation}\label{eq:causmotiv}
+\max_{\|\delta u\|=1}\|PJ_x\delta u\|^2
+=\lambda_{\max}(PJ_xJ_x^\top P)
+=\lambda_{\max}(PK_xP),\qquad K_x:=J_xJ_x^\top.
+\end{equation}
+Hence $\lambda_{\max}(PK_tP)$ measures the \emph{strongest} accessible
+squared response under $P$, with $K_t\succeq 0$ a local PSD response
+operator; a trace alternative $\tr(PK_t)$ measures \emph{total}
+accessible squared response and answers a different question.
+The operator-norm choice is appropriate when the task is to detect or
+recover the strongest linear effect rather than aggregate sensitivity.
 
 \subsection{Local maximiser structure}
 
@@ -535,33 +581,16 @@ This regime is informally called \emph{strong glue}.
 Direct from Definition~\ref{def:cov} and Proposition~\ref{prop:localmax}.
 \end{proof}
 
-\begin{table}[tbp]
-\caption{Side-by-side comparison of the two scoring rules considered in
-this paper. Both are smooth, except that $\lambda_{\max}(PKP)$ is
-non-smooth at eigenvalue crossings (\S\ref{sec:setup}).}
-\label{tab:compare}
-\begin{center}
-\begin{tabular}{lll}
-\toprule
-Scoring rule & Fixed-target optimal $P$ has & Common optimum exists iff \\
-\midrule
-$\tr(PM)$ (Ky Fan trace) &
-range $=$ a dominant $r$-dim invariant subspace of $M$ &
-family is $r$-coherent (Thm.~\ref{thm:pred}) \\
-$\lambda_{\max}(PKP)$ (operator norm) &
-range $\cap$ $\Emax(K)\ne\{0\}$ &
-family is $r$-coverable (Thm.~\ref{thm:caus}) \\
-\bottomrule
-\end{tabular}
-\end{center}
-\end{table}
-
 % =========================================================================
 \section{The Fork: Coherence Implies Coverability Strictly}
 \label{sec:fork}
 % =========================================================================
 
 The two structural conditions are not interchangeable.
+We write a single PSD family as $\{T_t\}$ in this section, isolating the
+algebraic relation between $r$-coherence and $r$-coverability from the
+predictive ($M_t$) vs.\ causal ($K_t$) interpretations of
+\S\ref{sec:pred}--\ref{sec:caus}.
 
 \begin{theorem}[Coherence implies coverability strictly]\label{thm:fork}
 For a single PSD family $\{T_t\}$ on $\R^d$:
@@ -816,6 +845,16 @@ $\lambda_2(A_i)=0$, or $\|P_F^\star u_i\|^2=1$ for every $i$.
 Outside these regimes the surrogate optimum need not coincide with the
 true optimum, but Theorem~\ref{thm:instancereg} controls the gap.
 
+\begin{remark}[Value regret vs subspace distance]
+\label{rem:valuevssubspace}
+Theorems~\ref{thm:weakglue}--\ref{thm:instancereg} control \emph{value
+regret} $F(P_F^\star)-F(P_B^\star)$, not subspace distance
+$\|\sin\Theta(P_F^\star,P_B^\star)\|_F$: $P_B^\star$ can be
+geometrically separated from $P_F^\star$ while the value gap remains
+small (the $d=3$, $r=1$ counterexample of Section~\ref{sec:numerics}
+gives $\approx 11.8^\circ$ separation at $1.5\%$ value gap).
+\end{remark}
+
 % =========================================================================
 \section{Numerical Illustrations}
 \label{sec:numerics}
@@ -838,10 +877,15 @@ $A=VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$ and random
 non-orthogonal $V$ (seed $100$); $Q=0.1\,I_8$.
 $\Sigma$ is computed from the discrete Lyapunov equation; $\Sigma\succ 0$
 to machine precision.
-Optimisation over $\Gr(2,8)$ uses $300$ random orthonormal
-initialisations and a quasi-Newton iteration on $U$ followed by a thin
-QR retraction to maintain $UU^\top=I_r$, with gradient-norm threshold
-$10^{-12}$ and function-value tolerance $10^{-15}$.
+The single-target optima $P_1^\star$, $P_2^\star$ are the top-$2$
+eigenspaces of $M_1$, $M_2$ in closed form (Theorem~\ref{thm:pred});
+no search is required.
+The minimax projection $P_{\mathrm{joint}}\in\arg\min_{P}\max_t
+\Reg(P;\,M_t)$ has no closed form and is computed by Riemannian
+optimisation on $\Gr(2,8)$ ($300$ random orthonormal initialisations with
+a quasi-Newton iteration on $U$ and a thin QR retraction; gradient-norm
+threshold $10^{-12}$).
+The numerical search is verification only at the minimax level.
 
 \paragraph{Condition A: target-dependent}
 Targets $T_1=([e_1^\top;e_2^\top],1)$ and $T_2=([e_5^\top;e_6^\top],5)$.
@@ -913,14 +957,23 @@ The minimax predictive regret is
 \Gamma_{\mathrm{pred}}^{\mathrm{fork}}
 =\min_{P\in\Gr(2,3)}\max_{t\in\{1,2\}}
 \bigl[\lambda_1(M_t)+\lambda_2(M_t)-\tr(P M_t)\bigr]
-=\frac{1}{2}\cdot 4=2,
+=2.
 \end{equation}
-attained by $P=\Pi_{\mathrm{span}\{e_1,(e_2+e_3)/\sqrt{2}\}}$, which
-captures direction $e_1$ exactly and direction $(e_2+e_3)/\sqrt 2$
-half-aligned with each of $e_2,e_3$.
-The trace contribution from the second slot is $4\cdot\frac{1}{2}=2$ for
-each target; the regret on each target is $4\cdot\frac{1}{2}=2$.
-This dissociation is exact and structural.
+\emph{Derivation.}
+Any $P\in\Gr(2,3)$ that is not a $2$-cover certifies $\Gamma>0$ by
+Proposition~\ref{prop:localmax}, so the minimum is attained at a
+$2$-cover, i.e.\ a $P$ with $e_1\in\ran(P)$.
+Such a $P$ has $\ran(P)=\mathrm{span}\{e_1,v\}$ for a unit
+$v\in\mathrm{span}\{e_2,e_3\}$.
+Write $v=\alpha e_2+\beta e_3$ with $\alpha^2+\beta^2=1$.
+Then $\tr(PM_1)=\lambda_1+4\alpha^2=5+4\alpha^2$ and
+$\tr(PM_2)=5+4\beta^2$, so the two regrets are
+$4(1-\alpha^2)=4\beta^2$ and $4(1-\beta^2)=4\alpha^2$.
+The max of these two is minimised when $\alpha^2=\beta^2=\tfrac{1}{2}$,
+giving $\Gamma_{\mathrm{pred}}^{\mathrm{fork}}=2$, attained by
+$v=(e_2\pm e_3)/\sqrt 2$ and the corresponding rank-$2$ projection
+$P=\Pi_{\mathrm{span}\{e_1,(e_2+e_3)/\sqrt{2}\}}$.
+The dissociation is exact and structural.
 
 \subsection{Weak-glue counterexample}
 
@@ -1061,8 +1114,13 @@ is mentioned implicitly via the rank-$1$ regime where $G=F$; a full
 treatment of the Jensen gap $F\ge G$ for $r>1$ is left to a companion
 note.
 Approximate coverability (a perturbation theory of $r$-coverability) is
-open; the predictive analogue is
-Corollary~\ref{cor:approxcoh}.
+open and structurally harder than its predictive analogue
+(Corollary~\ref{cor:approxcoh}): predictive regret has a smooth,
+principal-angle-controlled bound because the Ky Fan trace is analytic in
+$P$, whereas causal regret under $\lambda_{\max}(PKP)$ is a
+subspace-transversal/hitting condition for leading eigenspaces, with
+threshold behaviour when $\Emax(K_t)$ is multidimensional or when the
+family is nearly but not exactly $r$-hittable.
 
 \paragraph{Practical implication}
 Whenever a single rank-$r$ projection must serve a family of objectives,
