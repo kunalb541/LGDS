@@ -110,7 +110,7 @@ This paper establishes, for arbitrary finite PSD families $\{M_t\}$ and
 $\{K_t\}$, a structural answer to the existence question for each
 scoring rule, and characterises the gap between them.
 
-\paragraph{Contribution.}
+\paragraph{Contribution}
 The contributions are four:
 
 \begin{enumerate}
@@ -152,7 +152,7 @@ equality conditions and is provably tighter than the coarse
 $\sum_i w_i \lambda_2(A_i)$ bound.
 \end{enumerate}
 
-\paragraph{Position in the literature.}
+\paragraph{Position in the literature}
 The Grassmannian $\Gr(r,d)$ is the standard parameter space for rank-$r$
 linear maps, with smooth Riemannian structure inherited from $O(d)$
 \cite{Edelman1998}; principal-subspace optimality and the Ky Fan trace
@@ -167,7 +167,7 @@ under each of the two scoring rules above; the dissociation between
 predictive and causal privilege, and the weak-glue surrogate with
 instance-dependent regret, appear to be new.
 
-\paragraph{Outline.}
+\paragraph{Outline}
 Section~\ref{sec:setup} gives the setup, the two scoring rules, and the
 notion of finite global privilege.
 Section~\ref{sec:pred} proves the predictive theorem and instantiates it
@@ -183,7 +183,7 @@ Section~\ref{sec:scope} closes with scope and discussion.
 \label{sec:setup}
 % =========================================================================
 
-\paragraph{State space and projector class.}
+\paragraph{State space and projector class}
 The state space is $\R^d$ with the Euclidean inner product.
 A \emph{rank-$r$ projection} ($1 \le r < d$) is an orthogonal projector
 $P$ of rank $r$; equivalently, $P = U^\top U$ for a row-orthonormal
@@ -194,7 +194,7 @@ dimension $r(d-r)$ with metric and geodesic structure inherited from
 $O(d)$ \cite{Edelman1998}.
 Two projectors with the same range are equivalent on $\Gr(r,d)$.
 
-\paragraph{Target family and scores.}
+\paragraph{Target family and scores}
 A \emph{target family} $\mathcal{T}$ indexes the tasks.
 Each $t\in\mathcal{T}$ induces two PSD operators on $\R^d$:
 \begin{itemize}
@@ -211,7 +211,7 @@ The predictive score is the Ky Fan trace; the causal score is the
 operator norm of the symmetrically projected operator.
 Both are smooth functions of $P\in\Gr(r,d)$.
 
-\paragraph{Finite global privilege.}
+\paragraph{Finite global privilege}
 \begin{definition}[Finite global privilege]\label{def:fgp}
 A rank-$r$ orthogonal projector $P^\star$ has \emph{finite global
 privilege} for the family $\mathcal{T}$ under score $S$ if
@@ -749,7 +749,7 @@ There is no Monte Carlo simulation.
 
 \subsection{Predictive: LGDS instance}
 
-\paragraph{Setup.}
+\paragraph{Setup}
 State dimension $d=8$, projection rank $r=2$.
 $A=VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$ and random
 non-orthogonal $V$ (seed $100$); $Q=0.1\,I_8$.
@@ -759,7 +759,7 @@ Optimisation over $\Gr(2,8)$ uses $300$ random initialisations of
 projected L-BFGS-B with gradient-norm threshold $10^{-12}$ and
 function-value tolerance $10^{-15}$.
 
-\paragraph{Condition A: target-dependent.}
+\paragraph{Condition A: target-dependent}
 Targets $T_1=([e_1^\top;e_2^\top],1)$ and $T_2=([e_5^\top;e_6^\top],5)$.
 With non-normal $A$, $A^1$ and $A^5$ rotate state-space directions
 differently; the principal angles between the top-$2$ eigenspaces of
@@ -788,7 +788,7 @@ $P_{\mathrm{joint}}$ (minimax)          & \CondARegretUjointTa & \CondARegretUjo
 \end{center}
 \end{table}
 
-\paragraph{Condition B: structurally coherent.}
+\paragraph{Condition B: structurally coherent}
 A target family is constructed by design to be $2$-coherent: normal
 $A_{\mathrm{sym}}=VDV^\top$ with orthogonal $V$, common $C$ whose rows
 are top-$2$ eigenvectors of $A$, varying horizon $\tau\in\{1,2,3,5\}$.
@@ -807,7 +807,7 @@ principal angles (Corollary~\ref{cor:approxcoh}).
 The fork witness from~\eqref{eq:forkwitness}: $d=3$, $r=2$, $T_1
 =\mathrm{diag}(5,4,0)$, $T_2=\mathrm{diag}(5,0,4)$.
 
-\paragraph{Causal score (assigning $K_t=T_t$).}
+\paragraph{Causal score (assigning $K_t=T_t$)}
 Both $K_t$ have simple top eigenvalue $5$ with top eigenvector $e_1$.
 Thus $\dim\mathrm{span}\{u_t\}=1\le 2=r$, so $\{K_t\}$ is
 $2$-coverable.
@@ -817,7 +817,7 @@ $v\perp e_1$---satisfies
 $S^{\mathrm{caus}}_t(P_{\mathrm{cov}})=\lambda_1(K_t)=5$ for both $t$.
 Causal global privilege exists.
 
-\paragraph{Predictive score (assigning $M_t=T_t$).}
+\paragraph{Predictive score (assigning $M_t=T_t$)}
 $\mathrm{Top}_2(M_1)=\mathrm{span}\{e_1,e_2\}$ and
 $\mathrm{Top}_2(M_2)=\mathrm{span}\{e_1,e_3\}$.
 The intersection is $\mathrm{span}\{e_1\}$, of dimension $1<r$.
@@ -844,7 +844,7 @@ $\sum_i w_i\lambda_2(A_i)$ can grossly overestimate the actual regret,
 while still detecting the qualitative point that the surrogate
 optimiser need not equal the true optimiser.
 
-\paragraph{Construction.}
+\paragraph{Construction}
 $N=2$, $d=3$, $r=1$, equal weights $w_1=w_2=\tfrac{1}{2}$, with
 \begin{equation}\label{eq:wgex}
 A_1=\mathrm{diag}(3,2,0),\qquad
@@ -879,7 +879,7 @@ F(P_B^\star)=\tfrac{1}{2}[3.4+0.5\cos 26.6^\circ+0.6\sin 26.6^\circ]
 =\tfrac{1}{2}(3.4+0.447+0.268)\approx 2.058.
 \end{equation}
 
-\paragraph{Regret comparison.}
+\paragraph{Regret comparison}
 The actual regret is
 \begin{equation}
 F(P_F^\star)-F(P_B^\star)\approx 2.090-2.058 = 0.032.
@@ -938,7 +938,7 @@ $\theta_F^\star$, $\theta_B^\star$            & $25.1^\circ$, $13.3^\circ$ \\
 \label{sec:scope}
 % =========================================================================
 
-\paragraph{What is earned.}
+\paragraph{What is earned}
 For finite PSD families on $\R^d$ and a fixed projection rank $r$:
 \begin{itemize}
 \item Under the predictive trace score, finite global privilege
@@ -958,7 +958,7 @@ The instance-dependent bound is structurally informative: it factors
 regret into residual spectral mass and optimizer misalignment, and
 attributes it pointwise to the states in the support of $\mu$.
 
-\paragraph{What is not earned.}
+\paragraph{What is not earned}
 The results are stated for finite PSD families and finite-support
 regimes.
 Continuous regimes require replacing $B_\lambda$ with the integral
@@ -977,7 +977,7 @@ Approximate coverability (a perturbation theory of $r$-coverability) is
 open; the predictive analogue is
 Corollary~\ref{cor:approxcoh}.
 
-\paragraph{Practical implication.}
+\paragraph{Practical implication}
 Whenever a single rank-$r$ projection must serve a family of objectives,
 the iff conditions of Theorems~\ref{thm:pred} and~\ref{thm:caus} are
 testable: $r$-coherence by checking equality of top-$r$ eigenspaces;
