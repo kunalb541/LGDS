@@ -108,17 +108,16 @@ characterisation of the largest eigenvalue.
 The trace score corresponds to squared-error prediction risk in linear
 Gaussian settings (\S\ref{sec:pred}); the operator-norm score admits a
 local linearised intervention-response motivation (\S\ref{sec:caus}).
-The underlying variational ingredients are classical
-\cite{Fan1949,HornJohnson2013}; the contribution of this paper is to
-place the two common-optimality laws side by side, prove the strict
-coherence/coverability fork, and develop the weak-glue surrogate regret
-analysis when neither exact condition holds.
+The Ky Fan and Rayleigh--Ritz ingredients are classical
+\cite{Fan1949,HornJohnson2013}; the new content of this paper is the
+comparative common-optimality framework, the strict
+coherence/coverability fork, and the weak-glue value-regret analysis
+listed below.
 
 \paragraph{Contribution}
-The first two results are structural consequences of classical
-variational principles applied per family; the contribution is the
-side-by-side comparison, the strict gap between them, and the regret
-analysis when neither exact condition holds.
+Theorems~\ref{thm:pred} and~\ref{thm:caus} are structural consequences
+of classical variational principles, not new variational principles in
+their own right.
 
 \begin{enumerate}
 \item \emph{Trace-score common optimality} (Theorem~\ref{thm:pred}):
@@ -165,8 +164,10 @@ and is provably tighter than the coarse bound.
 \paragraph{Position in the literature}
 The Grassmannian $\Gr(r,d)$ is the standard parameter space for rank-$r$
 linear maps, with smooth Riemannian structure inherited from $O(d)$
-\cite{Edelman1998}; principal-subspace optimality and the Ky Fan trace
-maximisation are classical \cite{Fan1949,HornJohnson2013,Hotelling1933}.
+\cite{Edelman1998}; the Ky Fan trace maximisation principle is classical
+\cite{Fan1949,HornJohnson2013}.
+Principal component analysis \cite{Hotelling1933} is the corresponding
+single-matrix instance of trace-score optimality.
 The condition that several covariance-like matrices share a common
 eigenstructure has a long history under the names \emph{common principal
 components} \cite{Flury1984,Krzanowski1979} and \emph{joint
@@ -181,8 +182,8 @@ contamination structure, complementary to the exact-optimality focus
 here.
 Within this landscape, Theorems~\ref{thm:pred} and~\ref{thm:caus} are
 structural consequences of the Ky Fan trace and operator-norm variational
-principles respectively; the contribution of this paper is to put the
-two existence laws side by side, prove the strict gap between them
+principles respectively; what is new here is to put the two existence
+laws side by side, prove the strict gap between them
 (Theorem~\ref{thm:fork}), and develop the weak-glue regret comparison
 (Theorems~\ref{thm:weakglue}, \ref{thm:instancereg}) that quantifies
 suboptimality when neither exact condition holds.
@@ -398,6 +399,8 @@ where the \emph{target information matrix} is
 \begin{equation}\label{eq:M}
 M_{C,\tau} = \Sigma^{1/2}(A^\tau)^\top C^\top C A^\tau \Sigma^{1/2}.
 \end{equation}
+The matrix $M_{C,\tau}$ is symmetric PSD because $\Sigma^{1/2}$ is
+symmetric and $M_{C,\tau}=(CA^\tau\Sigma^{1/2})^\top(CA^\tau\Sigma^{1/2})$.
 \end{lemma}
 
 \begin{proof}
@@ -485,6 +488,15 @@ The second applies the upper bound of Corollary~\ref{cor:regretbound}
 uniformly in $a$.
 \end{proof}
 
+\begin{remark}[Contrapositive certificate]
+The contrapositive of the upper bound gives a one-sided practical
+certificate: if $\Gamma_{\mathrm{tr}}>\delta$ for some $\delta>0$, then
+no rank-$r$ projection lies within squared principal-angle distance
+$\delta/\Lambda$ of every task-optimal subspace $P_a^\star$.
+This is not a matching lower bound (the upper bound need not be tight),
+but rules out approximate $r$-coherence at the corresponding scale.
+\end{remark}
+
 % =========================================================================
 \section{Operator-Norm Common Optimality via \texorpdfstring{$r$}{r}-Coverability}
 \label{sec:caus}
@@ -569,26 +581,29 @@ each $\Emax(K_t)$.
 
 \begin{remark}[Testing $r$-coverability]
 \label{rem:covtest}
-$r$-coverability is a finite-dimensional subspace-transversal (or
-\emph{hitting}) problem: does there exist a rank-$r$ subspace $V$ that
-meets every $\Emax(K_t)$ nontrivially?
-\emph{Simple-top case.}
-If $\dim\Emax(K_t)=1$ with top eigenvector $u_t$ for every $t$, $V$
-must contain each $u_t$, so $r$-coverability is equivalent to
-$\dim\mathrm{span}\{u_t\}\le r$.
-\emph{General case.}
-If some $\Emax(K_t)$ are multidimensional, the problem is genuinely a
-hitting problem on a collection of subspaces of varying dimension.
-A simple sufficient condition is $\dim\sum_t\Emax(K_t)\le r$: any
-$r$-dimensional subspace containing this sum is an $r$-cover.
-A simple necessary condition is that any choice of unit
-$u_t\in\Emax(K_t)$ (one per $t$) gives $\dim\mathrm{span}\{u_t\}\le r$
-for at least one such choice; without freedom in selecting representatives
-this collapses to the simple-top reduction, which is sufficient but
-strictly stronger than $r$-coverability when the $\Emax(K_t)$ admit
-genuine multidimensional flexibility.
-General algorithmic testing under arbitrary multiplicity structure is
-outside the scope of this paper.
+$r$-coverability is the question whether there exists an $r$-plane
+$V\in\Gr(r,d)$ meeting every $\Emax(K_t)$ nontrivially.
+This is a finite-dimensional subspace-transversal / incidence problem
+on the Grassmannian: $V$ must satisfy a Schubert-type incidence
+condition $V\cap\Emax(K_t)\ne\{0\}$ for every $t$.
+We do not pursue a complexity classification; the following practical
+guidance suffices for our purposes.
+\begin{itemize}
+\item \emph{Simple-top reduction.} If $\dim\Emax(K_t)=1$ with top
+eigenvector $u_t$ for every $t$, $V$ must contain each $u_t$, so
+$r$-coverability is equivalent to $\dim\mathrm{span}\{u_t\}\le r$.
+\item \emph{Sufficient condition (any multiplicity).} If
+$\dim\sum_t\Emax(K_t)\le r$, any $r$-dimensional subspace containing
+this sum is an $r$-cover.
+\item \emph{Numerical / algebraic test.} Outside these regimes, $r$-
+coverability can be tested numerically as feasibility on $\Gr(r,d)$ or
+in principle via Schubert incidence calculus; a complete algorithmic
+classification is outside scope.
+\end{itemize}
+The simple-top reduction is sufficient but in general strictly stronger
+than $r$-coverability, since freedom to choose unit $u_t\in\Emax(K_t)$
+may bring $\dim\mathrm{span}\{u_t\}$ below $r$ when some
+$\Emax(K_t)$ are multidimensional.
 \end{remark}
 
 \subsection{Sufficient condition for the simple-top case}
@@ -680,7 +695,13 @@ The relevant question becomes \emph{approximate} common optimality under
 the operator-norm score: how close to optimal can a single rank-$r$
 projection come across the family, and is there a tractable surrogate
 for the non-Ky--Fan operator-norm objective?
-The construction in this section is informally called \emph{weak glue}.
+We use two informal labels for convenience: \emph{strong glue} for the
+simple-top $r$-coverable case ($\dim\mathrm{span}\{u_i\}\le r$), and
+\emph{weak glue} for the non-coverable regime in which the surrogate
+$B_\lambda$ is used in place of an exact common optimum.
+These labels are not additional assumptions; they are shorthand for
+regimes already characterised by Definition~\ref{def:cov} and the
+content of this section.
 The bounds developed here control \emph{value regret}
 $F(P_F^\star)-F(P_B^\star)$, not subspace distance
 $\|\sin\Theta(P_F^\star,P_B^\star)\|$; as the $d=3$ counterexample of
@@ -711,6 +732,17 @@ score $S^{\mathrm{op}}_i(P)$ from~\eqref{eq:scores} with $K_i:=A_i$.
 The surrogate $\tilde F$ is a Ky Fan trace and is therefore maximised by
 any rank-$r$ projection whose range is a dominant invariant subspace of
 $B_\lambda$.
+
+The choice of $B_\lambda$ is not arbitrary.
+For each $i$, the lower bound~\eqref{eq:pertermlow} gives
+$\lambda_1(A_i)\|Pu_i\|^2=\tr\!\bigl(P\,\lambda_1(A_i)u_iu_i^\top\bigr)
+\le\lambda_{\max}(PA_iP)$;
+summing the rank-one lower contributions with weights $w_i$ yields
+exactly $\tr(PB_\lambda)=\tilde F(P)$.
+$B_\lambda$ is the Ky Fan matrix collecting the rank-one
+leading-direction lower approximation to $F(P)$.
+It is exact when every $A_i$ is rank-$1$ (Theorem~\ref{thm:weakglue})
+and is controlled by the residual spectra $\lambda_2(A_i)$ when not.
 Let $P_F^\star\in\arg\max_{\rank P=r} F(P)$ (a true operator-norm optimiser)
 and $P_B^\star\in\arg\max_{\rank P=r}\tilde F(P)$ (a surrogate optimiser);
 under strict $r$-gap of $B_\lambda$ both are unique up to range
@@ -785,12 +817,16 @@ by~\eqref{eq:pertermlow}.
 $F(P)-\tilde F(P)=\sum_i w_i\delta_i(P)$ with positive weights and
 nonnegative summands, so $F=\tilde F$ pointwise iff $\delta_i(P)=0$ for
 every $i$ and every rank-$r$ projector $P$.
-Per $i$: take $P$ to project onto an eigenvector $e_k$ of $A_i$ with
-$k\ne 1$.
-Then $\lambda_{\max}(PA_iP)=\lambda_k(A_i)$ and $\|Pu_i\|^2=(e_k^\top u_i)^2=0$,
-so $\delta_i(P)=\lambda_k(A_i)$.
-Vanishing for all $k\ne 1$ forces $\lambda_k(A_i)=0$, i.e.\ $A_i$ is
-rank-$1$.
+Fix $i$ and any $k\ne 1$ with $\lambda_k(A_i)>0$ (if no such $k$
+exists, $A_i$ is rank-$1$).
+Since $r<d$ and $\{e_2,\ldots,e_d\}\perp u_i$ (the eigenvectors of
+$A_i$), the orthogonal complement of $u_i$ has dimension $d-1\ge r$,
+so we may choose a rank-$r$ subspace $V$ that contains $e_k$ and is
+orthogonal to $u_i$.
+For $P=\Pi_V$: $\|Pu_i\|=0$, hence $\delta_i(P)
+=\lambda_{\max}(PA_iP)\ge e_k^\top A_i e_k=\lambda_k(A_i)>0$,
+contradicting $\delta_i\equiv 0$.
+Therefore $\lambda_k(A_i)=0$ for all $k\ne 1$, i.e.\ $A_i$ is rank-$1$.
 Conversely, if every $A_i$ is rank-$1$, $A_i=\lambda_1(A_i)u_iu_i^\top$,
 and $\lambda_{\max}(PA_iP)=\lambda_1(A_i)\|Pu_i\|^2$ exactly, so $F=\tilde F$.
 \end{proof}
@@ -913,7 +949,12 @@ The minimax projection $P_{\mathrm{joint}}\in\arg\min_{P}\max_t
 optimisation on $\Gr(2,8)$ ($300$ random orthonormal initialisations with
 a quasi-Newton iteration on $U$ and a thin QR retraction; gradient-norm
 threshold $10^{-12}$).
-The numerical search is verification only at the minimax level.
+All initialisations converged to the same minimax value to numerical
+tolerance, with final projected gradient norm below the threshold,
+consistent with attainment of the global minimum.
+The numerical search is illustrative; the single-target optima are
+closed-form, and the minimax value is reported as a numerical
+illustration of $\Gamma_{\mathrm{tr}}>0$.
 
 \paragraph{Condition A: target-dependent}
 Targets $T_1=([e_1^\top;e_2^\top],1)$ and $T_2=([e_5^\top;e_6^\top],5)$.
@@ -1021,7 +1062,14 @@ $A_2$: $u_2=(e_1+e_2)/\sqrt 2$, $\lambda_1=1.5$, $\lambda_2=0.3$,
 $\kappa_2=0.2$.
 
 Restricting to rank-$1$ projectors $P_\theta=v(\theta)v(\theta)^\top$
-with $v(\theta)=(\cos\theta,\sin\theta,0)$:
+with $v(\theta)=(\cos\theta,\sin\theta,0)$, the per-state Rayleigh
+quotients are
+\begin{align*}
+v^\top A_1 v &= 3\cos^2\theta+2\sin^2\theta,\\
+v^\top A_2 v &= 0.9(\cos^2\theta+\sin^2\theta)+1.2\sin\theta\cos\theta
+              =0.9+0.6\sin(2\theta).
+\end{align*}
+Averaging with weights $w_1=w_2=\tfrac{1}{2}$:
 \begin{equation}
 F(\theta)=\tfrac{1}{2}[3\cos^2\theta+2\sin^2\theta+0.9+0.6\sin(2\theta)]
 =\tfrac{1}{2}[3.4+0.5\cos(2\theta)+0.6\sin(2\theta)].
