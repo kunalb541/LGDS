@@ -52,7 +52,8 @@ risk for target *Cx*(*t*+τ) is governed by the target information matrix
 M(C,τ) = Σ^(1/2) (A^τ)^T C^T C A^τ Σ^(1/2)
 ```
 
-and the *r*-coherence iff characterization gives Corollary 7.
+and the *r*-coherence iff characterization gives an LGDS corollary
+in §3.
 
 ## All computations are exact — no simulation
 
@@ -91,7 +92,7 @@ python -m pytest tests/ -v
 
 ```
 lgds.py                        # numerical computation; writes outputs/data/paper_macros.tex
-paper.tex                      # the manuscript (12 pages, elsarticle format)
+paper.tex                      # the manuscript (13 pages, elsarticle format)
 paper.pdf                      # compiled manuscript
 refs.bib                       # bibliography
 build.sh                       # python lgds.py + latexmk
@@ -107,23 +108,26 @@ tests/test_lgds.py             # correctness tests for the lgds.py computations
 - **§1 Introduction** — two scoring rules, four contributions, position
   vs CPC / joint-diagonalisation / Gramian / sensor-selection literature.
   Comparison table of the two existence laws.
-- **§2 Setup** — Grassmannian Gr(*r,d*), trace and operator-norm scoring
-  rules, common optimal rank-*r* projection (Definition 1), dominant
-  invariant subspace and leading eigenspace (Definition 2).
-- **§3 Trace-Score Common Optimality via *r*-Coherence** — Theorem 3
-  for arbitrary PSD families; LGDS instantiation (Lemma 6 + Corollary 7);
-  regret–angle bound (Corollary 8); approximate *r*-coherence
-  (Corollary 9).
+- **§2 Setup** — Grassmannian Gr(*r,d*); trace and operator-norm scoring
+  rules; common optimal rank-*r* projection; dominant invariant subspace
+  and leading eigenspace.
+- **§3 Trace-Score Common Optimality via *r*-Coherence** — main trace
+  theorem for arbitrary PSD families; LGDS instantiation (Bayes risk
+  lemma + LGDS corollary); regret–angle bound; approximate *r*-coherence
+  with one-sided contrapositive certificate.
 - **§4 Operator-Norm Common Optimality via *r*-Coverability** — local
   linearised intervention-response motivation (§4.1); rank-1-driven
-  local maximizer (Proposition 10); *r*-coverability definition and
-  testing remark; operator-norm theorem (Theorem 12); simple-top
-  sufficient condition (Corollary 14).
-- **§5 The Fork** — Theorem 15: *r*-coherence implies *r*-coverability
-  strictly; 3×3 witness; trace vs operator-norm dissociation.
+  local maximizer; *r*-coverability definition; testing via Schubert-
+  type incidence (simple-top reduction; sufficient condition
+  dim Σ_t E_max(K_t) ≤ r); main operator-norm theorem; simple-top
+  ("strong glue") sufficient condition.
+- **§5 The Fork** — *r*-coherence implies *r*-coverability strictly;
+  3×3 witness; trace vs operator-norm dissociation.
 - **§6 Surrogate Approximation When Coverability Fails (weak glue)** —
-  sandwich (Theorem 17); instance-dependent regret (Theorem 18); three
-  exact regimes (Corollary 19); value-vs-subspace remark.
+  motivation for *B_λ* as the Ky-Fan rank-1 lower contribution; sandwich
+  inequality; coarse and instance-dependent regret bounds; three exact
+  regimes (rank-1 *A_i*, *r*-coverable, common-shape); value-vs-subspace
+  remark.
 - **§7 Numerical Illustrations** — LGDS trace-score instance
   (Γ_tr = 0.026 > 0); 3×3 fork witness with explicit minimax derivation
   Γ_tr^fork = 2; 3×3 weak-glue counterexample (coarse bound 1.15 vs
