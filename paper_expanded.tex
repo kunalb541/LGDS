@@ -65,7 +65,8 @@ sandwich
 $\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(J_iJ_i^\top)$
 and an instance-dependent regret bound
 $F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(J_iJ_i^\top)(1-\|P_F^\star u_i\|^2)$
-that is tight in the rank-$1$, strong-glue, and common-shape regimes.
+that is tight in three structural regimes (rank-$1$ Jacobians,
+$r$-coverable case, common-shape family).
 Numerical illustrations include a stationary linear Gaussian dynamical
 system certifying non-coherence ($\Gamma=\GammaCondA>0$), the $3\times 3$
 fork witness in which a common optimal projection exists under
@@ -147,8 +148,8 @@ non-Ky--Fan operator-norm objective into a Ky--Fan eigenproblem.
 The surrogate is sandwiched between $F$ and $F + \sum_i w_i\lambda_2(A_i)$,
 giving a coarse regret bound; the instance-dependent refinement
 $\sum_i w_i \lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$ unifies the
-equality regimes (rank-$1$ Jacobians, strong glue, common-shape) and
-is provably tighter than the coarse bound.
+equality regimes (rank-$1$ Jacobians, $r$-coverable case, common-shape)
+and is provably tighter than the coarse bound.
 \end{enumerate}
 
 \paragraph{Position in the literature}
@@ -268,8 +269,9 @@ The two scoring rules give different answers.
 
 \begin{definition}[$r$-coherence]\label{def:rcoh}
 A PSD family $\{M_t\}_{t\in\mathcal{T}}$ on $\R^d$ is \emph{$r$-coherent}
-if there exists a rank-$r$ subspace $V^\star\subseteq\R^d$ contained
-in a dominant $r$-dimensional invariant subspace of every $M_t$.
+if there exists a rank-$r$ subspace $V^\star\subseteq\R^d$ that is a
+dominant $r$-dimensional invariant subspace of every $M_t$ (equivalently,
+$\tr(\Pi_{V^\star}M_t)=\sum_{i=1}^r\lambda_i(M_t)$ for every $t$).
 Under strict $r$-gaps ($\lambda_r(M_t)>\lambda_{r+1}(M_t)$ for all $t$),
 this is equivalent to the equality of the top-$r$ eigenspaces of all
 $M_t$.
@@ -286,16 +288,17 @@ each $t$,
 \begin{equation}\label{eq:kyfan}
 \max_{\rank P = r} \tr(P M_t) = \sum_{i=1}^r \lambda_i(M_t),
 \end{equation}
-attained exactly by projectors whose range lies within a dominant
-$r$-dimensional invariant subspace of $M_t$.
-($\Leftarrow$) If $V^\star$ is a common rank-$r$ subspace contained in
-every dominant invariant subspace, then $P^\star := \Pi_{V^\star}$ attains
-the maximum~\eqref{eq:kyfan} for every $t$.
+attained exactly by projectors $P=\Pi_V$ with $V$ a dominant
+$r$-dimensional invariant subspace of $M_t$ in the sense of
+Definition~\ref{def:domsubspace}.
+($\Leftarrow$) If $V^\star$ is a common dominant $r$-dimensional invariant
+subspace of every $M_t$, then $P^\star:=\Pi_{V^\star}$ attains the
+maximum~\eqref{eq:kyfan} for every $t$.
 ($\Rightarrow$) Conversely, if $P^\star$ attains the maximum for every
-$t$, then $\ran(P^\star)$ lies within a dominant $r$-dimensional invariant
+$t$, then $\ran(P^\star)$ is a dominant $r$-dimensional invariant
 subspace of every $M_t$, so the family is $r$-coherent.
-Under strict $r$-gaps the dominant invariant subspace is unique and equal
-to the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
+Under strict $r$-gaps the dominant invariant subspace is unique and equals
+the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
 \end{proof}
 
 \begin{remark}[Strictness of $r$-coherence]
@@ -491,18 +494,33 @@ Existence of such a rank-$r$ subspace is the definition of
 $r$-coverability.
 \end{proof}
 
-\begin{remark}[Coverability is much weaker than coherence]
-$r$-coherence demands that one rank-$r$ subspace lie \emph{within} the
-dominant invariant subspace of every $M_t$.
+\begin{remark}[Coverability is weaker than coherence]
+$r$-coherence demands that one rank-$r$ subspace \emph{equal} a dominant
+$r$-dimensional invariant subspace of every $M_t$.
 $r$-coverability demands only that the rank-$r$ subspace \emph{hit}
 each $\Emax(K_t)$.
-The latter is satisfied whenever the union of leading directions
-$\{u_t\}$ spans at most $r$ dimensions.
 \end{remark}
 
-\subsection{Strong glue: a sufficient condition}
+\begin{remark}[Testing $r$-coverability]
+\label{rem:covtest}
+$r$-coverability is a finite-dimensional subspace-transversal (or
+\emph{hitting}) problem: does there exist a rank-$r$ subspace $V$ that
+meets every $\Emax(K_t)$ nontrivially?
+In the simple-top case ($\dim\Emax(K_t)=1$ with top eigenvector $u_t$
+for every $t$), $V$ must contain each $u_t$, so the problem reduces to
+the dimension count $\dim\mathrm{span}\{u_t\}\le r$.
+In the general case ($\dim\Emax(K_t)$ possibly $>1$), $r$-coverability
+is implied by the simple-top reduction applied to any choice of unit
+$u_t\in\Emax(K_t)$ but is in general weaker, since the freedom to choose
+$u_t$ within each $\Emax(K_t)$ may bring $\dim\mathrm{span}\{u_t\}$
+below $r$.
+A constructive test exists when $\dim\sum_t\Emax(K_t)\le r$: any
+$r$-dimensional subspace containing this sum is an $r$-cover.
+\end{remark}
 
-\begin{corollary}[Strong glue]\label{cor:strongglue}
+\subsection{Sufficient condition for the simple-top case}
+
+\begin{corollary}[Simple-top $r$-coverability]\label{cor:strongglue}
 Suppose $\{K_t\}_{t\in T}$ is indexed by a finite-support measure
 $\mu=\sum_i w_i\delta_{x_i}$ on a state space, with $K_i:=K_{x_i}$ having
 simple top eigenvalues and top eigenvectors $u_i$.
@@ -510,11 +528,33 @@ Then $\{K_i\}$ is $r$-coverable iff $\dim\mathrm{span}\{u_i\}\le r$.
 In that case any $P^\star$ whose range contains $\mathrm{span}\{u_i\}$
 achieves the global causal optimum
 $S^{\mathrm{caus}}_i(P^\star)=\lambda_1(K_i)$ for every $i$.
+This regime is informally called \emph{strong glue}.
 \end{corollary}
 
 \begin{proof}
 Direct from Definition~\ref{def:cov} and Proposition~\ref{prop:localmax}.
 \end{proof}
+
+\begin{table}[tbp]
+\caption{Side-by-side comparison of the two scoring rules considered in
+this paper. Both are smooth, except that $\lambda_{\max}(PKP)$ is
+non-smooth at eigenvalue crossings (\S\ref{sec:setup}).}
+\label{tab:compare}
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Scoring rule & Fixed-target optimal $P$ has & Common optimum exists iff \\
+\midrule
+$\tr(PM)$ (Ky Fan trace) &
+range $=$ a dominant $r$-dim invariant subspace of $M$ &
+family is $r$-coherent (Thm.~\ref{thm:pred}) \\
+$\lambda_{\max}(PKP)$ (operator norm) &
+range $\cap$ $\Emax(K)\ne\{0\}$ &
+family is $r$-coverable (Thm.~\ref{thm:caus}) \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
 
 % =========================================================================
 \section{The Fork: Coherence Implies Coverability Strictly}
@@ -532,22 +572,16 @@ For a single PSD family $\{T_t\}$ on $\R^d$:
 \end{theorem}
 
 \begin{proof}
-(i) Let $\{T_t\}$ be $r$-coherent with shared rank-$r$ subspace $V^\star$,
-and fix $t$.
-$V^\star$ attains the Ky--Fan maximum
-$\tr(\Pi_{V^\star}T_t)=\sum_{i=1}^r\lambda_i(T_t)$.
-Choose an orthonormal basis $\{v_1,\ldots,v_r\}$ of $V^\star$ that
-diagonalises $\Pi_{V^\star}T_t\Pi_{V^\star}$ on $V^\star$; let
-$\mu_k:=v_k^\top T_t v_k$ ordered $\mu_1\ge\cdots\ge\mu_r$, so
-$\sum_{k=1}^r\mu_k=\sum_{i=1}^r\lambda_i(T_t)$.
-Cauchy interlacing for the principal submatrix
-$(v_k^\top T_t v_l)_{k,l}$ \cite{HornJohnson2013} gives
-$\mu_k\le\lambda_k(T_t)$ for every $k$; combined with the sum equality
-this forces $\mu_k=\lambda_k(T_t)$ for every $k$.
-In particular $\mu_1=v_1^\top T_t v_1=\lambda_1(T_t)$, and the Rayleigh
-quotient equality case gives $v_1\in\Emax(T_t)$.
-Hence $V^\star\cap\Emax(T_t)\supseteq\mathrm{span}\{v_1\}\ne\{0\}$ for
-every $t$, so $V^\star$ is an $r$-cover.
+(i) Let $\{T_t\}$ be $r$-coherent with shared dominant subspace
+$V^\star$, and fix $t$.
+A Ky--Fan-optimal $V^\star$ contains a top eigenvector of $T_t$:
+diagonalising $\Pi_{V^\star}T_t\Pi_{V^\star}$ on $V^\star$, the eigenvalues
+$\mu_1\ge\cdots\ge\mu_r$ satisfy $\mu_k\le\lambda_k(T_t)$ by Cauchy
+interlacing \cite{HornJohnson2013} and $\sum_k\mu_k=\sum_i\lambda_i(T_t)$,
+forcing $\mu_1=\lambda_1(T_t)$, hence the corresponding $v_1\in V^\star$
+lies in $\Emax(T_t)$.
+Therefore $V^\star\cap\Emax(T_t)\ne\{0\}$ for every $t$, so $V^\star$ is
+an $r$-cover.
 
 (ii) For the converse, take $d=3$, $r=2$ and
 \begin{equation}\label{eq:forkwitness}
@@ -580,7 +614,7 @@ functional.
 \end{remark}
 
 % =========================================================================
-\section{Weak Glue: Surrogate Optimization When Coverability Fails}
+\section{Surrogate Approximation When Coverability Fails}
 \label{sec:weakglue}
 % =========================================================================
 
@@ -591,6 +625,12 @@ The relevant question becomes \emph{approximate} causal projection
 selection: how close to optimal can a single rank-$r$ projector come
 across the family, and is there a tractable surrogate for the
 non-Ky--Fan operator-norm objective?
+The construction in this section is informally called \emph{weak glue}.
+We emphasise that the bounds developed here control the \emph{value
+regret} $F(P_F^\star)-F(P_B^\star)$, not the subspace distance
+$\|\sin\Theta(P_F^\star,P_B^\star)\|$; as the $d=3$ counterexample of
+Section~\ref{sec:numerics} shows, value and subspace can be discrepant
+(small value gap, substantial subspace gap).
 
 \subsection{Setup and surrogate}
 
@@ -746,8 +786,8 @@ true optimum, in each of the following cases:
 \begin{enumerate}
 \item[(R1)] \emph{Rank-$1$ Jacobians:} $\lambda_2(A_i)=0$ for every $i$.
 Then $\tilde F=F$ pointwise.
-\item[(R2)] \emph{Strong glue:} $\dim\mathrm{span}\{u_i\}\le r$, i.e.\
-$\{A_i\}$ is $r$-coverable.
+\item[(R2)] \emph{$r$-coverable case (informally, ``strong glue''):}
+$\dim\mathrm{span}\{u_i\}\le r$.
 Both $P_F^\star$ and $P_B^\star$ achieve the global maximum
 $\sum_i w_i\lambda_1(A_i)$.
 \item[(R3)] \emph{Common-shape family:} $A_i=\alpha_i A$ for some fixed
@@ -995,11 +1035,11 @@ projection exists iff the family is $r$-coverable
 \item $r$-coherence implies $r$-coverability strictly
 (Theorem~\ref{thm:fork}).
 \item When $\{A_i\}$ fails $r$-coverability, the eigenvalue-weighted
-surrogate $B_\lambda$ converts $F$ into a Ky Fan eigenproblem, and
-the surrogate regret is bounded by
-$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$, vanishing in three
-explicit regimes (rank-$1$, strong glue, common-shape;
-Corollary~\ref{cor:equality}).
+surrogate $B_\lambda$ converts $F$ into a Ky Fan eigenproblem; the
+surrogate value regret is bounded by
+$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$, which vanishes in
+three explicit regimes (rank-$1$ Jacobians, $r$-coverable case,
+common-shape family; Corollary~\ref{cor:equality}).
 \end{itemize}
 The instance-dependent bound is structurally informative: it factors
 regret into residual spectral mass and optimizer misalignment, and
@@ -1051,12 +1091,15 @@ per-target projections are necessary for predictive optimality.
 % =========================================================================
 
 The author received no external funding for this work.
-Reproducible code for the LGDS predictive instance is available from a
-publicly accessible repository\footnote{Repository details accompany the
-non-blind version of the manuscript.}.
-The fork witness and weak-glue counterexample are computed analytically
-from the exact $3\times 3$ matrices specified in equations
-\eqref{eq:forkwitness} and~\eqref{eq:wgex}.
+The numerical illustrations are fully reproducible.
+The fork witness~\eqref{eq:forkwitness} and the weak-glue
+counterexample~\eqref{eq:wgex} are stated as exact $3\times 3$ matrices
+and all reported quantities follow analytically.
+The LGDS predictive instance (Section~\ref{sec:numerics}) is generated
+and verified by the open-source script accompanying this manuscript at
+\url{https://github.com/kunalb541/LGDS}; running \texttt{python lgds.py}
+regenerates every numerical macro used in
+Tables~\ref{tab:condA}--\ref{tab:wg} and Section~\ref{sec:numerics}.
 
 \bibliographystyle{elsarticle-num}
 \bibliography{refs}
