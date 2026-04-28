@@ -1,0 +1,957 @@
+%% paper_expanded.tex
+%% Expanded version of the LGDS short note
+%% Title: Common Optimal Finite-Rank Projections: Coherence, Coverability, and Regret
+%% Format: elsarticle (compatible with Systems & Control Letters / Automatica)
+
+\documentclass[final,3p,times]{elsarticle}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage[colorlinks=true,citecolor=blue,urlcolor=blue,linkcolor=black]{hyperref}
+
+\input{outputs/data/paper_macros.tex}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Gr}{\mathrm{Gr}}
+\newcommand{\tr}{\mathrm{tr}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\ran}{\mathrm{ran}}
+\newcommand{\Reg}{\mathrm{Reg}}
+\newcommand{\Emax}{E_{\max}}
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+\journal{Systems \& Control Letters}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Common Optimal Finite-Rank Projections:\\
+       Coherence, Coverability, and Regret}
+
+\author{Kunal Bhatia}
+\address{Independent Researcher, Heidelberg, Germany\\
+ORCID: \href{https://orcid.org/0009-0007-4447-6325}{0009-0007-4447-6325}}
+
+\begin{abstract}
+For a finite family of positive semidefinite (PSD) target operators on
+$\R^d$ and a fixed rank $r$, we ask when a single rank-$r$ orthogonal
+projection is simultaneously optimal for every target under two natural
+scoring rules: the \emph{predictive} Ky--Fan trace
+$S^{\mathrm{pred}}_t(P)=\tr(P M_t)$ and the \emph{causal} operator norm
+$S^{\mathrm{caus}}_t(P)=\lambda_{\max}(P K_t P)$.
+Predictive global privilege is equivalent to \emph{$r$-coherence}---all
+$M_t$ share a common top-$r$ eigenspace.
+Causal global privilege is equivalent to \emph{$r$-coverability}---a
+single rank-$r$ subspace nontrivially intersects the leading invariant
+subspace of every $K_t$.
+$r$-coherence implies $r$-coverability but the converse fails; a $3\times 3$
+witness exhibits the strict gap.
+When coverability fails over a regime of local intervention Jacobians
+$\{J_i\}$, the eigenvalue-weighted surrogate
+$B_\lambda=\sum_i w_i\lambda_1(J_iJ_i^\top)u_iu_i^\top$ provides a
+Ky--Fan-tractable approximation of the causal landscape; we prove a
+sandwich
+$\tilde F(P)\le F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(J_iJ_i^\top)$
+and an instance-dependent regret bound
+$F(P_F^\star)-F(P_B^\star)\le\sum_i w_i\lambda_2(J_iJ_i^\top)(1-\|P_F^\star u_i\|^2)$
+that is tight in the rank-$1$, strong-glue, and common-shape regimes.
+Numerical illustrations include a stationary linear Gaussian dynamical
+system certifying non-coherence ($\Gamma=\GammaCondA>0$), the $3\times 3$
+fork witness exhibiting causal-without-predictive privilege, and a
+$3\times 3$ weak-glue counterexample in which the coarse regret bound
+overestimates the true regret by a factor of $36$.
+\end{abstract}
+
+\begin{keyword}
+finite-rank projection \sep Grassmannian \sep Ky Fan theorem \sep
+$r$-coherence \sep $r$-coverability \sep operator-norm objective
+\sep regret bound
+\MSC[2020] 93B07 \sep 15A18 \sep 93E10 \sep 90C26
+\end{keyword}
+
+\end{frontmatter}
+
+% =========================================================================
+\section{Introduction}
+% =========================================================================
+
+A recurrent structural question in observer design, sensor selection, and
+reduced-order modelling is whether a single low-rank linear projection can
+serve simultaneously as the optimal observation map for an entire family of
+prediction or intervention tasks, or whether the optimal projection is
+inherently task-dependent.
+The answer turns out to depend not only on the family of targets but on
+\emph{which scoring rule} is used to measure observer quality.
+
+For a fixed projector rank $r$ and a state space $\R^d$, two scoring rules
+are natural and arise in different contexts:
+\begin{itemize}
+\item the \emph{predictive trace} $S^{\mathrm{pred}}_t(P) = \tr(P M_t)$,
+which corresponds to squared-error prediction risk in linear Gaussian
+settings and is governed by the Ky Fan variational principle
+\cite{Fan1949};
+\item the \emph{causal operator norm} $S^{\mathrm{caus}}_t(P) =
+\lambda_{\max}(P K_t P)$, which corresponds to the strongest accessible
+intervention response under projector $P$, with $K_t$ a local
+output Gram or causal-response operator.
+\end{itemize}
+
+This paper establishes, for arbitrary finite PSD families $\{M_t\}$ and
+$\{K_t\}$, a structural answer to the existence question for each
+scoring rule, and characterises the gap between them.
+
+\paragraph{Contribution.}
+The contributions are four:
+
+\begin{enumerate}
+\item \emph{Predictive global privilege} (Theorem~\ref{thm:pred}):
+A common rank-$r$ projection is simultaneously optimal for all
+predictive targets $\{M_t\}$ if and only if the family is
+\emph{$r$-coherent}, meaning all $M_t$ share a common top-$r$
+eigenspace.
+This is the structural condition behind the linear Gaussian dynamical
+systems (LGDS) iff result; we present it for arbitrary PSD families
+and recover the LGDS Bayes-risk instance as a corollary.
+
+\item \emph{Causal global privilege} (Theorem~\ref{thm:caus}):
+A common rank-$r$ projection is simultaneously optimal for all causal
+targets $\{K_t\}$ under the operator-norm score if and only if the
+family is \emph{$r$-coverable}, meaning some rank-$r$ subspace
+intersects the leading invariant subspace of every $K_t$
+nontrivially.
+The proof uses the rank-$1$-driven structure of the
+$\lambda_{\max}(P K P)$ maximiser.
+
+\item \emph{The fork} (Theorem~\ref{thm:fork}): For the same PSD family,
+$r$-coherence implies $r$-coverability but the converse fails.
+A $3\times 3$ witness shows the strict gap: causal global privilege
+can hold while predictive global privilege fails.
+This dissociation is structural, not a consequence of approximation
+error.
+
+\item \emph{Weak-glue regret} (Theorem~\ref{thm:weakglue}): When
+coverability fails, the eigenvalue-weighted surrogate
+$B_\lambda = \sum_i w_i \lambda_1(A_i) u_i u_i^\top$ converts the
+non-Ky--Fan operator-norm objective into a Ky--Fan eigenproblem.
+The surrogate is sandwiched between $F$ and $F + \sum_i w_i\lambda_2(A_i)$
+and the resulting regret bound is tight in three structural regimes
+(rank-$1$ Jacobians, strong glue, common-shape family).
+The instance-dependent refinement
+$\sum_i w_i \lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$ unifies the
+equality conditions and is provably tighter than the coarse
+$\sum_i w_i \lambda_2(A_i)$ bound.
+\end{enumerate}
+
+\paragraph{Position in the literature.}
+The Grassmannian $\Gr(r,d)$ is the standard parameter space for rank-$r$
+linear maps, with smooth Riemannian structure inherited from $O(d)$
+\cite{Edelman1998}; principal-subspace optimality and the Ky Fan trace
+maximisation are classical \cite{Fan1949,HornJohnson2013,Hotelling1933}.
+Reduced-order models for linear systems are commonly built from balanced
+Gramians \cite{Moore1981} or by truncating in $H_2$/$H_\infty$ norms
+\cite{Antoulas2005}; sensor-placement and output-design methods optimise
+estimation or reconstruction quality for a single objective.
+What is less standard is a structural characterization of when a single
+finite-rank projection is exactly optimal across an entire \emph{task family}
+under each of the two scoring rules above; the dissociation between
+predictive and causal privilege, and the weak-glue surrogate with
+instance-dependent regret, appear to be new.
+
+\paragraph{Outline.}
+Section~\ref{sec:setup} gives the setup, the two scoring rules, and the
+notion of finite global privilege.
+Section~\ref{sec:pred} proves the predictive theorem and instantiates it
+in LGDS, recovering the Bayes-risk formula and the regret-angle bound.
+Section~\ref{sec:caus} proves the causal theorem.
+Section~\ref{sec:fork} proves the fork.
+Section~\ref{sec:weakglue} develops the weak-glue surrogate.
+Section~\ref{sec:numerics} gives numerical illustrations.
+Section~\ref{sec:scope} closes with scope and discussion.
+
+% =========================================================================
+\section{Setup}
+\label{sec:setup}
+% =========================================================================
+
+\paragraph{State space and projector class.}
+The state space is $\R^d$ with the Euclidean inner product.
+A \emph{rank-$r$ projection} ($1 \le r < d$) is an orthogonal projector
+$P$ of rank $r$; equivalently, $P = U^\top U$ for a row-orthonormal
+$U \in \R^{r\times d}$ with $UU^\top = I_r$.
+The set of rank-$r$ projectors is naturally identified with the
+Grassmannian $\Gr(r,d)$, a smooth compact Riemannian manifold of
+dimension $r(d-r)$ with metric and geodesic structure inherited from
+$O(d)$ \cite{Edelman1998}.
+Two projectors with the same range are equivalent on $\Gr(r,d)$.
+
+\paragraph{Target family and scores.}
+A \emph{target family} $\mathcal{T}$ indexes the tasks.
+Each $t\in\mathcal{T}$ induces two PSD operators on $\R^d$:
+\begin{itemize}
+\item a \emph{predictive target operator} $M_t \succeq 0$,
+\item a \emph{causal target operator} $K_t \succeq 0$.
+\end{itemize}
+The two scoring rules considered are:
+\begin{equation}\label{eq:scores}
+S^{\mathrm{pred}}_t(P) := \tr(P M_t),
+\qquad
+S^{\mathrm{caus}}_t(P) := \lambda_{\max}(P K_t P).
+\end{equation}
+The predictive score is the Ky Fan trace; the causal score is the
+operator norm of the symmetrically projected operator.
+Both are smooth functions of $P\in\Gr(r,d)$.
+
+\paragraph{Finite global privilege.}
+\begin{definition}[Finite global privilege]\label{def:fgp}
+A rank-$r$ projector $P^\star$ has \emph{finite global privilege} for the
+family $\mathcal{T}$ under score $S$ if
+$S_t(P^\star) = \max_{\rank P = r} S_t(P)$ for every $t \in \mathcal{T}$.
+\end{definition}
+
+The central question of the paper is when finite global privilege exists,
+under each scoring rule, and what structure is forced on the family if
+so.
+The two scoring rules give different answers.
+
+% =========================================================================
+\section{Predictive Global Privilege via \texorpdfstring{$r$}{r}-coherence}
+\label{sec:pred}
+% =========================================================================
+
+\subsection{The general PSD theorem}
+
+\begin{definition}[$r$-coherence]\label{def:rcoh}
+A PSD family $\{M_t\}_{t\in\mathcal{T}}$ on $\R^d$ is \emph{$r$-coherent}
+if there exists a rank-$r$ subspace $V^\star\subseteq\R^d$ contained
+in a dominant $r$-dimensional invariant subspace of every $M_t$.
+Under strict $r$-gaps ($\lambda_r(M_t)>\lambda_{r+1}(M_t)$ for all $t$),
+this is equivalent to the equality of the top-$r$ eigenspaces of all
+$M_t$.
+\end{definition}
+
+\begin{theorem}[Predictive global privilege]\label{thm:pred}
+The PSD family $\{M_t\}$ admits a rank-$r$ projector with finite global
+privilege under $S^{\mathrm{pred}}$ if and only if $\{M_t\}$ is
+$r$-coherent.
+\end{theorem}
+
+\begin{proof}
+By the Ky Fan variational principle \cite{Fan1949,HornJohnson2013}, for
+each $t$,
+\begin{equation}\label{eq:kyfan}
+\max_{\rank P = r} \tr(P M_t) = \sum_{i=1}^r \lambda_i(M_t),
+\end{equation}
+attained exactly by projectors whose range lies within a dominant
+$r$-dimensional invariant subspace of $M_t$.
+($\Leftarrow$) If $V^\star$ is a common rank-$r$ subspace contained in
+every dominant invariant subspace, then $P^\star := \Pi_{V^\star}$ attains
+the maximum~\eqref{eq:kyfan} for every $t$.
+($\Rightarrow$) Conversely, if $P^\star$ attains the maximum for every
+$t$, then $\ran(P^\star)$ lies within a dominant $r$-dimensional invariant
+subspace of every $M_t$, so the family is $r$-coherent.
+Under strict $r$-gaps the dominant invariant subspace is unique and equal
+to the top-$r$ eigenspace, so all $M_t$ share the same top-$r$ eigenspace.
+\end{proof}
+
+\begin{remark}[Strictness of $r$-coherence]
+$r$-coherence is strictly weaker than simultaneous diagonalisability.
+Pairwise commutativity $[M_s,M_t]=0$ implies a common eigenbasis and hence
+$r$-coherence for every $r$, but $r$-coherence with a fixed $r$ does not
+require commutativity: only the top-$r$ eigenspace must coincide.
+\end{remark}
+
+\begin{remark}[Genericity]
+For generic $\{M_t\}$, distinct $M_t$ have distinct top-$r$ eigenspaces.
+$r$-coherence is therefore a non-generic algebraic condition; outside
+$r$-coherence, the predictive optimum is target-dependent.
+\end{remark}
+
+\subsection{LGDS instantiation}
+
+The predictive theorem's classical instance is the stationary linear
+Gaussian dynamical system (LGDS) with squared-error prediction loss.
+Let
+\begin{equation}
+x_{t+1} = A x_t + \xi_t, \qquad \xi_t\sim\mathcal{N}(0,Q),
+\end{equation}
+with $A$ stable and $Q\succ 0$, and let $\Sigma\succ 0$ denote the
+stationary covariance solving $A\Sigma A^\top+Q=\Sigma$ \cite{Kailath1980}.
+A prediction target is a pair $(C,\tau)$ with $C\in\R^{p\times d}$ and
+horizon $\tau\ge 1$; the goal is to predict $Cx_{t+\tau}$ from a rank-$r$
+projection of the current state.
+
+\begin{lemma}[Bayes risk for LGDS]\label{lem:bayes}
+For projector $P=U^\top U$ with $UU^\top=I_r$, define the linear map
+$\phi_U(x)=U\Sigma^{-1/2}x$.
+At stationarity, the squared-error Bayes risk for predicting $Cx_{t+\tau}$
+from $\phi_U(x_t)$ is
+\begin{equation}\label{eq:lgdsbayes}
+\mathcal{R}(U;\,C,\tau)
+= \tr(C\Sigma C^\top) - \tr\!\bigl(U M_{C,\tau} U^\top\bigr),
+\end{equation}
+where the \emph{target information matrix} is
+\begin{equation}\label{eq:M}
+M_{C,\tau} = \Sigma^{1/2}(A^\tau)^\top C^\top C A^\tau \Sigma^{1/2}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+$x_{t+\tau}=A^\tau x_t+w_\tau$ with $w_\tau$ independent of $x_t$, so
+$\E[x_{t+\tau}x_t^\top]=A^\tau\Sigma$.
+With $z=U\Sigma^{-1/2}x_t$, $\mathrm{Cov}(z,z^\top)=I_r$ and
+$\mathrm{Cov}(Cx_{t+\tau},z^\top)=CA^\tau\Sigma^{1/2}U^\top$.
+The Gaussian linear MMSE formula
+$\mathcal{R}=\tr(\mathrm{Var}(Cx_{t+\tau}))-\tr(\mathrm{Cov}(Cx_{t+\tau},z^\top)\mathrm{Cov}(z,z^\top)^{-1}\mathrm{Cov}(z,Cx_{t+\tau}))$
+collapses to~\eqref{eq:lgdsbayes}.
+\end{proof}
+
+Since $\tr(C\Sigma C^\top)$ is independent of $U$, minimising
+$\mathcal{R}(U;C,\tau)$ is equivalent to maximising
+$\tr(U M_{C,\tau} U^\top)=\tr(P M_{C,\tau})$ where $P=U^\top U$.
+Theorem~\ref{thm:pred} applied to the LGDS family
+$\{M_{C_k,\tau_k}\}$ gives:
+
+\begin{corollary}[LGDS predictive iff]
+A common rank-$r$ projection minimising squared-error prediction risk for
+every $(C_k,\tau_k)\in\mathcal{T}$ exists if and only if
+$\{M_{C_k,\tau_k}\}$ is $r$-coherent.
+\end{corollary}
+
+\subsection{Task regret and the angle bound}
+
+The deviation of $P$ from $P^\star$ admits a sharp two-sided
+characterisation in principal angles \cite{BjorckGolub1973}.
+Let $M$ be PSD with eigenvalues $\lambda_1\ge\cdots\ge\lambda_d$ and
+top-$r$ eigenspace projector $P^\star$.
+Define the \emph{task regret}
+\begin{equation}\label{eq:regret}
+\Reg(P;\,M) := \tr(P^\star M) - \tr(P M)
+= \sum_{i=1}^r\lambda_i(M)-\tr(P M)\;\ge\;0.
+\end{equation}
+
+\begin{corollary}[Regret--angle bound]\label{cor:regretbound}
+Let $\|\sin\Theta\|_F^2 := \|\sin\Theta(P,P^\star)\|_F^2$ be the squared
+Frobenius norm of the principal-angle sines between $\ran(P)$ and
+$\ran(P^\star)$.
+Then
+\begin{equation}\label{eq:regretbound}
+(\lambda_r-\lambda_{r+1})\|\sin\Theta\|_F^2
+\;\le\;\Reg(P;\,M)\;\le\;
+(\lambda_1-\lambda_d)\|\sin\Theta\|_F^2.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Let $v_i$ be unit eigenvectors of $M$ with eigenvalues $\lambda_i$, and
+$u_k$ orthonormal vectors spanning $\ran(P)$.
+Set $p_i:=\sum_{k=1}^r(v_i^\top u_k)^2$.
+Then $\tr(PM)=\sum_i\lambda_i p_i$ and $\sum_i p_i=r$, while
+$\|\sin\Theta\|_F^2=\sum_{i\le r}(1-p_i)=\sum_{i>r}p_i$.
+Centering at $\lambda_{r+1}$:
+\[
+\Reg(P;\,M)
+=\sum_{i\le r}(\lambda_i-\lambda_{r+1})(1-p_i)
++\sum_{i>r}(\lambda_{r+1}-\lambda_i)\,p_i.
+\]
+Both sums are nonnegative.
+The lower bound follows by dropping the second sum and bounding
+$\lambda_i-\lambda_{r+1}\ge\lambda_r-\lambda_{r+1}$.
+The upper bound follows by bounding the two coefficients by $\lambda_1
+-\lambda_{r+1}$ and $\lambda_{r+1}-\lambda_d$ respectively.
+\end{proof}
+
+\begin{corollary}[Approximate predictive coherence]\label{cor:approxcoh}
+For a finite predictive family $\{M_a\}$, define the \emph{minimax
+predictive regret}
+\begin{equation}\label{eq:gamma}
+\Gamma_{\mathrm{pred}}
+:= \min_{P\in\Gr(r,d)}\,\max_a\,\Reg(P;\,M_a).
+\end{equation}
+$\Gamma_{\mathrm{pred}}=0$ iff $\{M_a\}$ is $r$-coherent.
+If there exists $P\in\Gr(r,d)$ with $\|\sin\Theta(P,P_a^\star)\|_F^2
+\le\varepsilon^2$ for every $a$, then
+$\Gamma_{\mathrm{pred}}\le\Lambda\,\varepsilon^2$, where
+$\Lambda:=\max_a[\lambda_1(M_a)-\lambda_d(M_a)]$.
+\end{corollary}
+
+\begin{proof}
+The first claim is Theorem~\ref{thm:pred} applied to the family.
+The second applies the upper bound of Corollary~\ref{cor:regretbound}
+uniformly in $a$.
+\end{proof}
+
+% =========================================================================
+\section{Causal Global Privilege via \texorpdfstring{$r$}{r}-coverability}
+\label{sec:caus}
+% =========================================================================
+
+The causal score $S^{\mathrm{caus}}_t(P)=\lambda_{\max}(P K_t P)$ is not
+a Ky Fan trace; the variational principle that governs it is different.
+The structural condition that emerges is correspondingly different.
+
+\subsection{Local maximiser structure}
+
+\begin{proposition}[Fixed-target causal maximiser]\label{prop:localmax}
+For fixed PSD $K\succeq 0$ on $\R^d$ with leading invariant subspace
+$\Emax(K)$ (the eigenspace of $\lambda_1(K)$),
+\begin{equation}\label{eq:localmax}
+\arg\max_{\rank P=r}\,\lambda_{\max}(P K P)
+=\bigl\{P:\rank(P)=r,\;\ran(P)\cap\Emax(K)\ne\{0\}\bigr\},
+\end{equation}
+and the maximum value is $\lambda_1(K)$.
+\end{proposition}
+
+\begin{proof}
+For any unit $v\in\R^d$, $v^\top K v\le\lambda_1(K)$, with equality iff
+$v\in\Emax(K)$.
+For rank-$r$ $P$,
+$\lambda_{\max}(PKP)=\sup_{v\in\ran(P),\,\|v\|=1}v^\top K v$.
+This supremum equals $\lambda_1(K)$ iff $\ran(P)$ contains a unit vector
+in $\Emax(K)$, i.e., $\ran(P)\cap\Emax(K)\ne\{0\}$.
+\end{proof}
+
+The contrast with the predictive case is sharp: under
+$S^{\mathrm{pred}}=\tr(PM)$ the optimal $P$ must have its range
+\emph{equal to} a dominant $r$-dimensional invariant subspace of $M$;
+under $S^{\mathrm{caus}}=\lambda_{\max}(PKP)$ it suffices that
+$\ran(P)$ \emph{intersects} the leading invariant subspace of $K$
+nontrivially.
+The local problem is rank-$1$-driven regardless of $r$.
+
+\subsection{\texorpdfstring{$r$}{r}-coverability and the causal theorem}
+
+\begin{definition}[$r$-coverability]\label{def:cov}
+A PSD family $\{K_t\}$ is \emph{$r$-coverable} if there exists a rank-$r$
+subspace $V\subseteq\R^d$ with $V\cap\Emax(K_t)\ne\{0\}$ for every $t$.
+When each $K_t$ has a simple top eigenvalue with top eigenvector $u_t$,
+$r$-coverability reduces to $\dim\mathrm{span}\{u_t\}\le r$.
+\end{definition}
+
+\begin{theorem}[Causal global privilege]\label{thm:caus}
+The PSD family $\{K_t\}$ admits a rank-$r$ projector with finite global
+privilege under $S^{\mathrm{caus}}$ if and only if $\{K_t\}$ is
+$r$-coverable.
+\end{theorem}
+
+\begin{proof}
+By Proposition~\ref{prop:localmax}, $P^\star$ has finite global causal
+privilege for $\{K_t\}$ iff $\ran(P^\star)\cap\Emax(K_t)\ne\{0\}$ for
+every $t$.
+Existence of such a rank-$r$ subspace is the definition of
+$r$-coverability.
+\end{proof}
+
+\begin{remark}[Coverability is much weaker than coherence]
+$r$-coherence demands that one rank-$r$ subspace lie \emph{within} the
+dominant invariant subspace of every $M_t$.
+$r$-coverability demands only that the rank-$r$ subspace \emph{hit}
+each $\Emax(K_t)$.
+The latter is satisfied whenever the union of leading directions
+$\{u_t\}$ spans at most $r$ dimensions.
+\end{remark}
+
+\subsection{Strong glue: a sufficient condition}
+
+\begin{corollary}[Strong glue]\label{cor:strongglue}
+Suppose $\{K_t\}_{t\in T}$ is indexed by a finite-support measure
+$\mu=\sum_i w_i\delta_{x_i}$ on a state space, with $K_i:=K_{x_i}$ having
+simple top eigenvalues and top eigenvectors $u_i$.
+Then $\{K_i\}$ is $r$-coverable iff $\dim\mathrm{span}\{u_i\}\le r$.
+In that case any $P^\star$ whose range contains $\mathrm{span}\{u_i\}$
+achieves the global causal optimum
+$S^{\mathrm{caus}}_i(P^\star)=\lambda_1(K_i)$ for every $i$.
+\end{corollary}
+
+\begin{proof}
+Direct from Definition~\ref{def:cov} and Proposition~\ref{prop:localmax}.
+\end{proof}
+
+% =========================================================================
+\section{The Fork: Coherence Implies Coverability Strictly}
+\label{sec:fork}
+% =========================================================================
+
+The two structural conditions are not interchangeable.
+
+\begin{theorem}[Coherence implies coverability strictly]\label{thm:fork}
+For a single PSD family $\{T_t\}$ on $\R^d$:
+\begin{enumerate}
+\item[(i)] $r$-coherence implies $r$-coverability.
+\item[(ii)] The converse fails in general.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) If $\{T_t\}$ is $r$-coherent with shared rank-$r$ subspace $V^\star$,
+then $V^\star$ is contained in a dominant invariant subspace of every
+$T_t$.
+In particular, $V^\star\cap\Emax(T_t)\ne\{0\}$ for every $t$ since
+$\Emax(T_t)$ is contained in the dominant invariant subspace and has
+positive dimension.
+Hence $V^\star$ is an $r$-cover.
+
+(ii) For the converse, take $d=3$, $r=2$ and
+\begin{equation}\label{eq:forkwitness}
+T_1=\mathrm{diag}(5,4,0),\qquad
+T_2=\mathrm{diag}(5,0,4).
+\end{equation}
+Both have simple top eigenvalue $5$ with top eigenvector $e_1$, so any
+rank-$2$ subspace containing $e_1$ is a $2$-cover; the family is
+$2$-coverable.
+However, the top-$2$ eigenspaces are
+$\mathrm{Top}_2(T_1)=\mathrm{span}\{e_1,e_2\}$ and
+$\mathrm{Top}_2(T_2)=\mathrm{span}\{e_1,e_3\}$, which are distinct.
+Their intersection is $\mathrm{span}\{e_1\}$, of dimension $1<r=2$, so no
+rank-$2$ subspace is contained in both top-$2$ eigenspaces; the family
+is not $2$-coherent.
+\end{proof}
+
+\begin{remark}[Predictive--causal dissociation]
+\label{rem:dissoc}
+Theorem~\ref{thm:fork} establishes an algebraic gap between coherence and
+coverability for a single PSD family.
+In a setting where the predictive operators $\{M_t\}$ and causal operators
+$\{K_t\}$ are different functions of the same task index (as is generally
+the case: $M_t$ encodes a prediction objective and $K_t$ a local
+intervention response), the two privilege types decouple completely.
+Causal global privilege can hold while predictive global privilege fails,
+and vice versa: the world seen by a bounded observer depends on the
+task functional.
+\end{remark}
+
+% =========================================================================
+\section{Weak Glue: Surrogate Optimization When Coverability Fails}
+\label{sec:weakglue}
+% =========================================================================
+
+When the causal family $\{K_i\}$ has $\dim\mathrm{span}\{u_i\}>r$ (i.e.
+fails $r$-coverability), no projector achieves global causal optimum
+simultaneously.
+The relevant question becomes \emph{approximate} causal observer
+selection: how close to optimal can a single rank-$r$ projector come
+across the family, and is there a tractable surrogate for the
+non-Ky--Fan operator-norm objective?
+
+\subsection{Setup and surrogate}
+
+Let $\mu=\sum_{i=1}^N w_i\delta_{x_i}$ with $w_i>0$, $\sum w_i=1$.
+At each state $x_i$ let $J_i$ denote a local intervention Jacobian and
+$A_i:=J_iJ_i^\top\succeq 0$ the local output Gram with simple top
+eigenvalue $\lambda_1(A_i)>\lambda_2(A_i)\ge 0$ and top eigenvector
+$u_i$.
+Define the residual ratio $\kappa_i:=\lambda_2(A_i)/\lambda_1(A_i)\in[0,1)$.
+
+The capacity-first causal objective (the regime-averaged
+operator-norm score) and its surrogate are:
+\begin{align}
+F(P) &:= \sum_{i=1}^N w_i\,\lambda_{\max}(P A_i P), \label{eq:F}\\
+\tilde F(P) &:= \tr(P B_\lambda),\qquad
+B_\lambda := \sum_{i=1}^N w_i\,\lambda_1(A_i)\,u_i u_i^\top.
+\label{eq:Btilde}
+\end{align}
+The surrogate $\tilde F$ is a Ky Fan trace and is therefore maximised by
+the top-$r$ eigenspace of the rank-$\le N$ matrix $B_\lambda$.
+Let $P_F^\star\in\arg\max F$ and $P_B^\star:=$~top-$r$ eigenspace of
+$B_\lambda$.
+
+\subsection{The sandwich and coarse regret}
+
+\begin{theorem}[Weak-glue sandwich and regret]\label{thm:weakglue}
+For all rank-$r$ projectors $P$:
+\begin{equation}\label{eq:sandwich}
+\tilde F(P)\;\le\;F(P)\;\le\;\tilde F(P)+\sum_{i=1}^N w_i\,\lambda_2(A_i).
+\end{equation}
+Consequently,
+\begin{equation}\label{eq:coarse}
+F(P_F^\star)-F(P_B^\star)\;\le\;\sum_{i=1}^N w_i\,\lambda_2(A_i).
+\end{equation}
+$\tilde F=F$ pointwise iff every $A_i$ is rank-$1$ (i.e.\ $\kappa_i=0$
+for all $i$).
+\end{theorem}
+
+\begin{proof}
+For each $i$, the Cauchy interlacing/Rayleigh inequality gives
+$\lambda_1(A_i)\|Pu_i\|^2\le\lambda_{\max}(PA_iP)\le\lambda_1(A_i)\|Pu_i\|^2
++\lambda_2(A_i)(1-\|Pu_i\|^2)$.
+The lower bound proves $\tilde F(P)\le F(P)$:
+$\tilde F(P)=\tr(P B_\lambda)=\sum_i w_i\lambda_1(A_i)\|Pu_i\|^2
+\le\sum_i w_i\lambda_{\max}(PA_iP)=F(P)$.
+The upper bound gives
+$F(P)\le\sum_i w_i[\lambda_1(A_i)\|Pu_i\|^2+\lambda_2(A_i)(1-\|Pu_i\|^2)]
+\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$ since $1-\|Pu_i\|^2\le 1$.
+
+For~\eqref{eq:coarse}: $F(P_F^\star)-F(P_B^\star)
+=[F(P_F^\star)-\tilde F(P_F^\star)]+[\tilde F(P_F^\star)-\tilde F(P_B^\star)]
++[\tilde F(P_B^\star)-F(P_B^\star)]$.
+The middle term is $\le 0$ by surrogate optimality of $P_B^\star$;
+the third is $\le 0$ by the lower sandwich; the first is bounded by
+$\sum_i w_i\lambda_2(A_i)$ from the upper sandwich.
+
+Pointwise equality $\tilde F=F$ requires
+$\lambda_2(A_i)(1-\|Pu_i\|^2)=0$ for all $i$ and all $P$, which forces
+$\lambda_2(A_i)=0$ for all $i$, i.e.\ rank-$1$ Jacobians.
+The converse is direct.
+\end{proof}
+
+\subsection{Instance-dependent regret}
+
+The coarse bound~\eqref{eq:coarse} treats every state's residual
+spectral mass as fully adversarial.
+A tighter bound accounts for the alignment of $P_F^\star$ with each
+local peak direction $u_i$.
+
+\begin{theorem}[Instance-dependent regret]\label{thm:instancereg}
+\begin{equation}\label{eq:instreg}
+F(P_F^\star)-F(P_B^\star)
+\;\le\;
+\sum_{i=1}^N w_i\,\lambda_2(A_i)\bigl(1-\|P_F^\star u_i\|^2\bigr).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+As in the proof of Theorem~\ref{thm:weakglue},
+$F(P_F^\star)-F(P_B^\star)\le F(P_F^\star)-\tilde F(P_F^\star)$.
+The upper sandwich applied at $P_F^\star$ gives
+$\lambda_{\max}(P_F^\star A_i P_F^\star)
+\le\lambda_1(A_i)\|P_F^\star u_i\|^2+\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$,
+so
+$F(P_F^\star)-\tilde F(P_F^\star)
+=\sum_i w_i[\lambda_{\max}(P_F^\star A_i P_F^\star)-\lambda_1(A_i)\|P_F^\star u_i\|^2]
+\le\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$.
+\end{proof}
+
+\begin{remark}[Two mechanisms]
+The instance-dependent bound factors regret at state $i$ as the product
+of two independent mechanisms:
+(a) residual spectral mass $\lambda_2(A_i)>0$, meaning $J_i$ carries
+energy beyond its top singular direction;
+(b) optimizer misalignment $1-\|P_F^\star u_i\|^2>0$, meaning the
+true causal optimum fails to capture the local peak direction.
+Either mechanism alone produces no regret: rank-$1$ Jacobians contribute
+nothing regardless of alignment, and perfectly aligned states contribute
+nothing regardless of $\lambda_2(A_i)$.
+\end{remark}
+
+\subsection{Equality conditions}
+
+\begin{corollary}[Three exact regimes]\label{cor:equality}
+$F(P_F^\star)-F(P_B^\star)=0$, i.e.\ the surrogate optimum equals the
+true optimum, in each of the following cases:
+\begin{enumerate}
+\item[(R1)] \emph{Rank-$1$ Jacobians:} $\lambda_2(A_i)=0$ for every $i$.
+Then $\tilde F=F$ pointwise.
+\item[(R2)] \emph{Strong glue:} $\dim\mathrm{span}\{u_i\}\le r$, i.e.\
+$\{A_i\}$ is $r$-coverable.
+Both $P_F^\star$ and $P_B^\star$ achieve the global maximum
+$\sum_i w_i\lambda_1(A_i)$.
+\item[(R3)] \emph{Common-shape family:} $A_i=\alpha_i A$ for some fixed
+$A\succeq 0$ and scalars $\alpha_i>0$.
+Then $F$ and $\tilde F$ have identical maximiser sets, namely
+$\{P:\rank(P)=r,\,\ran(P)\cap\Emax(A)\ne\{0\}\}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(R1) is Theorem~\ref{thm:weakglue}.
+(R2): $r$-coverability gives $\|P_B^\star u_i\|=1$ for every $i$ since
+$P_B^\star$ contains $\mathrm{span}\{u_i\}$, so the lower sandwich gives
+$F(P_B^\star)\ge\sum_i w_i\lambda_1(A_i)$.
+The trivial upper bound is also $\sum_i w_i\lambda_1(A_i)$, so $P_B^\star$
+achieves the global maximum.
+(R3): $F(P)=(\sum_i w_i\alpha_i)\lambda_{\max}(PAP)$ and $B_\lambda
+=(\sum_i w_i\alpha_i)\lambda_1(A)\,\Pi_{\Emax(A)}$, so both objectives are
+proportional to the operator-norm criterion of the single matrix $A$
+and have the same maximiser set
+$\{P:\ran(P)\cap\Emax(A)\ne\{0\}\}$ by Proposition~\ref{prop:localmax}.
+\end{proof}
+
+In all three regimes the instance-dependent bound vanishes: either
+$\lambda_2(A_i)=0$, or $\|P_F^\star u_i\|^2=1$ for every $i$.
+Outside these regimes the surrogate optimum need not coincide with the
+true optimum, but Theorem~\ref{thm:instancereg} controls the gap.
+
+% =========================================================================
+\section{Numerical Illustrations}
+\label{sec:numerics}
+% =========================================================================
+
+This section gives three illustrations.
+The first instantiates the predictive theorem in stationary LGDS.
+The second is the fork witness from Theorem~\ref{thm:fork}.
+The third is a $3\times 3$ weak-glue example showing the gap between the
+coarse and instance-dependent regret bounds.
+All numerical values are computed exactly: closed-form Bayes risk in the
+LGDS case, exact eigendecomposition for the small-dimensional examples.
+There is no Monte Carlo simulation.
+
+\subsection{Predictive: LGDS instance}
+
+\paragraph{Setup.}
+State dimension $d=8$, projection rank $r=2$.
+$A=VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$ and random
+non-orthogonal $V$ (seed $100$); $Q=0.1\,I_8$.
+$\Sigma$ is computed from the discrete Lyapunov equation; $\Sigma\succ 0$
+to machine precision.
+Optimisation over $\Gr(2,8)$ uses $300$ random initialisations of
+projected L-BFGS-B with gradient-norm threshold $10^{-12}$ and
+function-value tolerance $10^{-15}$.
+
+\paragraph{Condition A: target-dependent.}
+Targets $T_1=([e_1^\top;e_2^\top],1)$ and $T_2=([e_5^\top;e_6^\top],5)$.
+With non-normal $A$, $A^1$ and $A^5$ rotate state-space directions
+differently; the principal angles between the top-$2$ eigenspaces of
+$M_1$ and $M_2$ are $\CondAAngleOne^\circ$ and $\CondAAngleTwo^\circ$,
+confirming that no single rank-$2$ projection is simultaneously
+predictive-optimal.
+By Corollary~\ref{cor:approxcoh}, the minimax predictive regret
+$\Gamma_{\mathrm{pred}}>0$ certifies non-coherence; numerically,
+$\Gamma_{\mathrm{pred}}=\GammaCondA>0$.
+Table~\ref{tab:condA} gives the regret structure.
+
+\begin{table}[tbp]
+\caption{Predictive regret matrix, Condition A ($d=8$, $r=2$).
+Values from the exact Bayes risk formula~\eqref{eq:lgdsbayes}.}
+\label{tab:condA}
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Projection & $\Reg$ on $T_1$ & $\Reg$ on $T_2$ \\
+\midrule
+$P^\star_1$ (optimal for $T_1$)         & \CondARegretUoneTa & \CondARegretUoneTb \\
+$P^\star_2$ (optimal for $T_2$)         & \CondARegretUtwoTa & \CondARegretUtwoTb \\
+$P_{\mathrm{joint}}$ (minimax)          & \CondARegretUjointTa & \CondARegretUjointTb \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\paragraph{Condition B: structurally coherent.}
+A target family is constructed by design to be $2$-coherent: normal
+$A_{\mathrm{sym}}=VDV^\top$ with orthogonal $V$, common $C$ whose rows
+are top-$2$ eigenvectors of $A$, varying horizon $\tau\in\{1,2,3,5\}$.
+The four resulting $M_{C,\tau}$ share the same dominant
+$2$-dimensional eigenspace by construction, and the four optimal
+projections are identical: maximum pairwise principal angle is
+$\CondBMaxAngleDeg^\circ$ to machine precision.
+Under $\varepsilon=\CondBPertEps$ perturbations to $C$
+($\CondBPertDraws$ random draws), the maximum principal angle is
+$\CondBPertMaxRad$~rad, well below the $1.5\varepsilon=\CondBPertThreshold$~rad
+threshold, illustrating that approximate coherence is quantified via
+principal angles (Corollary~\ref{cor:approxcoh}).
+
+\subsection{Fork: causal-without-predictive privilege}
+
+The fork witness from~\eqref{eq:forkwitness}: $d=3$, $r=2$, $T_1
+=\mathrm{diag}(5,4,0)$, $T_2=\mathrm{diag}(5,0,4)$.
+
+\paragraph{Causal score (assigning $K_t=T_t$).}
+Both $K_t$ have simple top eigenvalue $5$ with top eigenvector $e_1$.
+Thus $\dim\mathrm{span}\{u_t\}=1\le 2=r$, so $\{K_t\}$ is
+$2$-coverable.
+Any rank-$2$ projection whose range contains $e_1$---e.g.
+$P_{\mathrm{cov}}=\Pi_{\mathrm{span}\{e_1,v\}}$ for any unit
+$v\perp e_1$---satisfies
+$S^{\mathrm{caus}}_t(P_{\mathrm{cov}})=\lambda_1(K_t)=5$ for both $t$.
+Causal global privilege exists.
+
+\paragraph{Predictive score (assigning $M_t=T_t$).}
+$\mathrm{Top}_2(M_1)=\mathrm{span}\{e_1,e_2\}$ and
+$\mathrm{Top}_2(M_2)=\mathrm{span}\{e_1,e_3\}$.
+The intersection is $\mathrm{span}\{e_1\}$, of dimension $1<r$.
+Hence no rank-$2$ subspace is contained in both top-$2$ eigenspaces;
+$\{M_t\}$ is not $2$-coherent and predictive global privilege fails.
+The minimax predictive regret is
+\begin{equation}
+\Gamma_{\mathrm{pred}}^{\mathrm{fork}}
+=\min_{P\in\Gr(2,3)}\max_{t\in\{1,2\}}
+\bigl[\lambda_1(M_t)+\lambda_2(M_t)-\tr(P M_t)\bigr]
+=\frac{1}{2}\cdot 4=2,
+\end{equation}
+attained by $P=\Pi_{\mathrm{span}\{e_1,(e_2+e_3)/\sqrt{2}\}}$, which
+captures direction $e_1$ exactly and direction $(e_2+e_3)/\sqrt 2$
+half-aligned with each of $e_2,e_3$.
+The trace contribution from the second slot is $4\cdot\frac{1}{2}=2$ for
+each target; the regret on each target is $4\cdot\frac{1}{2}=2$.
+This dissociation is exact and structural.
+
+\subsection{Weak-glue counterexample}
+
+A two-state regime in $\R^3$ illustrates that the coarse regret bound
+$\sum_i w_i\lambda_2(A_i)$ can grossly overestimate the actual regret,
+while still detecting the qualitative point that the surrogate
+optimiser need not equal the true optimiser.
+
+\paragraph{Construction.}
+$N=2$, $d=3$, $r=1$, equal weights $w_1=w_2=\tfrac{1}{2}$, with
+\begin{equation}\label{eq:wgex}
+A_1=\mathrm{diag}(3,2,0),\qquad
+A_2=\begin{pmatrix} 0.9 & 0.6 & 0\\ 0.6 & 0.9 & 0\\ 0 & 0 & 0\end{pmatrix}.
+\end{equation}
+$A_1$: $u_1=e_1$, $\lambda_1=3$, $\lambda_2=2$, $\kappa_1=2/3$.
+$A_2$: $u_2=(e_1+e_2)/\sqrt 2$, $\lambda_1=1.5$, $\lambda_2=0.3$,
+$\kappa_2=0.2$.
+
+Restricting to rank-$1$ projectors $P_\theta=v(\theta)v(\theta)^\top$
+with $v(\theta)=(\cos\theta,\sin\theta,0)$:
+\begin{equation}
+F(\theta)=\tfrac{1}{2}[3\cos^2\theta+2\sin^2\theta+0.9+0.6\sin(2\theta)]
+=\tfrac{1}{2}[3.4+0.5\cos(2\theta)+0.6\sin(2\theta)].
+\end{equation}
+Setting $dF/d\theta=0$ gives $\tan(2\theta_F^\star)=1.2$, so
+$\theta_F^\star\approx 25.1^\circ$ and
+$F(P_F^\star)=\tfrac{1}{2}[3.4+\sqrt{0.5^2+0.6^2}]
+=\tfrac{1}{2}(3.4+0.781)\approx 2.090$.
+
+The surrogate matrix is
+\begin{equation}
+B_\lambda=\tfrac{1}{2}\Bigl[3\,e_1e_1^\top
++\tfrac{3}{2}\cdot\tfrac{(e_1+e_2)(e_1+e_2)^\top}{2}\Bigr]
+=\begin{pmatrix} 1.875 & 0.375 & 0\\ 0.375 & 0.375 & 0\\ 0 & 0 & 0\end{pmatrix}.
+\end{equation}
+The top eigenvector of the leading $2\times 2$ block lies at
+$\theta_B^\star\approx 13.3^\circ$ from $e_1$.
+At $P_B^\star$:
+\begin{equation}
+F(P_B^\star)=\tfrac{1}{2}[3.4+0.5\cos 26.6^\circ+0.6\sin 26.6^\circ]
+=\tfrac{1}{2}(3.4+0.447+0.268)\approx 2.058.
+\end{equation}
+
+\paragraph{Regret comparison.}
+The actual regret is
+\begin{equation}
+F(P_F^\star)-F(P_B^\star)\approx 2.090-2.058 = 0.032.
+\end{equation}
+The coarse bound from~\eqref{eq:coarse} is
+\begin{equation}
+\sum_i w_i\lambda_2(A_i)=\tfrac{1}{2}(2+0.3)=1.15,
+\end{equation}
+which exceeds the true regret by a factor of $1.15/0.032\approx 36$.
+The instance-dependent bound from Theorem~\ref{thm:instancereg} is
+computed using
+$\|P_F^\star u_1\|^2=\cos^2(25.1^\circ)\approx 0.820$ and
+$\|P_F^\star u_2\|^2=\bigl(\cos 25.1^\circ+\sin 25.1^\circ\bigr)^2/2
+\approx 0.886$:
+\begin{equation}
+\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)
+\approx \tfrac{1}{2}\cdot 2\cdot 0.180+\tfrac{1}{2}\cdot 0.3\cdot 0.114
+\approx 0.197.
+\end{equation}
+The instance-dependent bound is $0.197/0.032\approx 6$ times the actual
+regret---substantially tighter than the coarse $36\times$, though
+still not tight at $P_F^\star$.
+The residual gap is due to the upper sandwich being itself loose
+pointwise.
+The picture: $P_B^\star\ne P_F^\star$ (separated by $\approx 11.8^\circ$),
+yet the actual value gap is small because $F(\theta)$ has a broad
+maximum.
+The coarse bound cannot distinguish a direction error from a value
+error; the instance-dependent bound partially can.
+Table~\ref{tab:wg} summarises.
+
+\begin{table}[tbp]
+\caption{Weak-glue example: regret and bounds.
+$N=2$, $d=3$, $r=1$, equal weights, $A_i$ as in~\eqref{eq:wgex}.}
+\label{tab:wg}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Quantity & Value \\
+\midrule
+$F(P_F^\star)$                                & $2.090$ \\
+$F(P_B^\star)$                                & $2.058$ \\
+Actual regret $F(P_F^\star)-F(P_B^\star)$     & $0.032$ \\
+Coarse bound $\sum_i w_i\lambda_2(A_i)$       & $1.150$ \\
+Instance-dependent bound, eq.~\eqref{eq:instreg} & $0.197$ \\
+Coarse / actual                               & $\approx 36$ \\
+Instance-dependent / actual                   & $\approx 6$ \\
+$\theta_F^\star$, $\theta_B^\star$            & $25.1^\circ$, $13.3^\circ$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+% =========================================================================
+\section{Scope and Discussion}
+\label{sec:scope}
+% =========================================================================
+
+\paragraph{What is earned.}
+For finite PSD families on $\R^d$ and a fixed projection rank $r$:
+\begin{itemize}
+\item Under the predictive trace score, finite global privilege
+exists iff the family is $r$-coherent (Theorem~\ref{thm:pred}).
+\item Under the causal operator-norm score, finite global privilege
+exists iff the family is $r$-coverable (Theorem~\ref{thm:caus}).
+\item $r$-coherence implies $r$-coverability strictly
+(Theorem~\ref{thm:fork}).
+\item When $\{A_i\}$ fails $r$-coverability, the eigenvalue-weighted
+surrogate $B_\lambda$ converts $F$ into a Ky Fan eigenproblem, and
+the surrogate regret is bounded by
+$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$, vanishing in three
+explicit regimes (rank-$1$, strong glue, common-shape;
+Corollary~\ref{cor:equality}).
+\end{itemize}
+The instance-dependent bound is structurally informative: it factors
+regret into residual spectral mass and optimizer misalignment, and
+attributes it pointwise to the states in the support of $\mu$.
+
+\paragraph{What is not earned.}
+The results are stated for finite PSD families and finite-support
+regimes.
+Continuous regimes require replacing $B_\lambda$ with the integral
+operator
+$\E_{x\sim\mu}[\lambda_1(J_xJ_x^\top)\,u_xu_x^\top]$ and analysing it
+spectrally; we have not proved a continuous-regime analogue.
+The causal operators $K_t$ are taken as given PSD inputs; in nonlinear
+settings $K_t$ would derive from a global intervention response rather
+than a local Jacobian Gram, and the rank-$1$-driven local maximiser
+characterisation (Proposition~\ref{prop:localmax}) need not extend.
+The geometry-first pooled objective $G(P)=\lambda_{\max}(P\,\E[J_xJ_x^\top]P)$
+is mentioned implicitly via the rank-$1$ regime where $G=F$; a full
+treatment of the Jensen gap $F\ge G$ for $r>1$ is left to a companion
+note.
+Approximate coverability (a perturbation theory of $r$-coverability) is
+open; the predictive analogue is
+Corollary~\ref{cor:approxcoh}.
+
+\paragraph{Practical implication.}
+Whenever a single rank-$r$ projection must serve a family of objectives,
+the iff conditions of Theorems~\ref{thm:pred} and~\ref{thm:caus} are
+testable: $r$-coherence by checking equality of top-$r$ eigenspaces;
+$r$-coverability by computing $\dim\mathrm{span}\{u_i\}$ in the
+simple-top case.
+When neither holds, the regret gap $\Gamma_{\mathrm{pred}}>0$ or the
+weak-glue regret $\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
+provides a computable lower bound on unavoidable suboptimality of any
+single projection.
+$\Gamma=0$ is the certificate of structural alignment between the system
+dynamics and the task family; $\Gamma>0$ is the certificate that
+dedicated per-target projections are necessary to achieve global
+optimum.
+
+% =========================================================================
+\section*{Acknowledgements}
+% =========================================================================
+
+The author received no external funding for this work.
+Reproducible code for the LGDS predictive instance is available from a
+publicly accessible repository\footnote{Repository details accompany the
+non-blind version of the manuscript.}.
+The fork witness and weak-glue counterexample are computed analytically
+from the exact $3\times 3$ matrices specified in equations
+\eqref{eq:forkwitness} and~\eqref{eq:wgex}.
+
+\bibliographystyle{elsarticle-num}
+\bibliography{refs}
+
+\end{document}
