@@ -213,9 +213,15 @@ Both are smooth functions of $P\in\Gr(r,d)$.
 
 \paragraph{Finite global privilege.}
 \begin{definition}[Finite global privilege]\label{def:fgp}
-A rank-$r$ projector $P^\star$ has \emph{finite global privilege} for the
-family $\mathcal{T}$ under score $S$ if
-$S_t(P^\star) = \max_{\rank P = r} S_t(P)$ for every $t \in \mathcal{T}$.
+A rank-$r$ orthogonal projector $P^\star$ has \emph{finite global
+privilege} for the family $\mathcal{T}$ under score $S$ if
+\begin{equation}
+  S_t(P^\star) \;=\; \max_{P:\,P^\top=P=P^2,\,\rank P=r}\,S_t(P)
+  \qquad\text{for every }t\in\mathcal{T}.
+\end{equation}
+Throughout this paper, $P$ ranges over rank-$r$ orthogonal projectors
+(equivalently $P\in\Gr(r,d)$ via $P=U^\top U$, $UU^\top=I_r$); the
+$\max$ is over this set.
 \end{definition}
 
 The central question of the paper is when finite global privilege exists,
@@ -493,12 +499,15 @@ For a single PSD family $\{T_t\}$ on $\R^d$:
 
 \begin{proof}
 (i) If $\{T_t\}$ is $r$-coherent with shared rank-$r$ subspace $V^\star$,
-then $V^\star$ is contained in a dominant invariant subspace of every
-$T_t$.
-In particular, $V^\star\cap\Emax(T_t)\ne\{0\}$ for every $t$ since
-$\Emax(T_t)$ is contained in the dominant invariant subspace and has
-positive dimension.
-Hence $V^\star$ is an $r$-cover.
+then $V^\star$ is a Ky--Fan maximiser for every $T_t$, attaining
+$\sum_{i=1}^r\lambda_i(T_t)$.
+A Ky--Fan-maximising $r$-subspace must contain at least one unit vector
+from $\Emax(T_t)$: if $V^\star\cap\Emax(T_t)=\{0\}$ then every unit vector
+in $V^\star$ has Rayleigh quotient strictly less than $\lambda_1(T_t)$,
+and replacing any such vector by a unit vector in $\Emax(T_t)$ strictly
+increases the trace, contradicting optimality.
+Hence $V^\star\cap\Emax(T_t)\ne\{0\}$ for every $t$, and $V^\star$ is an
+$r$-cover.
 
 (ii) For the converse, take $d=3$, $r=2$ and
 \begin{equation}\label{eq:forkwitness}
@@ -525,8 +534,8 @@ $\{K_t\}$ are different functions of the same task index (as is generally
 the case: $M_t$ encodes a prediction objective and $K_t$ a local
 intervention response), the two privilege types decouple completely.
 Causal global privilege can hold while predictive global privilege fails,
-and vice versa: the world seen by a bounded observer depends on the
-task functional.
+and vice versa: the existence law for a common optimal projection depends
+on the task functional.
 \end{remark}
 
 % =========================================================================
@@ -560,9 +569,13 @@ B_\lambda := \sum_{i=1}^N w_i\,\lambda_1(A_i)\,u_i u_i^\top.
 \label{eq:Btilde}
 \end{align}
 The surrogate $\tilde F$ is a Ky Fan trace and is therefore maximised by
-the top-$r$ eigenspace of the rank-$\le N$ matrix $B_\lambda$.
-Let $P_F^\star\in\arg\max F$ and $P_B^\star:=$~top-$r$ eigenspace of
+any rank-$r$ projection whose range is a dominant invariant subspace of
 $B_\lambda$.
+Let $P_F^\star\in\arg\max_{\rank P=r} F(P)$ (a true causal optimiser)
+and $P_B^\star\in\arg\max_{\rank P=r}\tilde F(P)$ (a surrogate optimiser);
+under strict $r$-gap of $B_\lambda$ both are unique up to range
+equivalence on $\Gr(r,d)$, while under degeneracy both are interpreted as
+\emph{any} element of the corresponding argmax.
 
 \subsection{The sandwich and coarse regret}
 
@@ -580,27 +593,66 @@ for all $i$).
 \end{theorem}
 
 \begin{proof}
-For each $i$, the Cauchy interlacing/Rayleigh inequality gives
-$\lambda_1(A_i)\|Pu_i\|^2\le\lambda_{\max}(PA_iP)\le\lambda_1(A_i)\|Pu_i\|^2
-+\lambda_2(A_i)(1-\|Pu_i\|^2)$.
-The lower bound proves $\tilde F(P)\le F(P)$:
-$\tilde F(P)=\tr(P B_\lambda)=\sum_i w_i\lambda_1(A_i)\|Pu_i\|^2
-\le\sum_i w_i\lambda_{\max}(PA_iP)=F(P)$.
-The upper bound gives
-$F(P)\le\sum_i w_i[\lambda_1(A_i)\|Pu_i\|^2+\lambda_2(A_i)(1-\|Pu_i\|^2)]
-\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$ since $1-\|Pu_i\|^2\le 1$.
+\emph{Per-term bound.}
+Fix $i$ and let $A_i=\sum_{k=1}^d\lambda_k(A_i)e_k e_k^\top$ be the
+spectral decomposition with $e_1=u_i$.
+For any unit $v\in\ran(P)$,
+\begin{equation*}
+v^\top A_i v
+=\sum_k\lambda_k(A_i)(e_k^\top v)^2
+\le\lambda_1(A_i)(u_i^\top v)^2+\lambda_2(A_i)\sum_{k\ge 2}(e_k^\top v)^2
+=\lambda_1(A_i)(u_i^\top v)^2+\lambda_2(A_i)\bigl(1-(u_i^\top v)^2\bigr).
+\end{equation*}
+Since $v\in\ran(P)$ and $P^\top=P$, $u_i^\top v=u_i^\top Pv=(Pu_i)^\top v$,
+so by Cauchy--Schwarz $(u_i^\top v)^2\le\|Pu_i\|^2\|v\|^2=\|Pu_i\|^2$.
+The map $t\mapsto\lambda_1(A_i)t+\lambda_2(A_i)(1-t)$ is non-decreasing on
+$[0,1]$ since $\lambda_1\ge\lambda_2$, so
+$v^\top A_iv\le\lambda_1(A_i)\|Pu_i\|^2+\lambda_2(A_i)(1-\|Pu_i\|^2)$.
+Taking the supremum over unit $v\in\ran(P)$ gives the upper bound
+\begin{equation}\label{eq:perterm}
+\lambda_{\max}(PA_iP)\le\lambda_1(A_i)\|Pu_i\|^2+\lambda_2(A_i)(1-\|Pu_i\|^2).
+\end{equation}
+For the lower bound, when $\|Pu_i\|>0$ test $v=Pu_i/\|Pu_i\|\in\ran(P)$:
+$v^\top A_i v=(Pu_i)^\top A_i(Pu_i)/\|Pu_i\|^2
+\ge\lambda_1(A_i)(u_i^\top Pu_i)^2/\|Pu_i\|^2
+=\lambda_1(A_i)\|Pu_i\|^2$,
+using $u_i^\top Pu_i=\|Pu_i\|^2$ and dropping the nonnegative
+$\lambda_k\ge 2$ terms.
+When $\|Pu_i\|=0$ the bound is trivial.
+Thus
+\begin{equation}\label{eq:pertermlow}
+\lambda_{\max}(PA_iP)\ge\lambda_1(A_i)\|Pu_i\|^2.
+\end{equation}
 
-For~\eqref{eq:coarse}: $F(P_F^\star)-F(P_B^\star)
+\emph{Sandwich.}
+Summing~\eqref{eq:pertermlow} weighted by $w_i$ gives $\tilde F(P)\le F(P)$;
+summing~\eqref{eq:perterm} and using $1-\|Pu_i\|^2\le 1$ gives
+$F(P)\le\tilde F(P)+\sum_i w_i\lambda_2(A_i)$.
+
+\emph{Coarse regret~\eqref{eq:coarse}.}
+Decompose
+$F(P_F^\star)-F(P_B^\star)
 =[F(P_F^\star)-\tilde F(P_F^\star)]+[\tilde F(P_F^\star)-\tilde F(P_B^\star)]
 +[\tilde F(P_B^\star)-F(P_B^\star)]$.
-The middle term is $\le 0$ by surrogate optimality of $P_B^\star$;
-the third is $\le 0$ by the lower sandwich; the first is bounded by
-$\sum_i w_i\lambda_2(A_i)$ from the upper sandwich.
+The middle term is $\le 0$ by surrogate optimality of $P_B^\star$; the
+third is $\le 0$ by the lower sandwich; the first is bounded by
+$\sum_i w_i\lambda_2(A_i)$ from~\eqref{eq:perterm} summed.
 
-Pointwise equality $\tilde F=F$ requires
-$\lambda_2(A_i)(1-\|Pu_i\|^2)=0$ for all $i$ and all $P$, which forces
-$\lambda_2(A_i)=0$ for all $i$, i.e.\ rank-$1$ Jacobians.
-The converse is direct.
+\emph{Pointwise equality $\tilde F=F$.}
+For each $i$, define the per-term gap
+$\delta_i(P):=\lambda_{\max}(PA_iP)-\lambda_1(A_i)\|Pu_i\|^2\ge 0$
+by~\eqref{eq:pertermlow}.
+$F(P)-\tilde F(P)=\sum_i w_i\delta_i(P)$ with positive weights and
+nonnegative summands, so $F=\tilde F$ pointwise iff $\delta_i(P)=0$ for
+every $i$ and every rank-$r$ projector $P$.
+Per $i$: take $P$ to project onto an eigenvector $e_k$ of $A_i$ with
+$k\ne 1$.
+Then $\lambda_{\max}(PA_iP)=\lambda_k(A_i)$ and $\|Pu_i\|^2=(e_k^\top u_i)^2=0$,
+so $\delta_i(P)=\lambda_k(A_i)$.
+Vanishing for all $k\ne 1$ forces $\lambda_k(A_i)=0$, i.e.\ $A_i$ is
+rank-$1$.
+Conversely, if every $A_i$ is rank-$1$, $A_i=\lambda_1(A_i)u_iu_i^\top$,
+and $\lambda_{\max}(PA_iP)=\lambda_1(A_i)\|Pu_i\|^2$ exactly, so $F=\tilde F$.
 \end{proof}
 
 \subsection{Instance-dependent regret}
@@ -619,15 +671,16 @@ F(P_F^\star)-F(P_B^\star)
 \end{theorem}
 
 \begin{proof}
-As in the proof of Theorem~\ref{thm:weakglue},
-$F(P_F^\star)-F(P_B^\star)\le F(P_F^\star)-\tilde F(P_F^\star)$.
-The upper sandwich applied at $P_F^\star$ gives
-$\lambda_{\max}(P_F^\star A_i P_F^\star)
-\le\lambda_1(A_i)\|P_F^\star u_i\|^2+\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$,
-so
-$F(P_F^\star)-\tilde F(P_F^\star)
-=\sum_i w_i[\lambda_{\max}(P_F^\star A_i P_F^\star)-\lambda_1(A_i)\|P_F^\star u_i\|^2]
-\le\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$.
+By the three-term decomposition in the proof of
+Theorem~\ref{thm:weakglue}, $F(P_F^\star)-F(P_B^\star)\le
+F(P_F^\star)-\tilde F(P_F^\star)$.
+Applying the per-term upper bound~\eqref{eq:perterm} at $P=P_F^\star$ for
+every $i$ and summing with weights $w_i$:
+\[
+F(P_F^\star)-\tilde F(P_F^\star)
+=\sum_i w_i\bigl[\lambda_{\max}(P_F^\star A_i P_F^\star)-\lambda_1(A_i)\|P_F^\star u_i\|^2\bigr]
+\le\sum_i w_i\lambda_2(A_i)\bigl(1-\|P_F^\star u_i\|^2\bigr).
+\]
 \end{proof}
 
 \begin{remark}[Two mechanisms]
