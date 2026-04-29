@@ -37,7 +37,7 @@ common-principal-subspace condition strictly weaker than simultaneous
 diagonalisation, and the operator-norm side opens a complementary
 hitting-problem perspective on PSD families.
 
-The manuscript is approximately 14 pages, theorem-driven, and includes
+The manuscript is approximately 15 pages, theorem-driven, and includes
 three numerical illustrations (one stationary linear Gaussian dynamical
 system instance and two analytically exact 3x3 examples). The
 reproduction code is openly available at https://github.com/kunalb541/LGDS.

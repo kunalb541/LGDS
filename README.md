@@ -92,7 +92,7 @@ python -m pytest tests/ -v
 
 ```
 lgds.py                        # numerical computation; writes outputs/data/paper_macros.tex
-paper.tex                      # the manuscript (14 pages, elsarticle format)
+paper.tex                      # the manuscript (15 pages, elsarticle format)
 paper.pdf                      # compiled manuscript
 refs.bib                       # bibliography
 build.sh                       # python lgds.py + latexmk

@@ -127,7 +127,10 @@ statistical causal identification.
 $r$-coherence implies $r$-coverability strictly.
 A $3\times 3$ witness shows the gap: a single common optimal projection
 can exist under the operator-norm score while no common optimal
-projection exists under the trace score.
+projection exists under the trace score; in the witness, the
+trace-score minimax regret is exactly $\Gamma^{\mathrm{fork}}_{\mathrm{tr}}=2$
+(\S\ref{sec:numerics}), so the fork is not merely existential but has a
+finite minimax gap under the trace objective.
 The dissociation is algebraic, not a consequence of approximation error.
 
 \item \emph{Surrogate regret beyond coverability}
@@ -360,6 +363,56 @@ $r$-coherence is therefore a non-generic algebraic condition; outside
 $r$-coherence, the trace-score optimum is target-dependent.
 \end{remark}
 
+\begin{proposition}[Generic non-coherence is measure-zero]
+\label{prop:generic}
+Fix $1\le r<d$ and $m\ge 2$.
+Within the space of $m$-tuples $(M_1,\ldots,M_m)$ of PSD matrices on
+$\R^d$ with strict $r$-gap, the subset admitting a common rank-$r$
+trace-optimal projection is contained in a finite union of algebraic
+subvarieties of positive codimension; in particular it is closed,
+nowhere dense, and has Lebesgue measure zero.
+Equivalently, for an open dense set of PSD families, no common
+trace-optimal rank-$r$ projection exists.
+\end{proposition}
+
+\begin{proof}
+Fix $M_1$ with simple top-$r$ spectrum; its top-$r$ subspace $V_1$ is
+unique with orthogonal complement $V_1^\perp$.
+By Proposition~\ref{thm:pred}, a common trace-optimal projection exists
+iff $V_1$ equals the top-$r$ eigenspace of every $M_t$, iff
+$V_1$ is an invariant subspace of $M_t$ for $t\ge 2$ with eigenvalues
+matching the top $r$ of $M_t$.
+Invariance under $M_t$ is equivalent to the off-diagonal block
+condition $\Pi_{V_1^\perp}M_t\Pi_{V_1}=0$, an $(d-r)\times r$ matrix of
+linear constraints on $M_t$, i.e.\ $r(d-r)\ge 1$ independent linear
+equations on the entries of $M_t$.
+For each $t\ge 2$ this defines a codimension-$r(d-r)$ algebraic
+subvariety of the space of symmetric $d\times d$ matrices; intersecting
+over $t$ keeps the codimension $\ge r(d-r)$.
+Allowing $M_1$ to vary preserves this codimension generically, since the
+parameterisation of $V_1$ by $M_1$ is smooth on the strict-gap stratum.
+The full strict-gap stratum is an open subset, and the
+common-trace-optimum locus is a closed algebraic subvariety of positive
+codimension within it.
+\end{proof}
+
+\noindent
+Proposition~\ref{prop:generic} formalises the genericity remark: in a
+typical PSD family, $r$-coherence is not just absent, it is
+measure-zero absent.
+A small perturbation of a coherent family destroys coherence, and
+there is no way to restore it without imposing $r(d-r)$ algebraic
+constraints.
+This gives the trace/operator-norm fork algebraic substance.
+On the generic locus where $r$-coherence fails, no common trace-optimal
+projection exists; whether a common operator-norm-optimal projection
+exists is a separate, much weaker condition ($r$-coverability), which
+in the simple-top case holds whenever the leading eigenvectors span at
+most $r$ dimensions --- a condition compatible with codimension-zero
+sets of families.
+The two existence conditions sit on opposite sides of a genericity
+gap.
+
 \subsection{LGDS instantiation}
 
 The trace-score theorem's classical instance is the stationary linear
@@ -427,6 +480,36 @@ A common rank-$r$ projection minimising squared-error prediction risk
 for every $(C_k,\tau_k)\in\mathcal{T}$ exists if and only if
 $\{M_{C_k,\tau_k}\}$ is $r$-coherent.
 \end{corollary}
+
+\begin{lemma}[PSD families are realisable as LGDS prediction tasks]
+\label{lem:realisability}
+For any finite family $\{M_t\}_{t=1}^m$ of PSD matrices on $\R^d$, there
+exist a stable LGDS $(A,Q)$ and output matrices $\{C_t\}_{t=1}^m$ at
+horizon $\tau=1$ such that
+\[
+M_{C_t,1}
+=\Sigma^{1/2}A^\top C_t^\top C_t A\,\Sigma^{1/2}=M_t
+\quad\text{for every }t.
+\]
+\end{lemma}
+
+\begin{proof}
+Pick any $a\in(0,1)$ and set $A=aI_d$, $Q=(1-a^2)I_d$; then
+$A\Sigma A^\top+Q=\Sigma$ is solved by $\Sigma=I_d$, so
+$\Sigma^{1/2}=I_d$.
+For each $t$, let $C_t\in\R^{d\times d}$ be any matrix with
+$C_t^\top C_t=a^{-2}M_t$ (e.g.\ the symmetric square root of
+$a^{-2}M_t$).
+Then $M_{C_t,1}=A^\top C_t^\top C_t A=a^2(a^{-2}M_t)=M_t$.
+\end{proof}
+
+\noindent
+Lemma~\ref{lem:realisability} converts every PSD example used elsewhere
+in the paper (in particular the fork witness of \S\ref{sec:fork}) into
+a concrete LGDS prediction-task family with the same target information
+matrices.
+The fork is therefore not an abstract PSD curiosity: it is an explicit
+$3\times 3$ LGDS prediction example.
 
 \subsection{Task regret and the angle bound}
 
@@ -692,6 +775,23 @@ intersection with $\Emax$), but not for trace optimality, which also
 requires capturing the second dominant direction --- and the second
 dominant directions of $T_1$ and $T_2$ disagree.
 
+\paragraph{Non-diagonal version of the witness}
+The diagonal form is not essential.
+For any $Q\in O(3)$, set
+\[
+\widetilde T_1=Q^\top\mathrm{diag}(5,4,0)Q,
+\qquad
+\widetilde T_2=Q^\top\mathrm{diag}(5,0,4)Q.
+\]
+Then $\widetilde T_1,\widetilde T_2$ are generally non-diagonal in the
+standard basis but have the same coherence/coverability behaviour:
+both share the leading unit vector $Q^\top e_1$, so they are
+$2$-coverable, while their dominant $2$-dimensional subspaces are
+$Q^\top\mathrm{span}\{e_1,e_2\}$ and $Q^\top\mathrm{span}\{e_1,e_3\}$,
+whose intersection is one-dimensional.
+Thus the fork is basis-invariant and not an artefact of simultaneous
+diagonality.
+
 \begin{remark}[Trace vs operator-norm dissociation]
 \label{rem:dissoc}
 Theorem~\ref{thm:fork} establishes an algebraic gap between coherence and
@@ -903,6 +1003,26 @@ Both bounds are certification bounds, not tight estimators of the value
 gap.
 \end{remark}
 
+\begin{remark}[Why this looseness is unavoidable in the present
+information]
+\label{rem:sharpness}
+The looseness is intrinsic to a bound stated only in terms of
+$\lambda_1(A_i),\lambda_2(A_i),u_i$, and $\|Pu_i\|^2$.
+Such a bound discards the orientation and decay of the subleading
+spectrum within $u_i^\perp$.
+Two families with the same $\lambda_1,\lambda_2,u_i$ and the same
+$\|Pu_i\|^2$ can have different values of
+$\lambda_{\max}(PA_iP)$, depending on whether the projection aligns
+with the $\lambda_2$-eigenvector or with lower-energy residual
+directions.
+The estimates here should therefore be read as worst-case certificates
+under limited spectral information.
+A sharper estimate would require retaining at least the projected
+residual matrix
+$P(I-u_iu_i^\top)A_i(I-u_iu_i^\top)P$, which defeats part of the
+purpose of the rank-one surrogate.
+\end{remark}
+
 \subsection{Equality conditions}
 
 \begin{corollary}[Three exact regimes]\label{cor:equality}
@@ -1066,7 +1186,13 @@ The max of these two is minimised when $\alpha^2=\beta^2=\tfrac{1}{2}$,
 giving $\Gamma_{\mathrm{tr}}^{\mathrm{fork}}=2$, attained by
 $v=(e_2\pm e_3)/\sqrt 2$ and the corresponding rank-$2$ projection
 $P=\Pi_{\mathrm{span}\{e_1,(e_2+e_3)/\sqrt{2}\}}$.
-The dissociation is exact and structural.
+
+\noindent
+This gives an exact quantitative separation: in the same family for
+which the operator-norm common optimum is exact, the best possible
+common trace-score projection incurs worst-case regret $2$.
+Thus the fork is not merely existential; it has a finite minimax gap
+under the trace objective.
 
 \subsection{Weak-glue counterexample}
 
@@ -1171,6 +1297,65 @@ $\theta_F^\star$, $\theta_B^\star$            & $25.1^\circ$, $13.3^\circ$ \\
 \end{center}
 \end{table}
 
+\subsection{Higher-dimensional weak-glue stress test}
+\label{sec:hidim}
+
+To test the surrogate's behaviour beyond the $3\times 3$ regime,
+we run a synthetic study at $d=50$, $r=5$, $N=100$.
+The setup is reproducible by the accompanying script.
+We sample $u_i$ from a mixture of $K=10$ cluster centres in
+$\mathrm{span}\{e_1,\ldots,e_{10}\}$ (so the simple-top span of the
+$u_i$ has effective dimension $>r$ and $r$-coverability fails),
+draw $\lambda_1(A_i)\sim U[0.8,1.2]$ and
+$\lambda_2(A_i)/\lambda_1(A_i)\sim U[0.2,0.5]$, and set
+$A_i=\lambda_1(A_i)u_iu_i^\top+\lambda_2(A_i)v_iv_i^\top$ with
+$v_i\perp u_i$.
+$P_B^\star$ is the top-$r$ eigenspace of $B_\lambda$ (one
+$d\times d$ eigendecomposition).
+$P_F^\star$ is approximated by Riemannian gradient ascent on $\Gr(r,d)$
+warm-started from $P_B^\star$ plus several random restarts.
+A random rank-$r$ projection baseline averages $50$ uniform draws.
+
+\begin{table}[tbp]
+\caption{Higher-dimensional weak-glue stress test ($d=50$, $r=5$,
+$N=100$). The surrogate $P_B^\star$ captures most of the achievable
+operator-norm value at the cost of one eigendecomposition; both
+certification bounds substantially overestimate the true surrogate
+regret, with the instance-dependent bound consistently tighter.}
+\label{tab:hidim}
+\begin{center}
+\begin{tabular}{lc}
+\toprule
+Quantity & Value \\
+\midrule
+$F(P_{\mathrm{random}})$ (mean of $50$ draws)        & $\HiDimFRandMean$ \\
+$F(P_B^\star)$ (one eigendecomposition of $B_\lambda$) & $\HiDimFPB$ \\
+$F(P_F^\star)$ (Riemannian ascent on $\Gr(5,50)$)    & $\HiDimFPF$ \\
+Actual surrogate regret $F(P_F^\star)-F(P_B^\star)$  & $\HiDimRegret$ \\
+Coarse bound $\sum_i w_i\lambda_2(A_i)$              & $\HiDimCoarse$ \\
+Instance-dependent bound,~\eqref{eq:instreg}         & $\HiDimInstDep$ \\
+Trivial upper bound $\sum_i w_i\lambda_1(A_i)$       & $\HiDimUpper$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+In this regime (Table~\ref{tab:hidim}), $P_B^\star$ recovers
+$F(P_B^\star)=\HiDimFPB$ versus $F(P_F^\star)=\HiDimFPF$ for the
+locally-optimised projection: the surrogate captures essentially the
+same operator-norm value, while requiring only one $d\times d$
+eigendecomposition.
+A random rank-$5$ baseline averages $\HiDimFRandMean$, an order of
+magnitude smaller.
+The certification bounds are conservative as expected: the coarse
+bound $\HiDimCoarse$ and the instance-dependent bound $\HiDimInstDep$
+both substantially exceed the actual regret $\HiDimRegret$; the
+instance-dependent bound is consistently tighter.
+This is a synthetic stress test, not a claim of universal optimality
+for $B_\lambda$; the takeaway is that the surrogate is computationally
+useful at moderate $d$ where direct Riemannian optimisation of $F$ is
+expensive.
+
 % =========================================================================
 \section{Scope and Discussion}
 \label{sec:scope}
@@ -1222,14 +1407,18 @@ The geometry-first pooled objective $G(P)=\lambda_{\max}(P\,\E[J_xJ_x^\top]P)$
 is mentioned implicitly via the rank-$1$ regime where $G=F$; a full
 treatment of the Jensen gap $F\ge G$ for $r>1$ is left to a companion
 note.
-Approximate coverability (a perturbation theory of $r$-coverability) is
-open and structurally harder than its trace-score analogue
-(Corollary~\ref{cor:approxcoh}): trace-score regret has a smooth,
+Approximate coverability is the natural next problem: given leading
+eigenspaces $\{E_i\}=\{\Emax(K_i)\}$, characterise when there exists
+$V\in\Gr(r,d)$ with $\mathrm{dist}(V,E_i)\le\varepsilon$ for all $i$,
+and relate the covering radius to operator-norm regret.
+This is structurally different from approximate $r$-coherence
+(Corollary~\ref{cor:approxcoh}): trace-score regret admits a smooth,
 principal-angle-controlled bound because the Ky Fan trace is analytic
-in $P$, whereas operator-norm regret under $\lambda_{\max}(PKP)$ is a
-subspace-transversal/hitting condition for leading eigenspaces, with
-threshold behaviour when $\Emax(K_t)$ is multidimensional or when the
-family is nearly but not exactly $r$-hittable.
+in $P$, whereas operator-norm regret is governed by incidence and
+hitting geometry on $\Gr(r,d)$, with threshold behaviour when
+$\Emax(K_t)$ is multidimensional or when the family is nearly but not
+exactly $r$-hittable.
+A perturbation theory of $r$-coverability is left open.
 
 \paragraph{Practical implication}
 Whenever a single rank-$r$ projection must serve a family of objectives,

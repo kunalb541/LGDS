@@ -192,6 +192,121 @@ assert max_frag_rad < frag_threshold, f"Structural coherence fragile: {max_frag_
 print(f"  Max angle under perturbation: {max_frag_rad:.6f} rad  (threshold: {frag_threshold})")
 
 
+# -- High-dimensional weak-glue stress test (d=50, r=5, N=100) ----------------
+# Synthetic, reproducible. Goal: show the surrogate B_lambda is competitive
+# with locally optimised F at moderate dimension, and that the
+# instance-dependent bound is consistently tighter than the coarse bound.
+
+print("\nHigh-dimensional weak-glue stress test (d=50, r=5, N=100):")
+
+def hidim_stress_test():
+    rng_h = np.random.default_rng(42)
+    d_h, r_h, N_h = 50, 5, 100
+    K_clusters = 10  # > r_h, so coverability fails
+
+    # K cluster centres in span{e_1, ..., e_K}
+    centers = np.eye(d_h)[:, :K_clusters]
+
+    u_list, lam1_list, lam2_list, A_list = [], [], [], []
+    for i in range(N_h):
+        c = centers[:, rng_h.integers(K_clusters)]
+        u = c + 0.05 * rng_h.standard_normal(d_h)
+        u /= np.linalg.norm(u)
+        v = rng_h.standard_normal(d_h)
+        v -= u * (u @ v)
+        v /= np.linalg.norm(v)
+        l1 = rng_h.uniform(0.8, 1.2)
+        l2 = l1 * rng_h.uniform(0.2, 0.5)
+        u_list.append(u)
+        lam1_list.append(l1)
+        lam2_list.append(l2)
+        A_list.append(l1 * np.outer(u, u) + l2 * np.outer(v, v))
+
+    weights_h = np.ones(N_h) / N_h
+
+    # Surrogate B_lambda and its top-r eigenspace
+    B = np.zeros((d_h, d_h))
+    for i in range(N_h):
+        B += weights_h[i] * lam1_list[i] * np.outer(u_list[i], u_list[i])
+    eigvals_B, eigvecs_B = np.linalg.eigh(B)
+    P_B = eigvecs_B[:, -r_h:]
+
+    def F_value(U):
+        return sum(weights_h[i] * np.linalg.eigvalsh(U.T @ A_list[i] @ U).max()
+                   for i in range(N_h))
+
+    F_PB = F_value(P_B)
+
+    # Random rank-r baseline
+    rng_rand = np.random.default_rng(123)
+    F_rand_list = []
+    for _ in range(50):
+        Q, _ = np.linalg.qr(rng_rand.standard_normal((d_h, r_h)))
+        F_rand_list.append(F_value(Q))
+    F_rand_mean = float(np.mean(F_rand_list))
+    F_rand_max = float(np.max(F_rand_list))
+
+    # Approximate F-optimum by Riemannian gradient ascent + restarts
+    def grad_F(U):
+        g = np.zeros_like(U)
+        for i in range(N_h):
+            UTAU = U.T @ A_list[i] @ U
+            _, ev = np.linalg.eigh(UTAU)
+            z = ev[:, -1]
+            g += 2 * weights_h[i] * A_list[i] @ U @ np.outer(z, z)
+        return g
+
+    def riemannian_ascent(U_init, max_iter=300, lr=0.05):
+        U = U_init.copy()
+        for _ in range(max_iter):
+            g = grad_F(U)
+            sym = (U.T @ g + g.T @ U) / 2
+            rg = g - U @ sym
+            U_new = U + lr * rg
+            U, _ = np.linalg.qr(U_new)
+        return U, F_value(U)
+
+    rng_opt = np.random.default_rng(456)
+    best_U, best_F = riemannian_ascent(P_B)  # warm start from surrogate
+    for _ in range(5):
+        Q, _ = np.linalg.qr(rng_opt.standard_normal((d_h, r_h)))
+        U_opt, f_opt = riemannian_ascent(Q)
+        if f_opt > best_F:
+            best_U, best_F = U_opt, f_opt
+    F_PF = best_F
+    P_F_basis = best_U
+
+    actual_regret = F_PF - F_PB
+    upper_bound = sum(weights_h[i] * lam1_list[i] for i in range(N_h))
+    coarse_bound = sum(weights_h[i] * lam2_list[i] for i in range(N_h))
+
+    inst_dep_bound = 0.0
+    for i in range(N_h):
+        proj_u = P_F_basis.T @ u_list[i]
+        norm_sq = float(proj_u @ proj_u)
+        inst_dep_bound += weights_h[i] * lam2_list[i] * (1 - norm_sq)
+
+    print(f"  F(random) mean = {F_rand_mean:.3f}")
+    print(f"  F(P_B*) = {F_PB:.3f}")
+    print(f"  F(P_F*) = {F_PF:.3f}  (regret = {actual_regret:.4f})")
+    print(f"  upper bound Σ w_i λ_1(A_i) = {upper_bound:.3f}")
+    print(f"  coarse bound Σ w_i λ_2(A_i) = {coarse_bound:.3f}")
+    print(f"  instance-dep bound = {inst_dep_bound:.3f}")
+
+    return {
+        'F_rand_mean': F_rand_mean,
+        'F_rand_max': F_rand_max,
+        'F_PB': F_PB,
+        'F_PF': F_PF,
+        'actual_regret': actual_regret,
+        'coarse_bound': coarse_bound,
+        'inst_dep_bound': inst_dep_bound,
+        'upper_bound': upper_bound,
+    }
+
+hi = hidim_stress_test()
+
+
 # -- Write macros -------------------------------------------------------------
 # IMPORTANT: all macro names must be purely alphabetic.
 # TeX command names end at the first non-letter, so a trailing digit like
@@ -223,6 +338,14 @@ macros = {
     "CondBPertDraws":         str(n_draws),
     "CondBPertMaxRad":        fmt(max_frag_rad, 3),
     "CondBPertThreshold":     fmt(frag_threshold, 2),
+    # High-dimensional weak-glue stress test (d=50, r=5, N=100)
+    "HiDimFRandMean":         fmt(hi['F_rand_mean'], 3),
+    "HiDimFPB":               fmt(hi['F_PB'], 3),
+    "HiDimFPF":               fmt(hi['F_PF'], 3),
+    "HiDimRegret":            fmt(hi['actual_regret'], 4),
+    "HiDimCoarse":            fmt(hi['coarse_bound'], 3),
+    "HiDimInstDep":           fmt(hi['inst_dep_bound'], 3),
+    "HiDimUpper":             fmt(hi['upper_bound'], 3),
 }
 
 lines = ["% Auto-generated by lgds.py -- do not edit by hand", ""]
