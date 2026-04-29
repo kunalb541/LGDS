@@ -112,26 +112,37 @@ tests/test_lgds.py             # correctness tests for the lgds.py computations
   rules; common optimal rank-*r* projection; dominant invariant subspace
   and leading eigenspace.
 - **§3 Trace-Score Common Optimality via *r*-Coherence** — main trace
-  theorem for arbitrary PSD families; LGDS instantiation (Bayes risk
-  lemma + LGDS corollary); regret–angle bound; approximate *r*-coherence
-  with one-sided contrapositive certificate.
-- **§4 Operator-Norm Common Optimality via *r*-Coverability** — local
-  linearised intervention-response motivation (§4.1); rank-1-driven
-  local maximizer; *r*-coverability definition; testing via Schubert-
-  type incidence (simple-top reduction; sufficient condition
-  dim Σ_t E_max(K_t) ≤ r); main operator-norm theorem; simple-top
-  ("strong glue") sufficient condition.
-- **§5 The Fork** — *r*-coherence implies *r*-coverability strictly;
-  3×3 witness; trace vs operator-norm dissociation.
+  characterisation (Proposition) for arbitrary PSD families;
+  **generic non-coherence proposition** (positive-codimension /
+  measure-zero, fibrewise scope); LGDS instantiation (Bayes risk lemma
+  + LGDS corollary + **PSD realisability lemma** showing every PSD
+  family is realisable as an LGDS prediction-task family at horizon
+  *τ*=1); regret–angle bound; approximate *r*-coherence with one-sided
+  contrapositive certificate.
+- **§4 Operator-Norm Common Optimality via *r*-Coverability** —
+  linearised Jacobian-response motivation (§4.1); rank-1-driven local
+  maximizer; *r*-coverability definition; testing via Schubert-type
+  incidence (simple-top reduction; sufficient condition
+  dim Σ_t E_max(K_t) ≤ r; multidimensional witness); main operator-norm
+  characterisation (Proposition); simple-top ("strong glue") sufficient
+  condition.
+- **§5 The Fork** — *r*-coherence implies *r*-coverability strictly
+  (Theorem); diagonal 3×3 witness *T₁* = diag(5,4,0), *T₂* = diag(5,0,4);
+  basis-invariant non-diagonal witness via orthogonal conjugation;
+  trace vs operator-norm dissociation.
 - **§6 Surrogate Approximation When Coverability Fails (weak glue)** —
   motivation for *B_λ* as the Ky-Fan rank-1 lower contribution; sandwich
-  inequality; coarse and instance-dependent regret bounds; three exact
-  regimes (rank-1 *A_i*, *r*-coverable, common-shape); value-vs-subspace
-  remark.
-- **§7 Numerical Illustrations** — LGDS trace-score instance
-  (Γ_tr = 0.026 > 0); 3×3 fork witness with explicit minimax derivation
-  Γ_tr^fork = 2; 3×3 weak-glue counterexample (coarse bound 1.15 vs
-  instance-dependent 0.197 vs actual regret 0.032).
-- **§8 Scope and Discussion** — what is earned, what is not earned,
-  practical implications, and the surrogate's computational value in
-  high-dimensional regimes.
+  inequality (Theorem); coarse and instance-dependent regret bounds
+  (Theorem); three exact regimes (rank-1 *A_i*, *r*-coverable,
+  common-shape); bound-sharpness diagnosis; value-vs-subspace remark.
+- **§7 Numerical Illustrations** — (§7.1) LGDS trace-score instance
+  (Γ_tr = 0.026 > 0); (§7.2) 3×3 fork witness with explicit minimax
+  derivation Γ_tr^fork = 2; (§7.3) 3×3 weak-glue counterexample
+  (coarse bound 1.15 vs instance-dependent 0.197 vs actual regret
+  0.032); **(§7.4) higher-dimensional weak-glue stress test
+  (d=50, r=5, N=100)**: surrogate captures essentially all achievable
+  operator-norm value via one *d*×*d* eigendecomposition.
+- **§8 Scope and Discussion** — what is earned, what is not earned
+  (continuous-regime, nonlinear *K_t*, full Jensen gap, approximate
+  coverability as a covering-radius / hitting-geometry problem
+  distinct from approximate *r*-coherence), practical implications.
