@@ -363,38 +363,60 @@ $r$-coherence is therefore a non-generic algebraic condition; outside
 $r$-coherence, the trace-score optimum is target-dependent.
 \end{remark}
 
-\begin{proposition}[Generic non-coherence is measure-zero]
+\begin{proposition}[Generic non-coherence: scoped, fibrewise]
 \label{prop:generic}
-Fix $1\le r<d$ and $m\ge 2$.
-Within the space of $m$-tuples $(M_1,\ldots,M_m)$ of PSD matrices on
-$\R^d$ with strict $r$-gap, the subset admitting a common rank-$r$
-trace-optimal projection is contained in a finite union of algebraic
-subvarieties of positive codimension; in particular it is closed,
+Fix $1\le r<d$, $m\ge 2$, and a PSD matrix $M_1$ on $\R^d$ with simple
+top-$r$ spectrum (so $\lambda_r(M_1)>\lambda_{r+1}(M_1)$ and the top-$r$
+eigenspace $V_1$ is unique).
+Within the space of $(m-1)$-tuples $(M_2,\ldots,M_m)$ of PSD matrices on
+$\R^d$ such that each $M_t$ also has simple top-$r$ spectrum, the subset
+for which $\{M_1,\ldots,M_m\}$ is $r$-coherent is contained in a finite
+intersection of algebraic subvarieties each of codimension $r(d-r)$ in
+the space of symmetric $d\times d$ matrices; in particular it is closed,
 nowhere dense, and has Lebesgue measure zero.
-Equivalently, for an open dense set of PSD families, no common
-trace-optimal rank-$r$ projection exists.
+Equivalently, for $M_1$ fixed and $(M_2,\ldots,M_m)$ ranging over an
+open dense set of PSD tuples with strict $r$-gap, no common rank-$r$
+trace-optimal projection exists.
 \end{proposition}
 
 \begin{proof}
-Fix $M_1$ with simple top-$r$ spectrum; its top-$r$ subspace $V_1$ is
-unique with orthogonal complement $V_1^\perp$.
-By Proposition~\ref{thm:pred}, a common trace-optimal projection exists
-iff $V_1$ equals the top-$r$ eigenspace of every $M_t$, iff
-$V_1$ is an invariant subspace of $M_t$ for $t\ge 2$ with eigenvalues
-matching the top $r$ of $M_t$.
-Invariance under $M_t$ is equivalent to the off-diagonal block
-condition $\Pi_{V_1^\perp}M_t\Pi_{V_1}=0$, an $(d-r)\times r$ matrix of
-linear constraints on $M_t$, i.e.\ $r(d-r)\ge 1$ independent linear
-equations on the entries of $M_t$.
-For each $t\ge 2$ this defines a codimension-$r(d-r)$ algebraic
-subvariety of the space of symmetric $d\times d$ matrices; intersecting
-over $t$ keeps the codimension $\ge r(d-r)$.
-Allowing $M_1$ to vary preserves this codimension generically, since the
-parameterisation of $V_1$ by $M_1$ is smooth on the strict-gap stratum.
-The full strict-gap stratum is an open subset, and the
-common-trace-optimum locus is a closed algebraic subvariety of positive
-codimension within it.
+With $V_1$ the unique top-$r$ eigenspace of $M_1$, let
+$V_1^\perp=\R^d\ominus V_1$ and $\Pi_{V_1},\Pi_{V_1^\perp}$ the
+corresponding orthogonal projectors.
+By Proposition~\ref{thm:pred}, a rank-$r$ projection with range $V_1$
+is trace-optimal for $M_t$ iff $V_1$ is the top-$r$ eigenspace of $M_t$
+(under simple top-$r$ spectrum), and $V_1$ is the top-$r$ eigenspace of
+$M_t$ iff $V_1$ is $M_t$-invariant with eigenvalues matching the top
+$r$ of $M_t$.
+$M_t$-invariance of $V_1$ is the off-diagonal block condition
+$\Pi_{V_1^\perp}M_t\Pi_{V_1}=0$, an $(d-r)\times r$ symmetric-matrix
+linear equation on $M_t$, i.e.\ $r(d-r)\ge 1$ independent linear
+constraints on the entries of $M_t$.
+For each $t\ge 2$ this defines a codimension-$r(d-r)$ linear subvariety
+$\mathcal{S}_t\subset\mathrm{Sym}_d$.
+The $r$-coherent locus is $\bigcap_{t=2}^m\mathcal{S}_t$, of codimension
+at least $r(d-r)$ inside $\mathrm{Sym}_d^{m-1}$, hence closed, nowhere
+dense, and Lebesgue null.
+The strict-gap simple-top condition on each $M_t$ is an open dense
+condition that does not affect codimension.
 \end{proof}
+
+\begin{remark}[Scope of the genericity claim]
+\label{rem:genericscope}
+Proposition~\ref{prop:generic} is fibrewise: $M_1$ is held fixed in the
+strict-gap simple-top stratum, and $(M_2,\ldots,M_m)$ is the variable
+parameter.
+A global statement varying all $M_t$ at once would require handling
+degenerate strata where some $M_t$ has a multiplicity at $\lambda_r$;
+on those strata the dominant invariant subspace is a Grassmannian
+fibre rather than a unique subspace, and a separate codimension count
+applies.
+We do not pursue the global version.
+The fibrewise version is enough to formalise the claim that
+$r$-coherence is non-generic: for any reasonable continuous prior on
+$(M_2,\ldots,M_m)$ with $M_1$ fixed, the probability of a common
+trace-optimal projection is zero.
+\end{remark}
 
 \noindent
 Proposition~\ref{prop:generic} formalises the genericity remark: in a
@@ -510,6 +532,11 @@ a concrete LGDS prediction-task family with the same target information
 matrices.
 The fork is therefore not an abstract PSD curiosity: it is an explicit
 $3\times 3$ LGDS prediction example.
+This is a realisability statement only --- it shows that the
+PSD examples used in this paper can be exhibited inside the LGDS
+prediction-task framework --- and is not a claim that arbitrary
+real-world dynamical systems generate arbitrary PSD families of target
+information matrices in practice.
 
 \subsection{Task regret and the angle bound}
 
@@ -1351,10 +1378,16 @@ The certification bounds are conservative as expected: the coarse
 bound $\HiDimCoarse$ and the instance-dependent bound $\HiDimInstDep$
 both substantially exceed the actual regret $\HiDimRegret$; the
 instance-dependent bound is consistently tighter.
-This is a synthetic stress test, not a claim of universal optimality
-for $B_\lambda$; the takeaway is that the surrogate is computationally
-useful at moderate $d$ where direct Riemannian optimisation of $F$ is
-expensive.
+This is a single synthetic stress test, not a statistical law: the
+result supports computational plausibility of the surrogate at moderate
+$d$, not universal near-optimality of $B_\lambda$ across regimes.
+A full statistical study would require sweeping cluster geometry,
+residual ratios $\kappa_i$, and weight schemes; we do not attempt one
+here.
+The takeaway is that the surrogate captures most of the achievable
+operator-norm value in this regime at the cost of one $d\times d$
+eigendecomposition, where direct Riemannian optimisation of $F$ on
+$\Gr(r,d)$ would be expensive.
 
 % =========================================================================
 \section{Scope and Discussion}
