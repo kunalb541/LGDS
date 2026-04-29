@@ -102,7 +102,7 @@ The strict separation between these existence laws
 (Theorem~\ref{thm:fork}), and the surrogate regret analysis beyond
 coverability (\S\ref{sec:weakglue}), are the main new components.
 
-\paragraph{Summary of results}
+\paragraph{Main results}
 \begin{enumerate}
 \item \emph{Trace-score characterisation} (Proposition~\ref{thm:pred}):
 an exact characterisation by Ky Fan trace maximisation.
@@ -973,14 +973,12 @@ $A=VDV^{-1}$ with eigenvalues drawn from $U[0.3,0.85]$ and random
 non-orthogonal $V$ (seed $100$); $Q=0.1\,I_8$.
 $\Sigma$ is computed from the discrete Lyapunov equation; $\Sigma\succ 0$
 to machine precision.
-The single-target optima $P_1^\star$, $P_2^\star$ are the top-$2$
-eigenspaces of $M_1$, $M_2$ in closed form
-(Proposition~\ref{thm:pred}); no search is required.
-The minimax projection $P_{\mathrm{joint}}\in\arg\min_{P}\max_t
-\Reg(P;\,M_t)$ has no closed form and is reported here as an
-illustration of $\Gamma_{\mathrm{tr}}>0$, computed by Riemannian
-optimisation on $\Gr(2,8)$ from many random orthonormal initialisations
-(consistent across initialisations to numerical tolerance).
+The single-target optima $P_1^\star,P_2^\star$ are top-$2$ eigenspaces
+of $M_1,M_2$ in closed form (Proposition~\ref{thm:pred}); no search is
+required.
+The minimax projection $P_{\mathrm{joint}}$ is reported here as an
+illustration of $\Gamma_{\mathrm{tr}}>0$ only; the qualitative
+existence statement does not depend on numerical optimisation.
 
 \paragraph{Condition A: target-dependent}
 Targets $T_1=([e_1^\top;e_2^\top],1)$ and $T_2=([e_5^\top;e_6^\top],5)$.
@@ -1235,35 +1233,23 @@ family is nearly but not exactly $r$-hittable.
 
 \paragraph{Practical implication}
 Whenever a single rank-$r$ projection must serve a family of objectives,
-the iff conditions of Propositions~\ref{thm:pred} and~\ref{thm:caus} are
-testable: $r$-coherence by checking equality of top-$r$ eigenspaces;
-$r$-coverability by computing $\dim\mathrm{span}\{u_i\}$ in the
-simple-top case.
+the iff conditions of Propositions~\ref{thm:pred} and~\ref{thm:caus}
+are testable: $r$-coherence by equality of top-$r$ eigenspaces;
+$r$-coverability by $\dim\mathrm{span}\{u_i\}\le r$ in the simple-top
+case.
 When neither exact condition holds, the two structural quantities
-play different roles:
-$\Gamma_{\mathrm{tr}}\ge 0$ is the minimax \emph{unavoidable worst-case}
-trace-score suboptimality of any single projection
+play different roles: $\Gamma_{\mathrm{tr}}\ge 0$ is the minimax
+unavoidable worst-case trace-score suboptimality
 (Corollary~\ref{cor:approxcoh}; $\Gamma_{\mathrm{tr}}>0$ certifies
-non-coherence and quantifies the inherent task-family gap), while the
-weak-glue expression
-$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$
-\emph{upper-bounds} the loss incurred by replacing the true
-operator-norm optimiser $P_F^\star$ with the surrogate optimiser
-$P_B^\star$ (Theorem~\ref{thm:instancereg}).
-$\Gamma_{\mathrm{tr}}=0$ is the certificate of structural alignment
-between the family $\{M_t\}$ and a common rank-$r$ subspace;
-$\Gamma_{\mathrm{tr}}>0$ certifies that dedicated per-target
-projections are necessary for trace-score optimality.
-The surrogate construction has independent computational value: it
-reduces the non-Ky--Fan regime-averaged operator-norm objective $F(P)$
-to the single eigendecomposition of the $d\times d$ matrix $B_\lambda$,
-making the surrogate optimum $P_B^\star$ tractable in high dimension
-where direct Riemannian optimisation of $F$ on $\Gr(r,d)$ would be
-expensive; the regret bounds in
-Theorems~\ref{thm:weakglue}--\ref{thm:instancereg} then certify how
-much value is sacrificed.
-A higher-dimensional numerical study (e.g.\ $d\sim 50$, $r\sim 5$,
-$N\sim 100$) is left to future computational work.
+non-coherence), while the weak-glue expression
+$\sum_i w_i\lambda_2(A_i)(1-\|P_F^\star u_i\|^2)$ upper-bounds the loss
+from replacing $P_F^\star$ by the surrogate $P_B^\star$
+(Theorem~\ref{thm:instancereg}).
+The surrogate has independent computational value: it reduces $F(P)$
+to a single $d\times d$ eigendecomposition of $B_\lambda$, where direct
+Riemannian optimisation of $F$ on $\Gr(r,d)$ would be expensive.
+A higher-dimensional study (e.g.\ $d\sim 50$, $r\sim 5$, $N\sim 100$)
+is left to future computational work.
 
 % =========================================================================
 \section*{Acknowledgements}
@@ -1273,11 +1259,10 @@ The author received no external funding for this work.
 The numerical illustrations are fully reproducible.
 The fork witness~\eqref{eq:forkwitness} and the weak-glue
 counterexample~\eqref{eq:wgex} are analytic from the explicit $3\times 3$
-matrices given in the manuscript and all reported quantities follow by
-hand.
-The LGDS instance is generated and verified by the open-source script
-accompanying this manuscript at \url{https://github.com/kunalb541/LGDS};
-running \texttt{python lgds.py} regenerates the LGDS numerical values in
+matrices given in the manuscript.
+The LGDS instance is regenerated by the accompanying open-source script
+at \url{https://github.com/kunalb541/LGDS}: running
+\texttt{python lgds.py} produces the LGDS numerical values used in
 Table~\ref{tab:condA} and Section~\ref{sec:numerics}.
 
 \bibliographystyle{elsarticle-num}
